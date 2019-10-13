@@ -166,7 +166,7 @@ void LoadResources()
 	animations->Add(901, ani);
 
 
-	for (int i = 0; i < 30; i++)
+	for (int i = 0; i < 95; i++)
 	{
 		CBrick *brick = new CBrick();
 		brick->AddAnimation(901);
@@ -183,7 +183,7 @@ void LoadResources()
 	simon->AddAnimation(105);	//	sit left
 	simon->AddAnimation(106);	//	sit right
 
-	simon->SetPosition(50.0f, 50.0f);
+	simon->SetPosition(40.0f, 50.0f);
 	objects.push_back(simon);
 }
 
@@ -205,15 +205,24 @@ void Update(DWORD dt)
 	float cx, cy;
 	simon->GetPosition(cx, cy);
 
-	/*if (cx - SCREEN_WIDTH / 2 > 0) cx -= SCREEN_WIDTH / 2;
-	else cx = SCREEN_WIDTH;
-	if (cy - SCREEN_HEIGHT / 2 > 0) cy -= SCREEN_HEIGHT / 2;
-	else cy = 0;*/
+	if (cx - SCREEN_WIDTH / 2 < 0)
+	{
+		cx = 0;
+	}
+	else
+	{
+		cx -= SCREEN_WIDTH / 2;
+	}
 
-	cx -= SCREEN_WIDTH / 2;
-	cy -= SCREEN_HEIGHT / 2;
-
-	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	if (cy - SCREEN_HEIGHT / 2 < 0)
+	{
+		cy = 0;
+	}
+	else
+	{
+		cy -= SCREEN_HEIGHT / 2;
+	}
+	CGame::GetInstance()->SetCamPos(cx,cy);
 }
 
 void Render()
