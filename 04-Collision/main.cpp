@@ -9,6 +9,7 @@
 
 #include "Brick.h"
 #include "Simon.h"
+#include "Candle.h"
 
 #define WINDOW_CLASS_NAME L"Window"
 #define MAIN_WINDOW_TITLE L"Game Castlevania"
@@ -19,8 +20,9 @@
 
 #define MAX_FRAME_RATE 120
 
-#define ID_TEX_SIMON 0
-#define ID_TEX_BACKBROUND 10
+#define ID_TEX_SIMON			0
+#define ID_TEX_BACKBROUND		10
+#define ID_TEX_OBJECTS			20
 
 CGame *game;
 CSimon *simon;
@@ -85,6 +87,7 @@ void LoadResources()
 	CTextures * textures = CTextures::GetInstance();
 	textures->Add(ID_TEX_SIMON, L"textures\\simon.png", D3DCOLOR_XRGB(255, 255, 255));
 	textures->Add(ID_TEX_BACKBROUND, L"textures\\background.png", D3DCOLOR_XRGB(255,255,255));
+	textures->Add(ID_TEX_OBJECTS, L"textures\\objects.png", D3DCOLOR_XRGB(34,177,76));
 
 
 	CSprites * sprites = CSprites::GetInstance();
@@ -92,6 +95,7 @@ void LoadResources()
 	
 	LPDIRECT3DTEXTURE9 texSimon = textures->Get(ID_TEX_SIMON);
 	LPDIRECT3DTEXTURE9 texBg = textures->Get(ID_TEX_BACKBROUND);
+	LPDIRECT3DTEXTURE9 texObj = textures->Get(ID_TEX_OBJECTS);
 	
 	// walking left
 	sprites->Add(10001, 123, 40, 140, 71, texSimon);
@@ -119,11 +123,21 @@ void LoadResources()
 	// sit right
 	sprites->Add(10061, 284, 43, 300, 67, texSimon);
 
+	// jump left
+	sprites->Add(10071, 84, 0, 100, 30, texSimon);
+
+	// jump right
+	sprites->Add(10081, 204, 0, 220, 30, texSimon);
+
 	//brick
 	sprites->Add(90000, 0, 153, 9, 160, texBg);
 
-	
 
+	sprites->Add(50001, 17, 30, 25, 47, texObj); 	// small candle 
+	sprites->Add(50002, 31, 30, 39, 47, texObj);
+
+	sprites->Add(50011, 48, 25, 64, 56, texObj); 	// big candle 
+	sprites->Add(50012, 75, 25, 91, 56, texObj);
 
 	LPANIMATION ani;
 
@@ -160,19 +174,15 @@ void LoadResources()
 	ani->Add(10061);
 	animations->Add(105, ani);
 
+	ani = new CAnimation(200);
+	ani->Add(10071);
+	ani->Add(10051);
+	animations->Add(106, ani);
 
-	ani = new CAnimation(100);		// brick
-	ani->Add(90000);
-	animations->Add(901, ani);
-
-
-	for (int i = 0; i < 95; i++)
-	{
-		CBrick *brick = new CBrick();
-		brick->AddAnimation(901);
-		brick->SetPosition(0 + i * 8.0f, 150);
-		objects.push_back(brick);
-	}
+	ani = new CAnimation(200);
+	ani->Add(10081);
+	ani->Add(10061);
+	animations->Add(107, ani);
 
 	simon = new CSimon();
 	simon->AddAnimation(101);	//	walking left
@@ -182,9 +192,61 @@ void LoadResources()
 	simon->AddAnimation(112);	//	idle right
 	simon->AddAnimation(105);	//	sit left
 	simon->AddAnimation(106);	//	sit right
+	simon->AddAnimation(107);	//	jump left
+	simon->AddAnimation(107);	//	jump right
 
 	simon->SetPosition(40.0f, 50.0f);
 	objects.push_back(simon);
+
+	/*===========================================================*/
+
+	ani = new CAnimation(100);		// brick
+	ani->Add(90000);
+	animations->Add(901, ani);
+
+
+	for (int i = 0; i < 20; i++)
+	{
+		CBrick *brick = new CBrick();
+		brick->AddAnimation(901);
+		brick->SetPosition(-9.0f, 150 - i*8.0f);
+		objects.push_back(brick);
+	}
+
+	for (int i = 0; i < 20; i++)
+	{
+		CBrick *brick = new CBrick();
+		brick->AddAnimation(901);
+		brick->SetPosition(760.0f, 150 - i * 8.0f);
+		objects.push_back(brick);
+	}
+
+	for (int i = 0; i < 95; i++)
+	{
+		CBrick *brick = new CBrick();
+		brick->AddAnimation(901);
+		brick->SetPosition(0 + i * 8.0f, 150);
+		objects.push_back(brick);
+	}
+
+	/*===========================================================*/
+
+	ani = new CAnimation(100);		// small candle
+	ani->Add(50001);
+	ani->Add(50002);
+	animations->Add(501, ani);
+
+	ani = new CAnimation(100);		// big candles
+	ani->Add(50011);
+	ani->Add(50012);
+	animations->Add(511, ani);
+
+	CCandle *candle = new CCandle();
+	candle->AddAnimation(501);
+	candle->AddAnimation(511);
+
+	candle->SetPosition(85.0f, 119.0f);
+	objects.push_back(candle);
 }
 
 void Update(DWORD dt)
@@ -222,6 +284,7 @@ void Update(DWORD dt)
 	{
 		cy -= SCREEN_HEIGHT / 2;
 	}
+
 	CGame::GetInstance()->SetCamPos(cx,cy);
 }
 

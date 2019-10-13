@@ -91,6 +91,7 @@ void CSimon::Render()
 			}
 			
 		}
+
 	}
 
 	int alpha = 255;
@@ -114,6 +115,9 @@ void CSimon::SetState(int state)
 	case SIMON_STATE_WALKING_RIGHT:
 		vx = SIMON_WALKING_SPEED;
 		nx = 1;
+		break;
+	case SIMON_STATE_JUMP:
+		vy = -SIMON_JUMP_SPEED_Y;
 		break;
 	case SIMON_STATE_SIT:
 		vx = 0;
