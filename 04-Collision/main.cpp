@@ -1,4 +1,6 @@
 #include <windows.h>
+#include<fstream>
+
 #include <d3d9.h>
 #include <d3dx9.h>
 
@@ -6,6 +8,7 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Textures.h"
+#include "Map.h"
 
 #include "Brick.h"
 #include "Simon.h"
@@ -26,6 +29,7 @@
 
 CGame *game;
 CSimon *simon;
+CCandle *candle;
 
 vector<LPGAMEOBJECT> objects;
 
@@ -96,7 +100,32 @@ void LoadResources()
 	LPDIRECT3DTEXTURE9 texSimon = textures->Get(ID_TEX_SIMON);
 	LPDIRECT3DTEXTURE9 texBg = textures->Get(ID_TEX_BACKBROUND);
 	LPDIRECT3DTEXTURE9 texObj = textures->Get(ID_TEX_OBJECTS);
-	
+
+	ifstream in;
+	in.open("data\\background\\background_sprites.txt", ios::in);
+
+	//in.open("background_sprites.txt", ios::in);
+	if (in.fail())
+	{
+		OutputDebugString(L"[ERROR] Load BackgroundSprites failed ! \n");
+		return;
+	}
+
+	while (!in.eof())
+	{
+		int id, l, t, r, b;
+		in >> id;
+		in >> l;
+		in >> t;
+		in >> r;
+		in >> b;
+		sprites->Add(id, l, t, r, b, texBg);
+	}
+
+	in.close();
+
+
+	/*===========================================================*/
 	// walking left
 	sprites->Add(10001, 123, 40, 140, 71, texSimon);
 	sprites->Add(10002, 83, 40, 100, 71, texSimon);
@@ -213,19 +242,12 @@ void LoadResources()
 		objects.push_back(brick);
 	}
 
-	for (int i = 0; i < 20; i++)
-	{
-		CBrick *brick = new CBrick();
-		brick->AddAnimation(901);
-		brick->SetPosition(760.0f, 150 - i * 8.0f);
-		objects.push_back(brick);
-	}
 
-	for (int i = 0; i < 95; i++)
+	for (int i = 0; i < 90; i++)
 	{
 		CBrick *brick = new CBrick();
 		brick->AddAnimation(901);
-		brick->SetPosition(0 + i * 8.0f, 150);
+		brick->SetPosition(0 + i * 8.0f, 173);
 		objects.push_back(brick);
 	}
 
@@ -241,11 +263,34 @@ void LoadResources()
 	ani->Add(50012);
 	animations->Add(511, ani);
 
-	CCandle *candle = new CCandle();
+	candle = new CCandle();
 	candle->AddAnimation(501);
 	candle->AddAnimation(511);
+	candle->SetPosition(85.0f, 139.0f);
+	objects.push_back(candle);
 
-	candle->SetPosition(85.0f, 119.0f);
+	candle = new CCandle();
+	candle->AddAnimation(501);
+	candle->AddAnimation(511);
+	candle->SetPosition(175.0f, 139.0f);
+	objects.push_back(candle);
+
+	candle = new CCandle();
+	candle->AddAnimation(501);
+	candle->AddAnimation(511);
+	candle->SetPosition(340.0f, 139.0f);
+	objects.push_back(candle);
+
+	candle = new CCandle();
+	candle->AddAnimation(501);
+	candle->AddAnimation(511);
+	candle->SetPosition(480.0f, 139.0f);
+	objects.push_back(candle);
+
+	candle = new CCandle();
+	candle->AddAnimation(501);
+	candle->AddAnimation(511);
+	candle->SetPosition(605.0f, 139.0f);
 	objects.push_back(candle);
 }
 
@@ -271,21 +316,18 @@ void Update(DWORD dt)
 	{
 		cx = 0;
 	}
+	else if (cx + SCREEN_WIDTH / 2 > 32*23)
+	{
+		cx = 32 * 23 - SCREEN_WIDTH;
+	}
 	else
 	{
 		cx -= SCREEN_WIDTH / 2;
 	}
 
-	if (cy - SCREEN_HEIGHT / 2 < 0)
-	{
-		cy = 0;
-	}
-	else
-	{
-		cy -= SCREEN_HEIGHT / 2;
-	}
+	
 
-	CGame::GetInstance()->SetCamPos(cx,cy);
+	CGame::GetInstance()->SetCamPos(cx,0);
 }
 
 void Render()
@@ -301,8 +343,61 @@ void Render()
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
+		CSprites *sprites = CSprites::GetInstance();
+		
+
+		//->Get(15)->Draw(0, 0);
+		//sprites->Get(16)->Draw(0, 32.0f);
+		//sprites->Get(2)->Draw(0, 64.0f);
+		//sprites->Get(3)->Draw(0, 96.0f);
+		//sprites->Get(4)->Draw(0, 128.0f);
+
+		//sprites->Get(5)->Draw(32.0f, 0);
+		//sprites->Get(6)->Draw(32.0f, 32.0f);
+		//sprites->Get(7)->Draw(32.0f, 64.0f);
+		//sprites->Get(8)->Draw(32.0f, 96.0f);
+		//sprites->Get(9)->Draw(32.0f, 128.0f);
+
+		//sprites->Get(5)->Draw(64.0f, 0);
+		//sprites->Get(6)->Draw(64.0f, 32.0f);
+		//sprites->Get(10)->Draw(64.0f, 64.0f);
+		//sprites->Get(11)->Draw(64.0f, 96.0f);
+		//sprites->Get(12)->Draw(64.0f, 128.0f);
+
+		ifstream in;
+		in.open("data\\background\\background_sprites_position.txt", ios::in);
+
+		if (in.fail())
+		{
+			OutputDebugString(L"[ERROR] Load BackgroundSprites position failed ! \n");
+			return;
+		}
+
+		int x = 0, y = 0;
+		while (!in.eof())
+		{
+			int id;
+			in >> id;
+
+			sprites->Get(id)->Draw(x, y + 20.0f);
+
+			y += 32.0f;
+
+			if (y > 128)
+			{
+				x += 32;
+				y = 0;
+			}
+		}
+
+		in.close();
+
 		for (int i = 0; i < objects.size(); i++)
 			objects[i]->Render();
+
+
+
+
 
 		spriteHandler->End();
 		d3ddv->EndScene();

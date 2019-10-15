@@ -70,6 +70,8 @@ public:
 	LPD3DXSPRITE GetSpriteHandler() { return this->spriteHandler; }
 
 	void SetCamPos(float x, float y) { cam_x = x; cam_y = y; }
+	float getCamPos_x() { return cam_x; }
+	float getCamPos_y() { return cam_y; }
 
 	static CGame * GetInstance();
 
