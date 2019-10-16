@@ -14,20 +14,26 @@
 #define SIMON_STATE_DIE				400
 #define SIMON_STATE_SIT				500
 
-#define SIMON_ANI_WALKING_LEFT		0
-#define SIMON_ANI_WALKING_RIGHT		1
-#define SIMON_ANI_DIE				2
-#define SIMON_ANI_IDLE_LEFT			3
-#define SIMON_ANI_IDLE_RIGHT		4
-#define SIMON_ANI_SIT_LEFT			5
-#define SIMON_ANI_SIT_RIGHT			6
-#define SIMON_ANI_JUMP_LEFT			7
-#define SIMON_ANI_JUMP_RIGHT		8
+#define SIMON_ANI_IDLE_LEFT			0
+#define SIMON_ANI_IDLE_RIGHT		1
+#define SIMON_ANI_BACK				2
+#define SIMON_ANI_INJURE_LEFT		3
+#define SIMON_ANI_INJURE_RIGHT		4
+#define SIMON_ANI_DIE_LEFT			5
+#define SIMON_ANI_DIE_RIGHT			6
+#define SIMON_ANI_WALKING_LEFT		7
+#define SIMON_ANI_WALKING_RIGHT		8
+#define SIMON_ANI_SIT_LEFT			9
+#define SIMON_ANI_SIT_RIGHT			10
+#define SIMON_ANI_ATTACK_LEFT		11
+#define SIMON_ANI_ATTACK_RIGHT		12
+#define SIMON_ANI_PICK_LEFT			13
+#define SIMON_ANI_PICK_RIGHT		14
 
 #define SIMON_BBOX_WIDTH  17
 #define SIMON_BBOX_HEIGHT 31
 
-#define SIMON_UNTOUCHABLE_TIME		4000
+#define SIMON_UNTOUCHABLE_TIME		3000
 
 class CSimon : public CGameObject
 {
@@ -35,6 +41,7 @@ class CSimon : public CGameObject
 	int untouchable;
 	DWORD untouchable_start;
 
+	bool isJump;
 public:
 	CSimon() : CGameObject()
 	{

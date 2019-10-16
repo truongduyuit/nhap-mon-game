@@ -38,6 +38,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
+		if (ny < 0)
+		{
+			isJump = false;
+		}
+
 		// block 
 		x += min_tx * dx + nx * 0.4f;		
 		y += min_ty * dy + ny * 0.4f;
@@ -58,7 +63,7 @@ void CSimon::Render()
 
 	if (state == SIMON_STATE_DIE)
 	{
-		ani = SIMON_ANI_DIE;
+		ani = SIMON_ANI_DIE_RIGHT;
 	}
 	else
 	{
@@ -68,18 +73,35 @@ void CSimon::Render()
 		}
 		else if (vx > 0)
 		{
-			if (nx < 0)
+			if (isJump)
 			{
-				ani = SIMON_ANI_WALKING_LEFT;
+				if (nx < 0)
+				{
+					ani = SIMON_ANI_SIT_LEFT;
+				}
+				else if (nx > 0)
+				{
+					ani = SIMON_ANI_SIT_RIGHT;
+				}
+				else
+				{
+					ani = SIMON_ANI_SIT_RIGHT;
+				}
 			}
-			else if (nx > 0)
+			else
 			{
-				ani = SIMON_ANI_WALKING_RIGHT;
+				if (nx < 0)
+				{
+					ani = SIMON_ANI_WALKING_LEFT;
+				}
+				else if (nx > 0)
+				{
+					ani = SIMON_ANI_WALKING_RIGHT;
+				}
 			}
 		}
 		else
-		{
-			
+		{	
 			if (this->state == SIMON_STATE_SIT)
 			{
 				if (nx < 0) ani = SIMON_ANI_SIT_LEFT;
@@ -117,7 +139,11 @@ void CSimon::SetState(int state)
 		nx = 1;
 		break;
 	case SIMON_STATE_JUMP:
-		vy = -SIMON_JUMP_SPEED_Y;
+		if(!isJump)
+		{
+			vy = -SIMON_JUMP_SPEED_Y;
+			isJump = true;
+		}
 		break;
 	case SIMON_STATE_SIT:
 		vx = 0;
