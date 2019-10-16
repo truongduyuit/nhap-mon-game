@@ -18,8 +18,8 @@
 #define MAIN_WINDOW_TITLE L"Game Castlevania"
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 200)
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 240
+#define SCREEN_WIDTH 420
+#define SCREEN_HEIGHT 300
 
 #define MAX_FRAME_RATE 120
 
@@ -104,7 +104,6 @@ void LoadResources()
 	ifstream in;
 	in.open("data\\background\\background_sprites.txt", ios::in);
 
-	//in.open("background_sprites.txt", ios::in);
 	if (in.fail())
 	{
 		OutputDebugString(L"[ERROR] Load BackgroundSprites failed ! \n");
@@ -126,37 +125,59 @@ void LoadResources()
 
 
 	/*===========================================================*/
-	// walking left
-	sprites->Add(10001, 123, 40, 140, 71, texSimon);
-	sprites->Add(10002, 83, 40, 100, 71, texSimon);
-	sprites->Add(10003, 43, 40, 60, 71, texSimon);
+	in.open("data\\simon\\simon_sprites.txt", ios::in);
 
-	// walking right
-	sprites->Add(10011, 163, 40, 180, 71, texSimon);
-	sprites->Add(10012, 203, 40, 220, 71, texSimon);
-	sprites->Add(10013, 243, 40, 260, 71, texSimon);
+	if (in.fail())
+	{
+		OutputDebugString(L"[ERROR] Load SimonSprites failed ! \n");
+		return;
+	}
 
-	// die
-	sprites->Add(10098, 83, 0, 100, 31, texSimon);
-	sprites->Add(10099, 36, 0, 68, 31, texSimon);
+	while (!in.eof())
+	{
+		int id, l, t, r, b;
+		in >> id;
+		in >> l;
+		in >> t;
+		in >> r;
+		in >> b;
+		sprites->Add(id, l, t, r, b, texSimon);
+	}
 
-	// idle left
-	sprites->Add(10031, 123, 40, 140, 71, texSimon);
+	in.close();
 
-	// idle right
-	sprites->Add(10032, 163, 40, 180, 71, texSimon);
 
-	// sit left
-	sprites->Add(10051, 4, 43, 20, 67, texSimon);
+	in.open("data\\simon\\simon_anis.txt", ios::in);
 
-	// sit right
-	sprites->Add(10061, 284, 43, 300, 67, texSimon);
+	if (in.fail())
+	{
+		OutputDebugString(L"[ERROR] Load SimonAnis failed ! \n");
+		return;
+	}
 
-	// jump left
-	sprites->Add(10071, 84, 0, 100, 30, texSimon);
+	simon = new CSimon();
+	LPANIMATION ani;
+	while (!in.eof())
+	{
+		int time, n, ani_id;
+		in >> time;
+		in >> n;
 
-	// jump right
-	sprites->Add(10081, 204, 0, 220, 30, texSimon);
+		ani = new CAnimation(time);
+		for (int i = 0; i < n; i++)
+		{
+			int id;
+			in >> id;
+			ani->Add(id);
+		}
+		
+		in >> ani_id;
+		animations->Add(ani_id, ani);
+		simon->AddAnimation(ani_id);
+	}
+
+	in.close();
+
 
 	//brick
 	sprites->Add(90000, 0, 153, 9, 160, texBg);
@@ -168,61 +189,6 @@ void LoadResources()
 	sprites->Add(50011, 48, 25, 64, 56, texObj); 	// big candle 
 	sprites->Add(50012, 75, 25, 91, 56, texObj);
 
-	LPANIMATION ani;
-
-	ani = new CAnimation(100);
-	ani->Add(10001);
-	ani->Add(10002);
-	ani->Add(10003);
-	animations->Add(101, ani);
-
-	ani = new CAnimation(100);
-	ani->Add(10011);
-	ani->Add(10012);
-	ani->Add(10013);
-	animations->Add(102, ani);
-
-	ani = new CAnimation(200);
-	ani->Add(10098);
-	ani->Add(10099);
-	animations->Add(99, ani);
-
-	ani = new CAnimation(300);
-	ani->Add(10031);
-	animations->Add(111, ani);
-
-	ani = new CAnimation(300);
-	ani->Add(10032);
-	animations->Add(112, ani);
-
-	ani = new CAnimation(300);
-	ani->Add(10051);
-	animations->Add(105, ani);
-
-	ani = new CAnimation(300);
-	ani->Add(10061);
-	animations->Add(105, ani);
-
-	ani = new CAnimation(200);
-	ani->Add(10071);
-	ani->Add(10051);
-	animations->Add(106, ani);
-
-	ani = new CAnimation(200);
-	ani->Add(10081);
-	ani->Add(10061);
-	animations->Add(107, ani);
-
-	simon = new CSimon();
-	simon->AddAnimation(101);	//	walking left
-	simon->AddAnimation(102);	//	walking right
-	simon->AddAnimation(99);	//	die
-	simon->AddAnimation(111);	//	idle left
-	simon->AddAnimation(112);	//	idle right
-	simon->AddAnimation(105);	//	sit left
-	simon->AddAnimation(106);	//	sit right
-	simon->AddAnimation(107);	//	jump left
-	simon->AddAnimation(107);	//	jump right
 
 	simon->SetPosition(40.0f, 50.0f);
 	objects.push_back(simon);
@@ -344,26 +310,7 @@ void Render()
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
 		CSprites *sprites = CSprites::GetInstance();
-		
-
-		//->Get(15)->Draw(0, 0);
-		//sprites->Get(16)->Draw(0, 32.0f);
-		//sprites->Get(2)->Draw(0, 64.0f);
-		//sprites->Get(3)->Draw(0, 96.0f);
-		//sprites->Get(4)->Draw(0, 128.0f);
-
-		//sprites->Get(5)->Draw(32.0f, 0);
-		//sprites->Get(6)->Draw(32.0f, 32.0f);
-		//sprites->Get(7)->Draw(32.0f, 64.0f);
-		//sprites->Get(8)->Draw(32.0f, 96.0f);
-		//sprites->Get(9)->Draw(32.0f, 128.0f);
-
-		//sprites->Get(5)->Draw(64.0f, 0);
-		//sprites->Get(6)->Draw(64.0f, 32.0f);
-		//sprites->Get(10)->Draw(64.0f, 64.0f);
-		//sprites->Get(11)->Draw(64.0f, 96.0f);
-		//sprites->Get(12)->Draw(64.0f, 128.0f);
-
+	
 		ifstream in;
 		in.open("data\\background\\background_sprites_position.txt", ios::in);
 
@@ -394,10 +341,6 @@ void Render()
 
 		for (int i = 0; i < objects.size(); i++)
 			objects[i]->Render();
-
-
-
-
 
 		spriteHandler->End();
 		d3ddv->EndScene();
