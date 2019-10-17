@@ -50,7 +50,10 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_SPACE:
 		simon->SetState(SIMON_STATE_JUMP);
 		break;
-	case DIK_A:
+	case DIK_D:
+		simon->SetState(SIMON_STATE_ATTACK);
+		break;
+	case DIK_DOWN:
 		simon->SetState(SIMON_STATE_SIT);
 		break;
 	}
@@ -69,6 +72,10 @@ void CSampleKeyHander::KeyState(BYTE *states)
 		simon->SetState(SIMON_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
+	else if (game->IsKeyDown(DIK_D))
+		simon->SetState(SIMON_STATE_ATTACK);
+	else if (game->IsKeyDown(DIK_DOWN))
+		simon->SetState(SIMON_STATE_SIT);
 	else
 		simon->SetState(SIMON_STATE_IDLE);
 }
@@ -100,6 +107,61 @@ void LoadResources()
 	LPDIRECT3DTEXTURE9 texSimon = textures->Get(ID_TEX_SIMON);
 	LPDIRECT3DTEXTURE9 texBg = textures->Get(ID_TEX_BACKBROUND);
 	LPDIRECT3DTEXTURE9 texObj = textures->Get(ID_TEX_OBJECTS);
+
+	/*===========================================================*/
+		//brick
+	sprites->Add(90000, 0, 153, 9, 160, texBg);
+
+
+	sprites->Add(50001, 17, 30, 25, 47, texObj); 	// small candle 
+	sprites->Add(50002, 31, 30, 39, 47, texObj);
+
+	sprites->Add(50011, 48, 25, 64, 56, texObj); 	// big candle 
+	sprites->Add(50012, 75, 25, 91, 56, texObj);
+
+
+	LPANIMATION ani;
+	ani = new CAnimation(100);		// small candle
+	ani->Add(50001);
+	ani->Add(50002);
+	animations->Add(501, ani);
+
+	ani = new CAnimation(100);		// big candles
+	ani->Add(50011);
+	ani->Add(50012);
+	animations->Add(511, ani);
+
+	candle = new CCandle();
+	candle->AddAnimation(501);
+	candle->AddAnimation(511);
+	candle->SetPosition(85.0f, 139.0f);
+	objects.push_back(candle);
+
+	candle = new CCandle();
+	candle->AddAnimation(501);
+	candle->AddAnimation(511);
+	candle->SetPosition(175.0f, 139.0f);
+	objects.push_back(candle);
+
+	candle = new CCandle();
+	candle->AddAnimation(501);
+	candle->AddAnimation(511);
+	candle->SetPosition(340.0f, 139.0f);
+	objects.push_back(candle);
+
+	candle = new CCandle();
+	candle->AddAnimation(501);
+	candle->AddAnimation(511);
+	candle->SetPosition(480.0f, 139.0f);
+	objects.push_back(candle);
+
+	candle = new CCandle();
+	candle->AddAnimation(501);
+	candle->AddAnimation(511);
+	candle->SetPosition(605.0f, 139.0f);
+	objects.push_back(candle);
+
+	/*===========================================================*/
 
 	ifstream in;
 	in.open("data\\background\\background_sprites.txt", ios::in);
@@ -156,7 +218,7 @@ void LoadResources()
 	}
 
 	simon = new CSimon();
-	LPANIMATION ani;
+
 	while (!in.eof())
 	{
 		int time, n, ani_id;
@@ -177,17 +239,6 @@ void LoadResources()
 	}
 
 	in.close();
-
-
-	//brick
-	sprites->Add(90000, 0, 153, 9, 160, texBg);
-
-
-	sprites->Add(50001, 17, 30, 25, 47, texObj); 	// small candle 
-	sprites->Add(50002, 31, 30, 39, 47, texObj);
-
-	sprites->Add(50011, 48, 25, 64, 56, texObj); 	// big candle 
-	sprites->Add(50012, 75, 25, 91, 56, texObj);
 
 
 	simon->SetPosition(40.0f, 50.0f);
@@ -217,47 +268,6 @@ void LoadResources()
 		objects.push_back(brick);
 	}
 
-	/*===========================================================*/
-
-	ani = new CAnimation(100);		// small candle
-	ani->Add(50001);
-	ani->Add(50002);
-	animations->Add(501, ani);
-
-	ani = new CAnimation(100);		// big candles
-	ani->Add(50011);
-	ani->Add(50012);
-	animations->Add(511, ani);
-
-	candle = new CCandle();
-	candle->AddAnimation(501);
-	candle->AddAnimation(511);
-	candle->SetPosition(85.0f, 139.0f);
-	objects.push_back(candle);
-
-	candle = new CCandle();
-	candle->AddAnimation(501);
-	candle->AddAnimation(511);
-	candle->SetPosition(175.0f, 139.0f);
-	objects.push_back(candle);
-
-	candle = new CCandle();
-	candle->AddAnimation(501);
-	candle->AddAnimation(511);
-	candle->SetPosition(340.0f, 139.0f);
-	objects.push_back(candle);
-
-	candle = new CCandle();
-	candle->AddAnimation(501);
-	candle->AddAnimation(511);
-	candle->SetPosition(480.0f, 139.0f);
-	objects.push_back(candle);
-
-	candle = new CCandle();
-	candle->AddAnimation(501);
-	candle->AddAnimation(511);
-	candle->SetPosition(605.0f, 139.0f);
-	objects.push_back(candle);
 }
 
 void Update(DWORD dt)
