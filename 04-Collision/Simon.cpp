@@ -3,7 +3,9 @@
 
 
 #include "Simon.h"
+#include "Candle.h"
 #include "Game.h"
+#include "Brick.h"
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -49,6 +51,23 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
+
+		// Collision logic with items
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
+
+			if (dynamic_cast<CCandle *>(e->obj)) 
+			{
+				x += dx;
+				
+
+				if (e->ny < 0)
+				{
+					y += dy;
+				}
+			}
+		}
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++)
@@ -60,6 +79,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void CSimon::Render()
 {
 	int ani;
+	
 
 	if (state == SIMON_STATE_DIE)
 	{
@@ -67,54 +87,65 @@ void CSimon::Render()
 	}
 	else
 	{
-		if (vx < 0)
+		DWORD end_time = GetTickCount();
+		if (end_time > action_time)
 		{
-			ani = SIMON_ANI_WALKING_LEFT;
+			isAttack = false;
+			action_time = 0;
 		}
-		else if (vx > 0)
+
+		if (nx > 0)
 		{
-			if (isJump)
+			if (isJump && !isAttack)
 			{
-				if (nx < 0)
-				{
-					ani = SIMON_ANI_SIT_LEFT;
-				}
-				else if (nx > 0)
-				{
-					ani = SIMON_ANI_SIT_RIGHT;
-				}
-				else
-				{
-					ani = SIMON_ANI_SIT_RIGHT;
-				}
+				ani = SIMON_ANI_SIT_RIGHT;
+			}
+			else if (isAttack)
+			{
+				ani = SIMON_ANI_ATTACK_RIGHT;
+
+			}
+			else if (state == SIMON_STATE_WALKING_RIGHT && !isJump && !isAttack)
+			{
+				ani = SIMON_ANI_WALKING_RIGHT;
+			}
+			else if (state == SIMON_STATE_SIT)
+			{
+				ani = SIMON_ANI_SIT_RIGHT;
 			}
 			else
 			{
-				if (nx < 0)
-				{
-					ani = SIMON_ANI_WALKING_LEFT;
-				}
-				else if (nx > 0)
-				{
-					ani = SIMON_ANI_WALKING_RIGHT;
-				}
+				ani = SIMON_ANI_IDLE_RIGHT;
 			}
 		}
 		else
-		{	
-			if (this->state == SIMON_STATE_SIT)
+		{
+			if (isJump && !isAttack)
 			{
-				if (nx < 0) ani = SIMON_ANI_SIT_LEFT;
-				else ani = SIMON_ANI_SIT_RIGHT;
+				ani = SIMON_ANI_SIT_LEFT;
 			}
-			else {
-				if (nx < 0) ani = SIMON_ANI_IDLE_LEFT;
-				else ani = SIMON_ANI_IDLE_RIGHT;
+			else if (isAttack)
+			{
+				ani = SIMON_ANI_ATTACK_LEFT;
 			}
-			
+			else if (state == SIMON_STATE_WALKING_LEFT && !isJump && !isAttack)
+			{
+				ani = SIMON_ANI_WALKING_LEFT;
+			}
+			else if (state == SIMON_STATE_SIT)
+			{
+				ani = SIMON_ANI_SIT_LEFT;
+			}
+			else
+			{
+				ani = SIMON_ANI_IDLE_LEFT;
+			}
 		}
+		
 
 	}
+
+	//ani = 9;
 
 	int alpha = 255;
 	if (untouchable) alpha = 128;
@@ -131,11 +162,11 @@ void CSimon::SetState(int state)
 	switch (state)
 	{
 	case SIMON_STATE_WALKING_LEFT:
-		vx = -SIMON_WALKING_SPEED;
+		if (!isAttack) vx = -SIMON_WALKING_SPEED;
 		nx = -1;
 		break;
 	case SIMON_STATE_WALKING_RIGHT:
-		vx = SIMON_WALKING_SPEED;
+		if (!isAttack) vx = SIMON_WALKING_SPEED;
 		nx = 1;
 		break;
 	case SIMON_STATE_JUMP:
@@ -143,6 +174,14 @@ void CSimon::SetState(int state)
 		{
 			vy = -SIMON_JUMP_SPEED_Y;
 			isJump = true;
+		}
+		break;
+	case SIMON_STATE_ATTACK:
+		if (!isAttack)
+		{
+			isAttack = true;
+			vx = 0;
+			action_time = 300 + GetTickCount();
 		}
 		break;
 	case SIMON_STATE_SIT:

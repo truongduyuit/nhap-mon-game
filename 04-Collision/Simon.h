@@ -2,8 +2,8 @@
 #include "GameObject.h"
 
 #define SIMON_WALKING_SPEED			0.1f
-#define SIMON_GRAVITY				0.002f
-#define SIMON_JUMP_SPEED_Y			0.4f
+#define SIMON_GRAVITY				0.001f
+#define SIMON_JUMP_SPEED_Y			0.3f
 
 #define SIMON_HP_START				100
 
@@ -13,6 +13,7 @@
 #define SIMON_STATE_JUMP			300
 #define SIMON_STATE_DIE				400
 #define SIMON_STATE_SIT				500
+#define SIMON_STATE_ATTACK			600
 
 #define SIMON_ANI_IDLE_LEFT			0
 #define SIMON_ANI_IDLE_RIGHT		1
@@ -42,10 +43,18 @@ class CSimon : public CGameObject
 	DWORD untouchable_start;
 
 	bool isJump;
+	bool isAttack;
+	DWORD action_time;
 public:
 	CSimon() : CGameObject()
 	{
 		hp = SIMON_HP_START;
+		state = SIMON_STATE_WALKING_RIGHT;
+		nx = 1;
+
+		isJump = false;
+		isAttack = false;
+
 		untouchable = 0;
 	}
 
