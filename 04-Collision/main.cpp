@@ -12,7 +12,8 @@
 
 #include "Brick.h"
 #include "Simon.h"
-#include "Candle.h"
+#include "SObject.h"
+#include "Weapon.h"
 
 #define WINDOW_CLASS_NAME L"Window"
 #define MAIN_WINDOW_TITLE L"Game Castlevania"
@@ -29,7 +30,6 @@
 
 CGame *game;
 CSimon *simon;
-CCandle *candle;
 
 vector<LPGAMEOBJECT> objects;
 
@@ -96,9 +96,24 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 void LoadResources()
 {
 	CTextures * textures = CTextures::GetInstance();
+
 	textures->Add(ID_TEX_SIMON, L"textures\\simon.png", D3DCOLOR_XRGB(255, 255, 255));
 	textures->Add(ID_TEX_BACKBROUND, L"textures\\background.png", D3DCOLOR_XRGB(255,255,255));
 	textures->Add(ID_TEX_OBJECTS, L"textures\\objects.png", D3DCOLOR_XRGB(34,177,76));
+	textures->Add(105, L"textures\\sprite\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
+
+	textures->Add(100, L"textures\\sprite\\ground\\0.png", D3DCOLOR_XRGB(255, 0, 255));
+	LPDIRECT3DTEXTURE9 texBigCandle = textures->Get(100);
+
+	textures->Add(101, L"textures\\sprite\\ground\\1.png", D3DCOLOR_XRGB(255, 0, 255));
+	LPDIRECT3DTEXTURE9 texSmallCandle = textures->Get(101);
+
+	textures->Add(102, L"textures\\weapon.png", D3DCOLOR_XRGB(34, 177, 76));
+	LPDIRECT3DTEXTURE9 texWeapon = textures->Get(102);
+
+	textures->Add(103, L"textures\\weapon2.png", D3DCOLOR_XRGB(255, 0, 255));
+	LPDIRECT3DTEXTURE9 texWeapon2 = textures->Get(103);
+
 
 
 	CSprites * sprites = CSprites::GetInstance();
@@ -112,54 +127,67 @@ void LoadResources()
 		//brick
 	sprites->Add(90000, 0, 153, 9, 160, texBg);
 
+	sprites->Add(91001, 0, 0, 16, 32, texBigCandle);
+	sprites->Add(91002, 16, 0, 32, 32, texBigCandle);
 
-	sprites->Add(50001, 17, 30, 25, 47, texObj); 	// small candle 
-	sprites->Add(50002, 31, 30, 39, 47, texObj);
+	sprites->Add(91011, 0, 0, 8, 16, texSmallCandle);
+	sprites->Add(91012, 8, 0, 16, 16, texSmallCandle);
 
-	sprites->Add(50011, 48, 25, 64, 56, texObj); 	// big candle 
-	sprites->Add(50012, 75, 25, 91, 56, texObj);
 
+	sprites->Add(92011, 0, 69, 20, 116, texWeapon);
+	sprites->Add(92012, 42, 62, 73, 100, texWeapon);
+	sprites->Add(92013, 95, 72, 141, 85, texWeapon);
+	sprites->Add(92014, 95, 133, 173, 146, texWeapon);
+	
+	//sprites->Add(92021, 237, 9, 292, 34, texWeapon2);
+	/*sprites->Add(92022, 164, 7, 219, 25, texWeapon2);*/
+	sprites->Add(92022, 0, 8, 24, 16, texWeapon2);
+	sprites->Add(92023, 120, 8, 144, 16, texWeapon2);
 
 	LPANIMATION ani;
-	ani = new CAnimation(100);		// small candle
-	ani->Add(50001);
-	ani->Add(50002);
-	animations->Add(501, ani);
 
-	ani = new CAnimation(100);		// big candles
-	ani->Add(50011);
-	ani->Add(50012);
-	animations->Add(511, ani);
+	ani = new CAnimation(100);
+	ani->Add(91001);
+	ani->Add(91002);
+	animations->Add(911, ani);
 
-	candle = new CCandle();
-	candle->AddAnimation(501);
-	candle->AddAnimation(511);
-	candle->SetPosition(85.0f, 139.0f);
-	objects.push_back(candle);
+	ani = new CAnimation(100);
+	ani->Add(91011);
+	ani->Add(91012);
+	animations->Add(921, ani);
 
-	candle = new CCandle();
-	candle->AddAnimation(501);
-	candle->AddAnimation(511);
-	candle->SetPosition(175.0f, 139.0f);
-	objects.push_back(candle);
+	
+	for (int i = 0; i < 5; i++)
+	{
+		CSObject *sobject = new CSObject();
+		sobject->AddAnimation(921);
+		sobject->AddAnimation(911);
+		sobject->SetPosition(100 + i * 100, 141);
+		sobject->SetState(1);
 
-	candle = new CCandle();
-	candle->AddAnimation(501);
-	candle->AddAnimation(511);
-	candle->SetPosition(340.0f, 139.0f);
-	objects.push_back(candle);
+		objects.push_back(sobject);
+	}
 
-	candle = new CCandle();
-	candle->AddAnimation(501);
-	candle->AddAnimation(511);
-	candle->SetPosition(480.0f, 139.0f);
-	objects.push_back(candle);
 
-	candle = new CCandle();
-	candle->AddAnimation(501);
-	candle->AddAnimation(511);
-	candle->SetPosition(605.0f, 139.0f);
-	objects.push_back(candle);
+
+	//ani = new CAnimation(100);
+	//ani->Add(92011);
+	//ani->Add(92012);
+	//ani->Add(92013);
+	//ani->Add(92014);
+	//animations->Add(951, ani);
+
+
+	ani = new CAnimation(200);
+	ani->Add(92022);
+	ani->Add(92022);
+	ani->Add(92023);
+	animations->Add(951, ani);
+
+	CWeapon* weapon = CWeapon::GetInstance();
+	weapon->AddAnimation(951);
+	weapon->SetPosition(-100, 141);
+	objects.push_back(weapon);
 
 	/*===========================================================*/
 
@@ -250,16 +278,6 @@ void LoadResources()
 	ani->Add(90000);
 	animations->Add(901, ani);
 
-
-	for (int i = 0; i < 20; i++)
-	{
-		CBrick *brick = new CBrick();
-		brick->AddAnimation(901);
-		brick->SetPosition(-9.0f, 150 - i*8.0f);
-		objects.push_back(brick);
-	}
-
-
 	for (int i = 0; i < 90; i++)
 	{
 		CBrick *brick = new CBrick();
@@ -268,14 +286,19 @@ void LoadResources()
 		objects.push_back(brick);
 	}
 
+
 }
 
 void Update(DWORD dt)
 {
 	vector<LPGAMEOBJECT> coObjects;
-	for (int i = 1; i < objects.size(); i++)
+	vector<LPGAMEOBJECT> coObjectsFull;
+	for (int i = 0; i < objects.size(); i++)
 	{
-		coObjects.push_back(objects[i]);
+		if (objects[i]->GetState() != 1)
+		{
+			coObjects.push_back(objects[i]);
+		}
 	}
 
 	for (int i = 0; i < objects.size(); i++)

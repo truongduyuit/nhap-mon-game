@@ -3,15 +3,17 @@
 
 
 #include "Simon.h"
-#include "Candle.h"
 #include "Game.h"
 #include "Brick.h"
+#include "SObject.h"
+#include "Weapon.h"
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	CGameObject::Update(dt);
 
 	vy += SIMON_GRAVITY * dt;
+
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -21,6 +23,16 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (state != SIMON_STATE_DIE)
 	{
 		CalcPotentialCollisions(coObjects, coEvents);
+	}
+
+	CWeapon* weapon = CWeapon::GetInstance();
+	if (isAttack)
+	{
+		weapon->SetPosition(x+SIMON_BBOX_WIDTH-2, y+6);
+	}
+	else
+	{
+		weapon->SetPosition(-100, 100);
 	}
 
 	if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
@@ -46,28 +58,22 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 
 		// block 
-		x += min_tx * dx + nx * 0.4f;		
-		y += min_ty * dy + ny * 0.4f;
-
-		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
-
-		// Collision logic with items
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (dynamic_cast<CCandle *>(e->obj)) 
+			if (dynamic_cast<CBrick *>(e->obj))
 			{
-				x += dx;
-				
-
-				if (e->ny < 0)
-				{
-					y += dy;
-				}
+				x += min_tx * dx + nx * 0.4f;
+				y += min_ty * dy + ny * 0.4f;
 			}
+			
 		}
+
+		if (nx != 0) vx = 0;
+		if (ny != 0) vy = 0;
+
+		
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++)
@@ -103,7 +109,6 @@ void CSimon::Render()
 			else if (isAttack)
 			{
 				ani = SIMON_ANI_ATTACK_RIGHT;
-
 			}
 			else if (state == SIMON_STATE_WALKING_RIGHT && !isJump && !isAttack)
 			{
