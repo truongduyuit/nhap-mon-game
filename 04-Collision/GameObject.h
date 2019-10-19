@@ -46,6 +46,7 @@ public:
 	int nx;	 
 
 	int state;
+	int nextState;
 
 	DWORD dt; 
 
@@ -58,6 +59,7 @@ public:
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
 
 	int GetState() { return this->state; }
+	int GetNextState() { return this->nextState; }
 
 	void RenderBoundingBox();
 
@@ -73,13 +75,16 @@ public:
 
 	void AddAnimation(int aniId);
 
+	bool isOverlapping(CGameObject* other);
+	
+
 	CGameObject();
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) = 0;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void Render() = 0;
 	virtual void SetState(int state) { this->state = state; }
-
+	virtual void SetNextState(int nextState) { this->nextState = nextState; }
 
 	~CGameObject();
 };

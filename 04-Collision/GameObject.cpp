@@ -137,6 +137,28 @@ void CGameObject::AddAnimation(int aniId)
 	animations.push_back(ani);
 }
 
+int XetDau(float pos)
+{
+	if (pos >= 0)
+		return 1;
+	else
+		return -1;
+}
+
+bool CGameObject::isOverlapping(CGameObject* other)
+{
+	float l, t, r, b;
+	float l2, t2, r2, b2;
+	other->GetBoundingBox(l2, t2, r2, b2);
+
+	
+	this->GetBoundingBox(l, t, r ,b);
+	
+	if (XetDau(l2 - r) != XetDau(r2-l) && XetDau(t2 - b) != XetDau(b2 - t))
+		return true;
+	else
+		return false;
+}
 
 CGameObject::~CGameObject()
 {

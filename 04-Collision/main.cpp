@@ -108,13 +108,20 @@ void LoadResources()
 	textures->Add(101, L"textures\\sprite\\ground\\1.png", D3DCOLOR_XRGB(255, 0, 255));
 	LPDIRECT3DTEXTURE9 texSmallCandle = textures->Get(101);
 
-	textures->Add(102, L"textures\\weapon.png", D3DCOLOR_XRGB(34, 177, 76));
+	textures->Add(102, L"textures\\weapon.png", D3DCOLOR_XRGB(255,255,255));
 	LPDIRECT3DTEXTURE9 texWeapon = textures->Get(102);
 
 	textures->Add(103, L"textures\\weapon2.png", D3DCOLOR_XRGB(255, 0, 255));
 	LPDIRECT3DTEXTURE9 texWeapon2 = textures->Get(103);
 
+	textures->Add(111, L"textures\\sprite\\item\\0.png", D3DCOLOR_XRGB(255, 0, 255));
+	LPDIRECT3DTEXTURE9 texHeart = textures->Get(111);
 
+	textures->Add(112, L"textures\\sprite\\item\\3.png", D3DCOLOR_XRGB(255, 0, 255));
+	LPDIRECT3DTEXTURE9 texCane = textures->Get(112);
+
+	textures->Add(113, L"textures\\sprite\\item\\4.png", D3DCOLOR_XRGB(255, 0, 255));
+	LPDIRECT3DTEXTURE9 texKnife = textures->Get(113);
 
 	CSprites * sprites = CSprites::GetInstance();
 	CAnimations * animations = CAnimations::GetInstance();
@@ -133,16 +140,38 @@ void LoadResources()
 	sprites->Add(91011, 0, 0, 8, 16, texSmallCandle);
 	sprites->Add(91012, 8, 0, 16, 16, texSmallCandle);
 
+	sprites->Add(91021, 0, 0, 8, 8, texHeart);
+	sprites->Add(91031, 0, 0, 16, 16, texCane);
+	sprites->Add(91041, 0, 0, 16, 9, texKnife);
 
-	sprites->Add(92011, 0, 69, 20, 116, texWeapon);
-	sprites->Add(92012, 42, 62, 73, 100, texWeapon);
-	sprites->Add(92013, 95, 72, 141, 85, texWeapon);
-	sprites->Add(92014, 95, 133, 173, 146, texWeapon);
+
+	sprites->Add(92021, 0, 4, 9, 27, texWeapon);
+	sprites->Add(92022, 21, 0, 37, 20, texWeapon);
+	sprites->Add(92023, 47, 3, 70, 11, texWeapon);
 	
-	//sprites->Add(92021, 237, 9, 292, 34, texWeapon2);
-	/*sprites->Add(92022, 164, 7, 219, 25, texWeapon2);*/
-	sprites->Add(92022, 0, 8, 24, 16, texWeapon2);
-	sprites->Add(92023, 120, 8, 144, 16, texWeapon2);
+	sprites->Add(92031, 0, 33, 9, 58, texWeapon);
+	sprites->Add(92032, 21, 30, 37, 50, texWeapon);
+	sprites->Add(92033, 47, 36, 70, 42, texWeapon);
+
+	sprites->Add(92041, 0, 63, 9, 88, texWeapon);
+	sprites->Add(92042, 0, 93, 9, 118, texWeapon);
+	sprites->Add(92043, 0, 123, 9, 148, texWeapon);
+	sprites->Add(92044, 0, 153, 9, 178, texWeapon);
+	sprites->Add(92045, 21, 60, 37, 80, texWeapon);
+	sprites->Add(92046, 21, 90, 37, 110, texWeapon);
+	sprites->Add(92047, 21, 120, 37, 140, texWeapon);
+	sprites->Add(92048, 21, 150, 37, 170, texWeapon);
+	sprites->Add(92049, 47, 66, 87, 72, texWeapon);
+	sprites->Add(92050, 47, 96, 87, 102, texWeapon);
+	sprites->Add(92051, 47, 126, 87, 132, texWeapon);
+	sprites->Add(92052, 47, 1566, 87, 162, texWeapon);
+
+
+	//sprites->Add(92021, 244, 9, 252, 34, texWeapon2);
+	//sprites->Add(92022, 164, 7, 180, 25, texWeapon2);
+	//sprites->Add(92023, 120, 8, 144, 16, texWeapon2);
+
+
 
 	LPANIMATION ani;
 
@@ -156,37 +185,67 @@ void LoadResources()
 	ani->Add(91012);
 	animations->Add(921, ani);
 
-	
-	for (int i = 0; i < 5; i++)
+	ani = new CAnimation(100);
+	ani->Add(91021);
+	animations->Add(931, ani);
+
+	ani = new CAnimation(100);
+	ani->Add(91031);
+	animations->Add(932, ani);
+
+	ani = new CAnimation(100);
+	ani->Add(91041);
+	animations->Add(933, ani);
+
+	for (int i = 0; i < 3; i++)
 	{
 		CSObject *sobject = new CSObject();
 		sobject->AddAnimation(921);
 		sobject->AddAnimation(911);
-		sobject->SetPosition(100 + i * 100, 141);
+		sobject->AddAnimation(931);
+		sobject->AddAnimation(932);
+		sobject->AddAnimation(933);
+		sobject->SetPosition(100 + i * 100, 135);
+
 		sobject->SetState(1);
+		sobject->SetNextState(i+2);
 
 		objects.push_back(sobject);
 	}
 
-
-
-	//ani = new CAnimation(100);
-	//ani->Add(92011);
-	//ani->Add(92012);
-	//ani->Add(92013);
-	//ani->Add(92014);
-	//animations->Add(951, ani);
-
-
-	ani = new CAnimation(200);
-	ani->Add(92022);
+	ani = new CAnimation(100);
+	ani->Add(92021);
 	ani->Add(92022);
 	ani->Add(92023);
 	animations->Add(951, ani);
 
+	ani = new CAnimation(250);
+	ani->Add(92031);
+	ani->Add(92032);
+	ani->Add(92033);
+	animations->Add(952, ani);
+
+	ani = new CAnimation(150);
+	ani->Add(92041);
+	ani->Add(92042);
+	ani->Add(92043);
+	ani->Add(92044);
+	ani->Add(92045);
+	ani->Add(92046);
+	ani->Add(92047);
+	ani->Add(92048);
+	ani->Add(92049);
+	ani->Add(92050);
+	ani->Add(92051);
+	ani->Add(92052);
+	animations->Add(953, ani);
+
 	CWeapon* weapon = CWeapon::GetInstance();
 	weapon->AddAnimation(951);
-	weapon->SetPosition(-100, 141);
+	weapon->AddAnimation(952);
+	weapon->AddAnimation(953);
+
+	weapon->SetPosition(-100, -100);
 	objects.push_back(weapon);
 
 	/*===========================================================*/
@@ -272,6 +331,7 @@ void LoadResources()
 	simon->SetPosition(40.0f, 50.0f);
 	objects.push_back(simon);
 
+
 	/*===========================================================*/
 
 	ani = new CAnimation(100);		// brick
@@ -289,21 +349,45 @@ void LoadResources()
 
 }
 
+
 void Update(DWORD dt)
 {
 	vector<LPGAMEOBJECT> coObjects;
 	vector<LPGAMEOBJECT> coObjectsFull;
+
 	for (int i = 0; i < objects.size(); i++)
 	{
-		if (objects[i]->GetState() != 1)
+		coObjectsFull.push_back(objects[i]);
+	
+		if (dynamic_cast<CSObject *>(objects[i]))
+		{
+			if (objects[i]->GetState() != 1 && objects[i]->GetState() != 0)
+			{
+				coObjects.push_back(objects[i]);
+			}
+		}
+		else
 		{
 			coObjects.push_back(objects[i]);
 		}
 	}
 
+
+
 	for (int i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
+		if (dynamic_cast<CSimon *>(objects[i]))
+			objects[i]->Update(dt, &coObjects);
+
+		else if (dynamic_cast<CWeapon *>(objects[i]))
+		{
+			objects[i]->Update(dt, &coObjectsFull);
+		}
+
+		else
+		{
+			objects[i]->Update(dt, &coObjectsFull);
+		}
 	}
 
 

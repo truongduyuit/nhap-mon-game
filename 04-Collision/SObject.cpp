@@ -1,4 +1,5 @@
 #include "SObject.h"
+#include "Brick.h"
 
 void CSObject::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
@@ -34,6 +35,52 @@ void CSObject::GetBoundingBox(float &left, float &top, float &right, float &bott
 	{
 		right = x + BBOX_KNIFE_ITEM_W;
 		bottom = y + BBOX_KNIFE_ITEM_H;
+	}
+}
+
+void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+{
+	CGameObject::Update(dt);
+
+	vy += SOBJECT_GRAVITY * dt;
+
+	vector<LPCOLLISIONEVENT> coEvents;
+	vector<LPCOLLISIONEVENT> coEventsResult;
+
+	coEvents.clear();
+
+	CalcPotentialCollisions(coObjects, coEvents);
+
+	if (coEvents.size() == 0)
+	{
+		x += dx;
+		y += dy;
+	}
+	else
+	{
+		float min_tx, min_ty, nx = 0, ny;
+
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
+
+			if (dynamic_cast<CBrick *>(e->obj))
+			{
+				x += min_tx * dx + nx * 0.4f;
+				y += min_ty * dy + ny * 0.4f;
+			}
+
+		}
+
+		if (nx != 0) vx = 0;
+		if (ny != 0) vy = 0;
+	}
+
+	for (UINT i = 0; i < coEvents.size(); i++)
+	{
+		delete coEvents[i];
 	}
 }
 
@@ -73,16 +120,4 @@ void CSObject::Render()
 void CSObject::SetState(int state)
 {
 	CGameObject::SetState(state);
-
-	// something
-}
-
-void CSObject::SetNextState(int state)
-{
-	this->nextState = state;
-}
-
-int CSObject::GetNextState()
-{
-	return this->nextState;
 }

@@ -66,7 +66,6 @@ void CAnimation::Render(float x, float y, int alpha)
 			lastFrameTime = now;
 			if (currentFrame == frames.size()) currentFrame = 0;
 		}
-		
 	}
 
 	frames[currentFrame]->GetSprite()->Draw(x, y, alpha);
