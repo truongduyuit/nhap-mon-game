@@ -94,10 +94,15 @@ void CSimon::Render()
 	else
 	{
 		DWORD end_time = GetTickCount();
+		CWeapon* weapon = CWeapon::GetInstance();
+
 		if (end_time > action_time)
 		{
+			
 			isAttack = false;
 			action_time = 0;
+			/*CWeapon* weapon = CWeapon::GetInstance();
+			weapon->SetPosition(-100, -100);*/
 		}
 
 		if (nx > 0)
@@ -109,6 +114,7 @@ void CSimon::Render()
 			else if (isAttack)
 			{
 				ani = SIMON_ANI_ATTACK_RIGHT;
+				weapon->SetPosition(x, y);
 			}
 			else if (state == SIMON_STATE_WALKING_RIGHT && !isJump && !isAttack)
 			{
@@ -186,7 +192,7 @@ void CSimon::SetState(int state)
 		{
 			isAttack = true;
 			vx = 0;
-			action_time = 300 + GetTickCount();
+			action_time = 600 + GetTickCount();
 		}
 		break;
 	case SIMON_STATE_SIT:
