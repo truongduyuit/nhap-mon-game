@@ -22,7 +22,7 @@
 #define SCREEN_WIDTH 420
 #define SCREEN_HEIGHT 300
 
-#define MAX_FRAME_RATE 120
+#define MAX_FRAME_RATE 60
 
 #define ID_TEX_SIMON			0
 #define ID_TEX_BACKBROUND		10
@@ -164,7 +164,28 @@ void LoadResources()
 	sprites->Add(92049, 47, 66, 87, 72, texWeapon);
 	sprites->Add(92050, 47, 96, 87, 102, texWeapon);
 	sprites->Add(92051, 47, 126, 87, 132, texWeapon);
-	sprites->Add(92052, 47, 1566, 87, 162, texWeapon);
+	sprites->Add(92052, 47, 156, 87, 162, texWeapon);
+
+	sprites->Add(92121, 77, 4, 86, 27, texWeapon);
+	sprites->Add(92122, 50, 0, 66, 20, texWeapon);
+	sprites->Add(92123, 16, 3, 39, 11, texWeapon);
+
+	sprites->Add(92131, 77, 33, 86, 58, texWeapon);
+	sprites->Add(92132, 50, 30, 66, 50, texWeapon);
+	sprites->Add(92133, 16, 36, 39, 42, texWeapon);
+
+	sprites->Add(92141, 77, 63, 86, 88, texWeapon);
+	sprites->Add(92142, 77, 93, 86, 118, texWeapon);
+	sprites->Add(92143, 77, 123, 86, 148, texWeapon);
+	sprites->Add(92144, 77, 153, 86, 178, texWeapon);
+	sprites->Add(92145, 50, 60, 66, 80, texWeapon);
+	sprites->Add(92146, 50, 90, 66, 110, texWeapon);
+	sprites->Add(92147, 50, 120, 66, 140, texWeapon);
+	sprites->Add(92148, 50, 150, 66, 170, texWeapon);
+	sprites->Add(92149, 0, 66, 39, 72, texWeapon);
+	sprites->Add(92150, 0, 96, 39, 102, texWeapon);
+	sprites->Add(92151, 0, 126, 39, 132, texWeapon);
+	sprites->Add(92152, 0, 156, 39, 162, texWeapon);
 
 
 	//sprites->Add(92021, 244, 9, 252, 34, texWeapon2);
@@ -208,7 +229,7 @@ void LoadResources()
 		sobject->SetPosition(100 + i * 100, 135);
 
 		sobject->SetState(1);
-		sobject->SetNextState(i+2);
+		sobject->SetNextState(3);
 
 		objects.push_back(sobject);
 	}
@@ -240,10 +261,40 @@ void LoadResources()
 	ani->Add(92052);
 	animations->Add(953, ani);
 
+	ani = new CAnimation(100);
+	ani->Add(92121);
+	ani->Add(92122);
+	ani->Add(92123);
+	animations->Add(9511, ani);
+
+	ani = new CAnimation(250);
+	ani->Add(92131);
+	ani->Add(92132);
+	ani->Add(92133);
+	animations->Add(9512, ani);
+
+	ani = new CAnimation(150);
+	ani->Add(92141);
+	ani->Add(92142);
+	ani->Add(92143);
+	ani->Add(92144);
+	ani->Add(92145);
+	ani->Add(92146);
+	ani->Add(92147);
+	ani->Add(92148);
+	ani->Add(92149);
+	ani->Add(92150);
+	ani->Add(92151);
+	ani->Add(92152);
+	animations->Add(9513, ani);
+
 	CWeapon* weapon = CWeapon::GetInstance();
 	weapon->AddAnimation(951);
 	weapon->AddAnimation(952);
 	weapon->AddAnimation(953);
+	weapon->AddAnimation(9511);
+	weapon->AddAnimation(9512);
+	weapon->AddAnimation(9513);
 
 	weapon->SetPosition(-100, -100);
 	objects.push_back(weapon);
@@ -353,11 +404,17 @@ void LoadResources()
 void Update(DWORD dt)
 {
 	vector<LPGAMEOBJECT> coObjects;
+	vector<LPGAMEOBJECT> coObjectsBrick;
 	vector<LPGAMEOBJECT> coObjectsFull;
 
 	for (int i = 0; i < objects.size(); i++)
 	{
 		coObjectsFull.push_back(objects[i]);
+
+		if (dynamic_cast<CBrick *>(objects[i]))
+		{
+			coObjectsBrick.push_back(objects[i]);
+		}
 	
 		if (dynamic_cast<CSObject *>(objects[i]))
 		{
@@ -382,6 +439,11 @@ void Update(DWORD dt)
 		else if (dynamic_cast<CWeapon *>(objects[i]))
 		{
 			objects[i]->Update(dt, &coObjectsFull);
+		}
+
+		else if (dynamic_cast<CSObject *>(objects[i]))
+		{
+			objects[i]->Update(dt, &coObjectsBrick);
 		}
 
 		else

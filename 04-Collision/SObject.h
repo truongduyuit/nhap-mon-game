@@ -3,12 +3,13 @@
 
 #define SOBJECT_GRAVITY		0.001f
 
+#define SOBJECT_HIDDEN		-1
 #define SMALL_CANDLE		0
 #define BIG_CANDLE			1
 #define HEART_ITEM			2
-#define MONEY_ITEM			5
-#define KNIFE_ITEM			4
 #define CANE_ITEM			3
+#define KNIFE_ITEM			4
+#define MONEY_ITEM			5
 
 
 #define BBOX_BIG_CANDLE_W	16
