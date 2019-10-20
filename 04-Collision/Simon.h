@@ -14,6 +14,7 @@
 #define SIMON_STATE_DIE				400
 #define SIMON_STATE_SIT				500
 #define SIMON_STATE_ATTACK			600
+#define SIMON_STATE_PICK			700
 
 #define SIMON_ANI_IDLE_LEFT			0
 #define SIMON_ANI_IDLE_RIGHT		1
@@ -44,6 +45,8 @@ class CSimon : public CGameObject
 
 	bool isJump;
 	bool isAttack;
+	bool isPick;
+
 	DWORD action_time;
 public:
 	CSimon() : CGameObject()

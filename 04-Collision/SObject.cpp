@@ -1,5 +1,6 @@
 #include "SObject.h"
 #include "Brick.h"
+#include "Simon.h"
 
 void CSObject::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
@@ -71,7 +72,7 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				x += min_tx * dx + nx * 0.4f;
 				y += min_ty * dy + ny * 0.4f;
 			}
-
+		
 		}
 
 		if (nx != 0) vx = 0;
@@ -113,8 +114,11 @@ void CSObject::Render()
 		ani = KNIFE_ITEM;
 	}
 
-	animations[ani]->Render(x, y);
-	RenderBoundingBox();
+	if (state != SOBJECT_HIDDEN)
+	{
+		animations[ani]->Render(x, y);
+		RenderBoundingBox();
+	}
 }
 
 void CSObject::SetState(int state)

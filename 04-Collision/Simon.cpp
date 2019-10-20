@@ -41,6 +41,24 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		untouchable = 0;
 	}
 
+	for (int i = 0; i < coObjects->size(); i++)
+	{
+		if (dynamic_cast<CSObject *>(coObjects->at(i)))
+		{
+			if (isOverlapping(coObjects->at(i)))
+			{
+				if (coObjects->at(i)->state == 3)
+				{
+					SetState(SIMON_STATE_PICK);
+					weapon->IncreaseLevel();
+					weapon->SetState(STATE_HIDDEN);
+				}
+
+				coObjects->at(i)->SetState(SOBJECT_HIDDEN);
+			}
+		}
+	}
+
 	if (coEvents.size() == 0)
 	{
 		x += dx;
@@ -57,7 +75,21 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			isJump = false;
 		}
 
-		// block 
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
+
+			if (dynamic_cast<CBrick *>(e->obj))
+			{
+				if (isOverlapping(e->obj))
+				{
+					x += min_tx * dx + nx * 1.4f;
+					y += min_ty * dy + ny * 1.4f;
+
+				}
+			}
+		}
+
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
@@ -66,9 +98,28 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				x += min_tx * dx + nx * 0.4f;
 				y += min_ty * dy + ny * 0.4f;
+
+				if (isOverlapping(e->obj))
+				{
+					x += min_tx * dx + nx * 0.4f;
+					y += min_ty * dy + ny * 0.4f;
+
+				}
 			}
 			
+			if (dynamic_cast<CSObject *>(e->obj))
+			{
+				if (e->obj->state == 3)
+				{
+					SetState(SIMON_STATE_PICK);
+					weapon->IncreaseLevel();
+				}
+
+				e->obj->SetState(SOBJECT_HIDDEN);
+			}
 		}
+
+
 
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
@@ -100,63 +151,70 @@ void CSimon::Render()
 		{
 			
 			isAttack = false;
+			isPick = false;
 			action_time = 0;
-			/*CWeapon* weapon = CWeapon::GetInstance();
-			weapon->SetPosition(-100, -100);*/
 		}
 
-		if (nx > 0)
+		if (isPick)
 		{
-			if (isJump && !isAttack)
-			{
-				ani = SIMON_ANI_SIT_RIGHT;
-			}
-			else if (isAttack)
-			{
-				ani = SIMON_ANI_ATTACK_RIGHT;
-				weapon->SetPosition(x, y);
-			}
-			else if (state == SIMON_STATE_WALKING_RIGHT && !isJump && !isAttack)
-			{
-				ani = SIMON_ANI_WALKING_RIGHT;
-			}
-			else if (state == SIMON_STATE_SIT)
-			{
-				ani = SIMON_ANI_SIT_RIGHT;
-			}
-			else
-			{
-				ani = SIMON_ANI_IDLE_RIGHT;
-			}
+			ani = SIMON_ANI_PICK_RIGHT;
+			untouchable = true;
 		}
 		else
 		{
-			if (isJump && !isAttack)
+			if (nx > 0)
 			{
-				ani = SIMON_ANI_SIT_LEFT;
-			}
-			else if (isAttack)
-			{
-				ani = SIMON_ANI_ATTACK_LEFT;
-			}
-			else if (state == SIMON_STATE_WALKING_LEFT && !isJump && !isAttack)
-			{
-				ani = SIMON_ANI_WALKING_LEFT;
-			}
-			else if (state == SIMON_STATE_SIT)
-			{
-				ani = SIMON_ANI_SIT_LEFT;
+				if (isJump && !isAttack)
+				{
+					ani = SIMON_ANI_SIT_RIGHT;
+				}
+				else if (isAttack)
+				{
+					ani = SIMON_ANI_ATTACK_RIGHT;
+					weapon->SetPosition(x, y);
+					weapon->SetState(STATE_ATTACK_RIGHT);
+				}
+				else if (state == SIMON_STATE_WALKING_RIGHT && !isJump && !isAttack)
+				{
+					ani = SIMON_ANI_WALKING_RIGHT;
+				}
+				else if (state == SIMON_STATE_SIT)
+				{
+					ani = SIMON_ANI_SIT_RIGHT;
+				}
+				else
+				{
+					ani = SIMON_ANI_IDLE_RIGHT;
+				}
 			}
 			else
 			{
-				ani = SIMON_ANI_IDLE_LEFT;
+				if (isJump && !isAttack)
+				{
+					ani = SIMON_ANI_SIT_LEFT;
+				}
+				else if (isAttack)
+				{
+					ani = SIMON_ANI_ATTACK_LEFT;
+					weapon->SetPosition(x, y);
+					weapon->SetState(STATE_ATTACK_LEFT);
+				}
+				else if (state == SIMON_STATE_WALKING_LEFT && !isJump && !isAttack)
+				{
+					ani = SIMON_ANI_WALKING_LEFT;
+				}
+				else if (state == SIMON_STATE_SIT)
+				{
+					ani = SIMON_ANI_SIT_LEFT;
+				}
+				else
+				{
+					ani = SIMON_ANI_IDLE_LEFT;
+				}
 			}
 		}
-		
-
 	}
 
-	//ani = 9;
 
 	int alpha = 255;
 	if (untouchable) alpha = 128;
@@ -170,37 +228,45 @@ void CSimon::SetState(int state)
 {
 	CGameObject::SetState(state);
 
-	switch (state)
+	if (!isPick)
 	{
-	case SIMON_STATE_WALKING_LEFT:
-		if (!isAttack) vx = -SIMON_WALKING_SPEED;
-		nx = -1;
-		break;
-	case SIMON_STATE_WALKING_RIGHT:
-		if (!isAttack) vx = SIMON_WALKING_SPEED;
-		nx = 1;
-		break;
-	case SIMON_STATE_JUMP:
-		if(!isJump)
+		switch (state)
 		{
-			vy = -SIMON_JUMP_SPEED_Y;
-			isJump = true;
-		}
-		break;
-	case SIMON_STATE_ATTACK:
-		if (!isAttack)
-		{
-			isAttack = true;
+		case SIMON_STATE_WALKING_LEFT:
+			if (!isAttack) vx = -SIMON_WALKING_SPEED;
+			nx = -1;
+			break;
+		case SIMON_STATE_WALKING_RIGHT:
+			if (!isAttack) vx = SIMON_WALKING_SPEED;
+			nx = 1;
+			break;
+		case SIMON_STATE_JUMP:
+			if (!isJump)
+			{
+				vy = -SIMON_JUMP_SPEED_Y;
+				isJump = true;
+			}
+			break;
+		case SIMON_STATE_ATTACK:
+			if (!isAttack)
+			{
+				isAttack = true;
+				vx = 0;
+				action_time = 600 + GetTickCount();
+			}
+			break;
+		case SIMON_STATE_PICK:
+			isPick = true;
+			action_time = 1000 + GetTickCount();
 			vx = 0;
-			action_time = 600 + GetTickCount();
+			break;
+		case SIMON_STATE_SIT:
+			vx = 0;
+			break;
+		default:
+			vx = 0;
+			break;
 		}
-		break;
-	case SIMON_STATE_SIT:
-		vx = 0;
-		break;
-	default:
-		vx = 0;
-		break;
 	}
 }
 

@@ -20,8 +20,6 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						
 						int nextState = coObjects->at(i)->GetNextState();
 						coObjects->at(i)->SetState(nextState);
-
-						//coObjects->at(i)->SetNextState(-1);
 					}
 				}
 			}
@@ -34,68 +32,151 @@ void CWeapon::Render()
 {
 
 	int ani;
-	ani = 2;
-	level = 3;
+
 	isCol = false;
 
-	//if (state == STATE_ATTACK_RIGHT)
-	//	ani = STATE_ATTACK_RIGHT;
-	//else if (state == STATE_ATTACK_LEFT)
-	//	ani = STATE_ATTACK_LEFT;
+	if (state == STATE_ATTACK_RIGHT)
+	{
+		if (level == 1)
+		{
+			ani = 0;
+		}
+		else if (level == 2)
+		{
+			ani = 1;
+		}
+		else if (level == 3)
+		{
+			ani = 2;
+		}
+	}
+	else if (state == STATE_ATTACK_LEFT)
+	{
+		if (level == 1)
+		{
+			ani = 3;
+		}
+		else if (level == 2)
+		{
+			ani = 4;
+		}
+		else if (level == 3)
+		{
+			ani = 5;
+		}
+	}
 
-	//float wy = y;
-	if (level != 3)
+
+	if (state == STATE_ATTACK_RIGHT)
 	{
-		if (animations[ani]->GetCurrentFrame() == 0)
+		if (level != 3)
 		{
-			x -= 25;
-			y += 3;
-			isCol = false;
+			if (animations[ani]->GetCurrentFrame() == 0)
+			{
+				x -= 25;
+				y += 3;
+				isCol = false;
+			}
+			else if (animations[ani]->GetCurrentFrame() == 1)
+			{
+				x -= 33;
+				y += 3;
+				isCol = false;
+			}
+			else if (animations[ani]->GetCurrentFrame() == 2)
+			{
+				y += 3;
+				isCol = true;
+			}
 		}
-		else if (animations[ani]->GetCurrentFrame() == 1)
+		else
 		{
-			x -= 33;
-			y += 3;
-			isCol = false;
-		}
-		else if (animations[ani]->GetCurrentFrame() == 2)
-		{
-			y += 3;
-			isCol = true;
+			if (animations[ani]->GetCurrentFrame() < 4)
+			{
+				x -= 25;
+				y += 3;
+				isCol = false;
+			}
+			else if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 8)
+			{
+				x -= 33;
+				y += 3;
+				isCol = false;
+			}
+			else if (animations[ani]->GetCurrentFrame() >= 8 && animations[ani]->GetCurrentFrame() < 12)
+			{
+				y += 3;
+				isCol = true;
+			}
 		}
 	}
-	else
-	{
-		if (animations[ani]->GetCurrentFrame() < 4)
-		{
-			x -= 25;
-			y += 3;
-			isCol = false;
-		}
-		else if (animations[ani]->GetCurrentFrame() < 8)
-		{
-			x -= 33;
-			y += 3;
-			isCol = false;
-		}
-		else if (animations[ani]->GetCurrentFrame() < 12)
-		{
-			y += 3;
-			isCol = true;
-		}
-	}
+	//else if (state == STATE_ATTACK_LEFT)
+	//{
+	//	if (level != 3)
+	//	{
+	//		if (animations[ani]->GetCurrentFrame() == 0)
+	//		{
+	//			x -= 25;
+	//			y += 3;
+	//			isCol = false;
+	//		}
+	//		else if (animations[ani]->GetCurrentFrame() == 1)
+	//		{
+	//			x -= 33;
+	//			y += 3;
+	//			isCol = false;
+	//		}
+	//		else if (animations[ani]->GetCurrentFrame() == 2)
+	//		{
+	//			y += 3;
+	//			isCol = true;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		if (animations[ani]->GetCurrentFrame() < 4)
+	//		{
+	//			x -= 25;
+	//			y += 3;
+	//			isCol = false;
+	//		}
+	//		else if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 8)
+	//		{
+	//			x -= 33;
+	//			y += 3;
+	//			isCol = false;
+	//		}
+	//		else if (animations[ani]->GetCurrentFrame() >= 8 && animations[ani]->GetCurrentFrame() < 12)
+	//		{
+	//			y += 3;
+	//			isCol = true;
+	//		}
+	//	}
+	//}
+
+
 
 
 	int alpha = 255;
 	if (untouchable) alpha = 128;
-	animations[ani]->Render(x, y, alpha);
 	
-	RenderBoundingBox();
+	if (state != STATE_HIDDEN)
+	{
+		animations[ani]->Render(x, y, alpha);
+		RenderBoundingBox();
+	}
+	
+	
 }
 
 void CWeapon::SetState(int state)
 {
 	CGameObject::SetState(state);
+}
+
+void CWeapon::SetDirrection(int direction)
+{
+	this->direction = direction;
 }
 
 void CWeapon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
