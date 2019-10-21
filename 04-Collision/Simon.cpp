@@ -83,9 +83,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				if (isOverlapping(e->obj))
 				{
-					x += min_tx * dx + nx * 1.4f;
-					y += min_ty * dy + ny * 1.4f;
-
+					y = e->obj->y - 31;
 				}
 			}
 		}
@@ -116,6 +114,15 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				}
 
 				e->obj->SetState(SOBJECT_HIDDEN);
+				
+				if (skill.size() < 1)
+				{
+					skill.push_back(5);
+				}
+				else
+				{
+					skill[0] += 5;
+				}
 			}
 		}
 
@@ -147,14 +154,16 @@ void CSimon::Render()
 		DWORD end_time = GetTickCount();
 		CWeapon* weapon = CWeapon::GetInstance();
 
-		if (end_time > action_time)
+		if (end_time >= action_time)
 		{
 			
 			isAttack = false;
 			isPick = false;
 			action_time = 0;
+			
 		}
 
+		
 		if (isPick)
 		{
 			ani = SIMON_ANI_PICK_RIGHT;
@@ -171,8 +180,13 @@ void CSimon::Render()
 				else if (isAttack)
 				{
 					ani = SIMON_ANI_ATTACK_RIGHT;
-					weapon->SetPosition(x, y);
-					weapon->SetState(STATE_ATTACK_RIGHT);
+
+					if (action_time == 0)
+					{
+						weapon->SetPosition(x, y);
+						weapon->SetState(STATE_ATTACK_RIGHT);
+					}
+
 				}
 				else if (state == SIMON_STATE_WALKING_RIGHT && !isJump && !isAttack)
 				{
@@ -196,8 +210,11 @@ void CSimon::Render()
 				else if (isAttack)
 				{
 					ani = SIMON_ANI_ATTACK_LEFT;
-					weapon->SetPosition(x, y);
-					weapon->SetState(STATE_ATTACK_LEFT);
+					if (action_time == 0)
+					{
+						weapon->SetPosition(x, y);
+						weapon->SetState(STATE_ATTACK_LEFT);
+					}					
 				}
 				else if (state == SIMON_STATE_WALKING_LEFT && !isJump && !isAttack)
 				{
@@ -220,7 +237,7 @@ void CSimon::Render()
 	if (untouchable) alpha = 128;
 	animations[ani]->Render(x, y, alpha);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 	
 }
 
@@ -252,8 +269,16 @@ void CSimon::SetState(int state)
 			{
 				isAttack = true;
 				vx = 0;
-				action_time = 600 + GetTickCount();
+				action_time = SIMON_ATTACK_TIME + GetTickCount();
 			}
+			break;
+		case SIMON_STATE_THROW:
+			if (!isAttack)
+			{
+				isAttack = true;
+				vx = 0;
+				action_time = SIMON_ATTACK_TIME + GetTickCount();
+			}			
 			break;
 		case SIMON_STATE_PICK:
 			isPick = true;

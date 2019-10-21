@@ -15,6 +15,7 @@
 #define SIMON_STATE_SIT				500
 #define SIMON_STATE_ATTACK			600
 #define SIMON_STATE_PICK			700
+#define SIMON_STATE_THROW			800
 
 #define SIMON_ANI_IDLE_LEFT			0
 #define SIMON_ANI_IDLE_RIGHT		1
@@ -35,11 +36,14 @@
 #define SIMON_BBOX_WIDTH  17
 #define SIMON_BBOX_HEIGHT 31
 
+#define SIMON_ATTACK_TIME			300
 #define SIMON_UNTOUCHABLE_TIME		3000
 
 class CSimon : public CGameObject
 {
 	int hp;
+	vector<int> skill;
+
 	int untouchable;
 	DWORD untouchable_start;
 

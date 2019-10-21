@@ -74,18 +74,19 @@ void CWeapon::Render()
 			if (animations[ani]->GetCurrentFrame() == 0)
 			{
 				x -= 25;
-				y += 3;
+				y += 2;
 				isCol = false;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 1)
 			{
 				x -= 33;
-				y += 3;
+				y += 2;
 				isCol = false;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 2)
 			{
-				y += 3;
+				x -= 3;
+				y += 2;
 				isCol = true;
 			}
 		}
@@ -94,76 +95,74 @@ void CWeapon::Render()
 			if (animations[ani]->GetCurrentFrame() < 4)
 			{
 				x -= 25;
-				y += 3;
+				y += 2;
 				isCol = false;
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 8)
 			{
 				x -= 33;
+				y += 2;
+				isCol = false;
+			}
+			else if (animations[ani]->GetCurrentFrame() >= 8 && animations[ani]->GetCurrentFrame() < 12)
+			{
+				x -= 3;
+				y += 2;
+				isCol = true;
+			}
+		}
+	}
+	else if (state == STATE_ATTACK_LEFT)
+	{
+		if (level != 3)
+		{
+			if (animations[ani]->GetCurrentFrame() == 0)
+			{
+				x += 17;
+				y += 3;
+				isCol = false;
+			}
+			else if (animations[ani]->GetCurrentFrame() == 1)
+			{
+				x += 17;
+				y += 3;
+				isCol = false;
+			}
+			else if (animations[ani]->GetCurrentFrame() == 2)
+			{
+				x -= 39;
+				y += 3;
+				isCol = true;
+			}
+		}
+		else
+		{
+			if (animations[ani]->GetCurrentFrame() < 4)
+			{
+				y += 3;
+				isCol = false;
+			}
+			else if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 8)
+			{
 				y += 3;
 				isCol = false;
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 8 && animations[ani]->GetCurrentFrame() < 12)
 			{
+				x -= 39;
 				y += 3;
 				isCol = true;
 			}
 		}
 	}
-	//else if (state == STATE_ATTACK_LEFT)
-	//{
-	//	if (level != 3)
-	//	{
-	//		if (animations[ani]->GetCurrentFrame() == 0)
-	//		{
-	//			x -= 25;
-	//			y += 3;
-	//			isCol = false;
-	//		}
-	//		else if (animations[ani]->GetCurrentFrame() == 1)
-	//		{
-	//			x -= 33;
-	//			y += 3;
-	//			isCol = false;
-	//		}
-	//		else if (animations[ani]->GetCurrentFrame() == 2)
-	//		{
-	//			y += 3;
-	//			isCol = true;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		if (animations[ani]->GetCurrentFrame() < 4)
-	//		{
-	//			x -= 25;
-	//			y += 3;
-	//			isCol = false;
-	//		}
-	//		else if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 8)
-	//		{
-	//			x -= 33;
-	//			y += 3;
-	//			isCol = false;
-	//		}
-	//		else if (animations[ani]->GetCurrentFrame() >= 8 && animations[ani]->GetCurrentFrame() < 12)
-	//		{
-	//			y += 3;
-	//			isCol = true;
-	//		}
-	//	}
-	//}
-
-
-
-
+	
 	int alpha = 255;
 	if (untouchable) alpha = 128;
 	
 	if (state != STATE_HIDDEN)
 	{
 		animations[ani]->Render(x, y, alpha);
-		RenderBoundingBox();
+		//RenderBoundingBox();
 	}
 	
 	
@@ -184,8 +183,16 @@ void CWeapon::GetBoundingBox(float &left, float &top, float &right, float &botto
 	left = x;
 	top = y;
 
-	right = x + 24;
-	bottom = y + 18;
+	if (level != 3)
+	{
+		right = x + 24;
+		bottom = y + 18;
+	}
+	else
+	{
+		right = x + 39;
+		bottom = y + 18;
+	}
 }
 
 CWeapon* CWeapon::__instance = NULL;
