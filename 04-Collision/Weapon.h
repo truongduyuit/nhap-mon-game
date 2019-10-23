@@ -11,7 +11,6 @@ class CWeapon : public CGameObject
 
 	bool isCol;
 	int level;
-	int direction;
 
 	int untouchable;
 	DWORD untouchable_start;
@@ -20,7 +19,6 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> * colliable_objects = NULL);
 	virtual void Render();
 	void SetState(int statCSpritese);
-	void SetDirrection(int directtion);
 
 	void IncreaseLevel() {
 		if (level < 3)

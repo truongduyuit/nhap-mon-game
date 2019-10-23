@@ -173,11 +173,6 @@ void CWeapon::SetState(int state)
 	CGameObject::SetState(state);
 }
 
-void CWeapon::SetDirrection(int direction)
-{
-	this->direction = direction;
-}
-
 void CWeapon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	left = x;

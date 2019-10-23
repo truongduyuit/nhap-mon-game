@@ -18,8 +18,8 @@
 #define BBOX_SMALL_CANDLE_W		8
 #define BBOX_SMALL_CANDLE_H		8
 
-#define BBOX_HEART_ITEM_W		8
-#define BBOX_HEART_ITEM_H		8
+#define BBOX_HEART_ITEM_W		16
+#define BBOX_HEART_ITEM_H		16
 
 #define BBOX_MONEY_ITEM_W		30
 #define BBOX_MONEY_ITEM_H		30

@@ -36,13 +36,15 @@
 #define SIMON_BBOX_WIDTH  17
 #define SIMON_BBOX_HEIGHT 31
 
-#define SIMON_ATTACK_TIME			300
+#define SIMON_ATTACK_TIME			100
+#define SIMON_THROW_TIME			1000
 #define SIMON_UNTOUCHABLE_TIME		3000
 
 class CSimon : public CGameObject
 {
 	int hp;
 	vector<int> skill;
+	int sthrow;
 
 	int untouchable;
 	DWORD untouchable_start;
@@ -50,6 +52,7 @@ class CSimon : public CGameObject
 	bool isJump;
 	bool isAttack;
 	bool isPick;
+	bool isthrow;
 
 	DWORD action_time;
 public:
@@ -61,6 +64,9 @@ public:
 
 		isJump = false;
 		isAttack = false;
+		isthrow = false;
+
+		skill.push_back(0);
 
 		untouchable = 0;
 	}
