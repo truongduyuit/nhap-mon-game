@@ -7,6 +7,7 @@
 #include "Brick.h"
 #include "SObject.h"
 #include "Weapon.h"
+#include "Skill.h"
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -51,7 +52,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					SetState(SIMON_STATE_PICK);
 					weapon->IncreaseLevel();
-					weapon->SetState(STATE_HIDDEN);
+					weapon->SetState(STATE_HIDDEN);					
 				}
 
 				coObjects->at(i)->SetState(SOBJECT_HIDDEN);
@@ -86,6 +87,21 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					y = e->obj->y - 31;
 				}
 			}
+
+			if (dynamic_cast<CSObject *>(e->obj))
+			{
+				if (e->obj->state == CANE_ITEM)
+				{
+					SetState(SIMON_STATE_PICK);
+					weapon->IncreaseLevel();
+				}
+				else if (e->obj->state == KNIFE_ITEM)
+				{
+					this->skill[0] += 5;
+				}
+
+				e->obj->SetState(SOBJECT_HIDDEN);
+			}
 		}
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
@@ -102,26 +118,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					x += min_tx * dx + nx * 0.4f;
 					y += min_ty * dy + ny * 0.4f;
 
-				}
-			}
-			
-			if (dynamic_cast<CSObject *>(e->obj))
-			{
-				if (e->obj->state == 3)
-				{
-					SetState(SIMON_STATE_PICK);
-					weapon->IncreaseLevel();
-				}
-
-				e->obj->SetState(SOBJECT_HIDDEN);
-				
-				if (skill.size() < 1)
-				{
-					skill.push_back(5);
-				}
-				else
-				{
-					skill[0] += 5;
 				}
 			}
 		}
@@ -152,13 +148,17 @@ void CSimon::Render()
 	else
 	{
 		DWORD end_time = GetTickCount();
+
 		CWeapon* weapon = CWeapon::GetInstance();
+		CSkill* skill = CSkill::GetInstance();
 
 		if (end_time >= action_time)
 		{
 			
 			isAttack = false;
 			isPick = false;
+			isthrow = false;
+
 			action_time = 0;
 			
 		}
@@ -187,6 +187,26 @@ void CSimon::Render()
 						weapon->SetState(STATE_ATTACK_RIGHT);
 					}
 
+				}
+				else if (state == SIMON_STATE_THROW && !isthrow)
+				{
+					if (this->skill[0] > 0)
+					{
+						ani = SIMON_ANI_ATTACK_RIGHT;		
+						this->skill[0]--;
+
+						skill->SetState(STATE_KNIFE);
+						skill->SetPosition(x + 17, y + 6);
+						skill->nx = 1;
+
+						action_time = SIMON_THROW_TIME + GetTickCount();
+						OutputDebugString(L"a");
+					}
+					else
+					{
+						ani = SIMON_ANI_IDLE_RIGHT;
+						OutputDebugString(L"b");
+					}
 				}
 				else if (state == SIMON_STATE_WALKING_RIGHT && !isJump && !isAttack)
 				{
@@ -273,11 +293,12 @@ void CSimon::SetState(int state)
 			}
 			break;
 		case SIMON_STATE_THROW:
-			if (!isAttack)
+			if (this->skill[0] > 0 && !isthrow)
 			{
-				isAttack = true;
+				isthrow = true;
 				vx = 0;
-				action_time = SIMON_ATTACK_TIME + GetTickCount();
+				//action_time = SIMON_THROW_TIME + GetTickCount();
+				OutputDebugString(L"c");
 			}			
 			break;
 		case SIMON_STATE_PICK:

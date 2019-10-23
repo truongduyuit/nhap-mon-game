@@ -14,6 +14,7 @@
 #include "Simon.h"
 #include "SObject.h"
 #include "Weapon.h"
+#include "Skill.h"
 
 #define WINDOW_CLASS_NAME L"Window"
 #define MAIN_WINDOW_TITLE L"Game Castlevania"
@@ -31,6 +32,7 @@
 CGame *game;
 CSimon *simon;
 CSObject *sobject;
+CSkill *skill;
 
 vector<LPGAMEOBJECT> objects;
 
@@ -45,7 +47,7 @@ CSampleKeyHander * keyHandler;
 
 void CSampleKeyHander::OnKeyDown(int KeyCode)
 {
-	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
@@ -65,12 +67,11 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 
 void CSampleKeyHander::OnKeyUp(int KeyCode)
 {
-	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
+	//DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
 }
 
 void CSampleKeyHander::KeyState(BYTE *states)
 {
-	// disable control key when Mario die 
 	if (simon->GetState() == SIMON_STATE_DIE) return;
 	if (game->IsKeyDown(DIK_RIGHT))
 		simon->SetState(SIMON_STATE_WALKING_RIGHT);
@@ -146,7 +147,7 @@ void LoadResources()
 	sprites->Add(91011, 0, 0, 8, 16, texSmallCandle);
 	sprites->Add(91012, 8, 0, 16, 16, texSmallCandle);
 
-	sprites->Add(91021, 0, 0, 8, 8, texHeart);
+	sprites->Add(91021, 0, 0, 16, 16, texHeart);
 	sprites->Add(91031, 0, 0, 16, 16, texCane);
 	sprites->Add(91041, 0, 0, 16, 9, texKnife);
 
@@ -273,19 +274,19 @@ void LoadResources()
 	sobject->SetNextState(4);
 	objects.push_back(sobject);
 
-	ani = new CAnimation(SIMON_ATTACK_TIME / 3);
+	ani = new CAnimation(100);
 	ani->Add(92021);
 	ani->Add(92022);
 	ani->Add(92023);
 	animations->Add(951, ani);
 
-	ani = new CAnimation(SIMON_ATTACK_TIME / 3);
+	ani = new CAnimation(100);
 	ani->Add(92031);
 	ani->Add(92032);
 	ani->Add(92033);
 	animations->Add(952, ani);
 
-	ani = new CAnimation(SIMON_ATTACK_TIME/12);
+	ani = new CAnimation(100/6);
 	ani->Add(92041);
 	ani->Add(92042);
 	ani->Add(92043);
@@ -300,19 +301,19 @@ void LoadResources()
 	ani->Add(92052);
 	animations->Add(953, ani);
 
-	ani = new CAnimation(SIMON_ATTACK_TIME / 3 - 1);
+	ani = new CAnimation(100);
 	ani->Add(92121);
 	ani->Add(92122);
 	ani->Add(92123);
 	animations->Add(9511, ani);
 
-	ani = new CAnimation(SIMON_ATTACK_TIME / 3);
+	ani = new CAnimation(100);
 	ani->Add(92131);
 	ani->Add(92132);
 	ani->Add(92133);
 	animations->Add(9512, ani);
 
-	ani = new CAnimation(SIMON_ATTACK_TIME / 12);
+	ani = new CAnimation(100/6);
 	ani->Add(92141);
 	ani->Add(92142);
 	ani->Add(92143);
@@ -335,6 +336,17 @@ void LoadResources()
 	weapon->AddAnimation(9512);
 	weapon->AddAnimation(9513);
 	objects.push_back(weapon);
+
+
+	ani = new CAnimation(100);
+	ani->Add(91041);
+
+	animations->Add(111, ani);
+
+	skill = CSkill::GetInstance();
+	skill->AddAnimation(111);
+
+	objects.push_back(skill);
 
 	/*===========================================================*/
 
