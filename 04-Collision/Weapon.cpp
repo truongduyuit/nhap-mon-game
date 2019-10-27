@@ -119,7 +119,7 @@ void CWeapon::Render()
 			}
 			else if (animations[ani]->GetCurrentFrame() == 2)
 			{
-				//xx -= 39;
+				xx -= 20;
 				xy += 6;
 			}
 		}
@@ -127,16 +127,18 @@ void CWeapon::Render()
 		{
 			if (animations[ani]->GetCurrentFrame() < 4)
 			{
-				xy += 3;
+				xx += 15;
+				xy += 6;
 			}
-			else if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 8)
+			else if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 7)
 			{
-				xy += 3;
+				xx += 15;
+				xy += 6;
 			}
-			else if (animations[ani]->GetCurrentFrame() >= 8 && animations[ani]->GetCurrentFrame() < 12)
+			else if (animations[ani]->GetCurrentFrame() >= 7 && animations[ani]->GetCurrentFrame() < 12)
 			{
-				xx -= 39;
-				xy += 3;
+				xx -= 40;
+				xy += 6;
 			}
 		}
 	}

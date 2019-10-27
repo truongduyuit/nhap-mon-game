@@ -182,9 +182,9 @@ void LoadResources()
 	sprites->Add(92051, 47, 126, 87, 132, texWeapon);
 	sprites->Add(92052, 47, 156, 87, 162, texWeapon);
 
-	sprites->Add(92121, 77, 4, 86, 27, texWeapon);
-	sprites->Add(92122, 50, 0, 66, 20, texWeapon);
-	sprites->Add(92123, 16, 3, 39, 11, texWeapon);
+	sprites->Add(92121, 77, 4, 86, 27, texWeapon2);
+	sprites->Add(92122, 50, 0, 66, 20, texWeapon2);
+	sprites->Add(92123, 16, 3, 39, 11, texWeapon2);
 
 	sprites->Add(92131, 77, 33, 86, 58, texWeapon2);
 	sprites->Add(92132, 50, 30, 66, 50, texWeapon2);
