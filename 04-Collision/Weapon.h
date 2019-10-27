@@ -13,7 +13,14 @@
 #define WEAPON_ANI_2_LEFT	4
 #define WEAPON_ANI_3_LEFT	5
 
-
+#define WEAPON_BBOX_FRAME_1_WIDTH		9
+#define WEAPON_BBOX_FRAME_1_HEIGHT		25
+#define WEAPON_BBOX_FRAME_2_WIDTH		16
+#define WEAPON_BBOX_FRAME_2_HEIGHT		20
+#define WEAPON_BBOX_FRAME_3_WIDTH		23
+#define WEAPON_BBOX_FRAME_3_HEIGHT		6
+#define WEAPON_BBOX_FRAME_3_3_WIDTH		40
+#define WEAPON_BBOX_FRAME_3_3_HEIGHT	6
 
 class CWeapon : public CGameObject
 {
@@ -21,7 +28,9 @@ class CWeapon : public CGameObject
 	int level;
 
 	bool isHidden;
-
+	float xx;
+	float xy;
+	int frame;
 public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> * colliable_objects = NULL);
 	virtual void Render();
@@ -36,6 +45,7 @@ public:
 	void set_isHidden(bool hidden) { isHidden = hidden; }
 
 	void ResetAttack();
+	void SetPositionTemp(float x, float y);
 
 	CWeapon()
 	{

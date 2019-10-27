@@ -30,7 +30,8 @@ void CWeapon::Render()
 
 	int ani;
 
-	float xx = x, xy = y;
+	x = xx;
+	y = xy;
 
 	if (state == STATE_ATTACK_RIGHT)
 	{
@@ -70,36 +71,42 @@ void CWeapon::Render()
 		{
 			if (animations[ani]->GetCurrentFrame() == 0)
 			{
-				xx -= 8;
-				xy += 6;
+				x -= 8;
+				y += 6;
+				frame = 0;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 1)
 			{
-				xx -= 16;
-				xy += 6;
+				x -= 16;
+				y += 6;
+				frame = 1;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 2)
 			{
-				xx += 15;
-				xy += 6;
+				x += 15;
+				y += 6;
+				frame = 2;
 			}
 		}
 		else
 		{
 			if (animations[ani]->GetCurrentFrame() < 4)
 			{
-				xx -= 8;
-				xy += 6;
+				x -= 8;
+				y += 6;
+				frame = 0;
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 8)
 			{
-				xx -= 17;
-				xy += 6;
+				x -= 17;
+				y += 6;
+				frame = 1;
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 8 && animations[ani]->GetCurrentFrame() < 12)
 			{
-				xx += 15;
-				xy += 6;
+				x += 15;
+				y += 6;
+				frame = 2;
 			}
 		}
 	}
@@ -109,36 +116,42 @@ void CWeapon::Render()
 		{
 			if (animations[ani]->GetCurrentFrame() == 0)
 			{
-				xx += 15;
-				xy += 6;
+				x += 15;
+				y += 6;
+				frame = 0;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 1)
 			{
-				xx += 15;
-				xy += 6;
+				x += 15;
+				y += 6;
+				frame = 1;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 2)
 			{
-				xx -= 20;
-				xy += 6;
+				x -= 20;
+				y += 6;
+				frame = 2;
 			}
 		}
 		else
 		{
 			if (animations[ani]->GetCurrentFrame() < 4)
 			{
-				xx += 15;
-				xy += 6;
+				x += 15;
+				y += 6;
+				frame = 0;
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 7)
 			{
-				xx += 15;
-				xy += 6;
+				x += 15;
+				y += 6;
+				frame = 1;
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 7 && animations[ani]->GetCurrentFrame() < 12)
 			{
-				xx -= 40;
-				xy += 6;
+				x -= 40;
+				y += 6;
+				frame = 2;
 			}
 		}
 	}
@@ -148,8 +161,8 @@ void CWeapon::Render()
 	
 	if (!isHidden)
 	{
-		animations[ani]->Render(xx, xy, alpha);
-		//RenderBoundingBox();
+		animations[ani]->Render(x, y, alpha);
+		RenderBoundingBox();
 	}
 }
 
@@ -159,6 +172,12 @@ void CWeapon::ResetAttack()
 	{
 		animations[i]->ResetFrame();
 	}
+}
+
+void CWeapon::SetPositionTemp(float x, float y)
+{
+	xx = x;
+	xy = y;
 }
 
 void CWeapon::SetState(int state)
@@ -171,16 +190,56 @@ void CWeapon::GetBoundingBox(float &left, float &top, float &right, float &botto
 	left = x;
 	top = y;
 
+
 	if (level != 3)
 	{
-		right = x + 24;
-		bottom = y + 18;
+		if (frame == 0)
+		{
+			//left = x - 17;
+			//top = y;
+			right = left + WEAPON_BBOX_FRAME_1_WIDTH;
+			bottom = top + WEAPON_BBOX_FRAME_1_HEIGHT;
+		}
+		else if (frame == 1)
+		{
+			//left = x - 17;
+			//top = y;
+			right = left + WEAPON_BBOX_FRAME_2_WIDTH;
+			bottom = top + WEAPON_BBOX_FRAME_2_HEIGHT;
+		}
+		else
+		{
+			//left = x + 15;
+			//top = y + 6;
+			right = left + WEAPON_BBOX_FRAME_3_WIDTH;
+			bottom = top + WEAPON_BBOX_FRAME_3_HEIGHT;
+		}
 	}
 	else
 	{
-		right = x + 39;
-		bottom = y + 18;
+		if (frame == 0)
+		{
+			//left = x + 8;
+			//top = y + 6;
+			right = left + WEAPON_BBOX_FRAME_1_WIDTH;
+			bottom = top + WEAPON_BBOX_FRAME_1_HEIGHT;
+		}
+		else if (frame == 1)
+		{
+			//left = x + 16;
+			//top = y + 6;
+			right = left + WEAPON_BBOX_FRAME_2_WIDTH;
+			bottom = top + WEAPON_BBOX_FRAME_2_HEIGHT;
+		}
+		else
+		{
+			//left = x + 15;
+			//top = y + 6;
+			right = left + WEAPON_BBOX_FRAME_3_3_WIDTH;
+			bottom = top + WEAPON_BBOX_FRAME_3_3_HEIGHT;
+		}
 	}
+
 }
 
 CWeapon* CWeapon::__instance = NULL;

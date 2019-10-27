@@ -55,7 +55,6 @@ class CSimon : public CGameObject
 	bool isPick;
 	bool isthrow;
 	bool isSit;
-	bool canAction;
 
 
 	DWORD action_time;
@@ -86,7 +85,6 @@ public:
 	bool get_isPick() { return isPick; }
 	bool get_isThrow() { return isthrow; }
 	bool get_isSit() { return isSit; }
-	bool get_canAction() { return canAction; }
 
 	void startAttack();
 	void startJump();

@@ -41,7 +41,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	else
 	{
 		weapon->set_isHidden(false);
-		weapon->SetPosition(x, y);
+		weapon->SetPositionTemp(x, y);
 		nx > 0 ? weapon->SetState(STATE_ATTACK_RIGHT) : weapon->SetState(STATE_ATTACK_LEFT);
 		dx = 0;
 	}
@@ -296,7 +296,6 @@ void CSimon::startAttack()
 	{
 		isAttack = true;
 		action_time = GetTickCount();
-		canAction = false;
 
 		vx = 0;
 	}
@@ -307,7 +306,6 @@ void CSimon::startJump()
 	if (!isPick && !isAttack && !isJump)
 	{
 		isJump = true;
-		canAction = true;
 
 		vy = -SIMON_JUMP_SPEED_Y;
 	}
@@ -316,6 +314,9 @@ void CSimon::startJump()
 void CSimon::startPick()
 {
 	isPick = true;
+
+	isAttack = false;
+
 	action_time = GetTickCount();
 
 	vx = 0;

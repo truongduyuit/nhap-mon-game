@@ -198,10 +198,10 @@ void LoadResources()
 	sprites->Add(92146, 50, 90, 66, 110, texWeapon2);
 	sprites->Add(92147, 50, 120, 66, 140, texWeapon2);
 	sprites->Add(92148, 50, 150, 66, 170, texWeapon2);
-	sprites->Add(92149, 0, 66, 39, 72, texWeapon2);
-	sprites->Add(92150, 0, 96, 39, 102, texWeapon2);
-	sprites->Add(92151, 0, 126, 39, 132, texWeapon2);
-	sprites->Add(92152, 0, 156, 39, 162, texWeapon2);
+	sprites->Add(92149, 0, 66, 40, 72, texWeapon2);
+	sprites->Add(92150, 0, 96, 40, 102, texWeapon2);
+	sprites->Add(92151, 0, 126, 40, 132, texWeapon2);
+	sprites->Add(92152, 0, 156, 40, 162, texWeapon2);
 
 
 	LPANIMATION ani;
