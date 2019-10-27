@@ -195,22 +195,16 @@ void CWeapon::GetBoundingBox(float &left, float &top, float &right, float &botto
 	{
 		if (frame == 0)
 		{
-			//left = x - 17;
-			//top = y;
 			right = left + WEAPON_BBOX_FRAME_1_WIDTH;
 			bottom = top + WEAPON_BBOX_FRAME_1_HEIGHT;
 		}
 		else if (frame == 1)
 		{
-			//left = x - 17;
-			//top = y;
 			right = left + WEAPON_BBOX_FRAME_2_WIDTH;
 			bottom = top + WEAPON_BBOX_FRAME_2_HEIGHT;
 		}
 		else
 		{
-			//left = x + 15;
-			//top = y + 6;
 			right = left + WEAPON_BBOX_FRAME_3_WIDTH;
 			bottom = top + WEAPON_BBOX_FRAME_3_HEIGHT;
 		}
@@ -219,22 +213,16 @@ void CWeapon::GetBoundingBox(float &left, float &top, float &right, float &botto
 	{
 		if (frame == 0)
 		{
-			//left = x + 8;
-			//top = y + 6;
 			right = left + WEAPON_BBOX_FRAME_1_WIDTH;
 			bottom = top + WEAPON_BBOX_FRAME_1_HEIGHT;
 		}
 		else if (frame == 1)
 		{
-			//left = x + 16;
-			//top = y + 6;
 			right = left + WEAPON_BBOX_FRAME_2_WIDTH;
 			bottom = top + WEAPON_BBOX_FRAME_2_HEIGHT;
 		}
 		else
 		{
-			//left = x + 15;
-			//top = y + 6;
 			right = left + WEAPON_BBOX_FRAME_3_3_WIDTH;
 			bottom = top + WEAPON_BBOX_FRAME_3_3_HEIGHT;
 		}

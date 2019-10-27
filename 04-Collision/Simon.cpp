@@ -53,10 +53,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		action_time = 0;
 	}
 	else
-	{
+	{		
 		dx = 0;
 	}
 
+	if (isPick)
+	{
+		weapon->set_isHidden(true);
+	}
 
 	if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
 	{
@@ -72,9 +76,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				if (coObjects->at(i)->state == 3)
 				{
-					SetState(SIMON_STATE_PICK);
-					weapon->IncreaseLevel();
-					weapon->SetState(STATE_HIDDEN);					
+					startPick();
+					weapon->IncreaseLevel();					
 				}
 
 				coObjects->at(i)->SetState(SOBJECT_HIDDEN);
@@ -120,7 +123,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					weapon->IncreaseLevel();
 				}
 
-				// Lụm giao
+				// Lụm dao
 				else if (e->obj->state == KNIFE_ITEM)
 				{
 					this->skill[0] += 5;
@@ -143,7 +146,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					x += min_tx * dx + nx * 0.4f;
 					y += min_ty * dy + ny * 0.4f;
-
 				}
 			}
 		}
@@ -246,10 +248,12 @@ void CSimon::Render()
 
 void CSimon::SetState(int state)
 {
-	CGameObject::SetState(state);
+	
 
 	if (!isPick)
 	{
+		CGameObject::SetState(state);
+
 		switch (state)
 		{
 		case SIMON_STATE_WALKING_LEFT:
