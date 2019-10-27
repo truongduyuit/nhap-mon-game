@@ -54,13 +54,22 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		simon->SetState(SIMON_STATE_JUMP);
 		break;
 	case DIK_D:
-		simon->SetState(SIMON_STATE_ATTACK);
+		if (!simon->get_isAttack() && !simon->get_isPick())
+		{
+			simon->SetState(SIMON_STATE_ATTACK);
+		}
 		break;
 	case DIK_A:
-		simon->SetState(SIMON_STATE_THROW);
+		if (!simon->get_isAttack() && !simon->get_isPick())
+		{
+			simon->SetState(SIMON_STATE_THROW);
+		}
 		break;
 	case DIK_DOWN:
-		simon->SetState(SIMON_STATE_SIT);
+		if (!simon->get_isAttack() && !simon->get_isPick())
+		{
+			simon->SetState(SIMON_STATE_SIT);
+		}	
 		break;
 	}
 }
@@ -77,12 +86,12 @@ void CSampleKeyHander::KeyState(BYTE *states)
 		simon->SetState(SIMON_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
-	else if (game->IsKeyDown(DIK_D))
-		simon->SetState(SIMON_STATE_ATTACK);
-	else if (game->IsKeyDown(DIK_A))
-		simon->SetState(SIMON_STATE_THROW);
-	else if (game->IsKeyDown(DIK_DOWN))
-		simon->SetState(SIMON_STATE_SIT);
+	//else if (game->IsKeyDown(DIK_D))
+	//	simon->SetState(SIMON_STATE_ATTACK);
+	//else if (game->IsKeyDown(DIK_A))
+	//	simon->SetState(SIMON_STATE_THROW);
+	//else if (game->IsKeyDown(DIK_DOWN))
+	//	simon->SetState(SIMON_STATE_SIT);
 	else
 		simon->SetState(SIMON_STATE_IDLE);
 }
@@ -118,7 +127,7 @@ void LoadResources()
 	textures->Add(102, L"textures\\weapon.png", D3DCOLOR_XRGB(255,255,255));
 	LPDIRECT3DTEXTURE9 texWeapon = textures->Get(102);
 
-	textures->Add(103, L"textures\\weapon2.png", D3DCOLOR_XRGB(255, 0, 255));
+	textures->Add(103, L"textures\\weapon2.png", D3DCOLOR_XRGB(255, 255, 255));
 	LPDIRECT3DTEXTURE9 texWeapon2 = textures->Get(103);
 
 	textures->Add(111, L"textures\\sprite\\item\\0.png", D3DCOLOR_XRGB(255, 0, 255));
@@ -197,6 +206,9 @@ void LoadResources()
 
 	LPANIMATION ani;
 
+
+#pragma region SObject
+
 	ani = new CAnimation(100);
 	ani->Add(91001);
 	ani->Add(91002);
@@ -274,6 +286,11 @@ void LoadResources()
 	sobject->SetNextState(4);
 	objects.push_back(sobject);
 
+#pragma endregion SObject
+
+
+#pragma region Weapon
+
 	ani = new CAnimation(100);
 	ani->Add(92021);
 	ani->Add(92022);
@@ -286,7 +303,7 @@ void LoadResources()
 	ani->Add(92033);
 	animations->Add(952, ani);
 
-	ani = new CAnimation(100/6);
+	ani = new CAnimation(100/6 -1);
 	ani->Add(92041);
 	ani->Add(92042);
 	ani->Add(92043);
@@ -313,7 +330,7 @@ void LoadResources()
 	ani->Add(92133);
 	animations->Add(9512, ani);
 
-	ani = new CAnimation(100/6);
+	ani = new CAnimation(100 / 6 - 1);
 	ani->Add(92141);
 	ani->Add(92142);
 	ani->Add(92143);
@@ -337,6 +354,7 @@ void LoadResources()
 	weapon->AddAnimation(9513);
 	objects.push_back(weapon);
 
+#pragma endregion Weapon
 
 	ani = new CAnimation(100);
 	ani->Add(91041);

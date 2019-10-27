@@ -11,16 +11,13 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 		if (dynamic_cast<CSObject *>(coObjects->at(i)))
 		{
-			if (isCol)
+			if (isOverlapping(coObjects->at(i)))
 			{
-				if (isOverlapping(coObjects->at(i)))
+				if (coObjects->at(i)->GetState() == 1)
 				{
-					if (coObjects->at(i)->GetState() == 1)
-					{
-						
-						int nextState = coObjects->at(i)->GetNextState();
-						coObjects->at(i)->SetState(nextState);
-					}
+
+					int nextState = coObjects->at(i)->GetNextState();
+					coObjects->at(i)->SetState(nextState);
 				}
 			}
 		}
@@ -33,36 +30,36 @@ void CWeapon::Render()
 
 	int ani;
 
-	isCol = false;
+	float xx = x, xy = y;
 
 	if (state == STATE_ATTACK_RIGHT)
 	{
 		if (level == 1)
 		{
-			ani = 0;
+			ani = WEAPON_ANI_1_RIGHT;
 		}
 		else if (level == 2)
 		{
-			ani = 1;
+			ani = WEAPON_ANI_2_RIGHT;
 		}
 		else if (level == 3)
 		{
-			ani = 2;
+			ani = WEAPON_ANI_3_RIGHT;
 		}
 	}
 	else if (state == STATE_ATTACK_LEFT)
 	{
 		if (level == 1)
 		{
-			ani = 3;
+			ani = WEAPON_ANI_1_LEFT;
 		}
 		else if (level == 2)
 		{
-			ani = 4;
+			ani = WEAPON_ANI_2_LEFT;
 		}
 		else if (level == 3)
 		{
-			ani = 5;
+			ani = WEAPON_ANI_3_LEFT;
 		}
 	}
 
@@ -73,42 +70,36 @@ void CWeapon::Render()
 		{
 			if (animations[ani]->GetCurrentFrame() == 0)
 			{
-				x -= 25;
-				y += 2;
-				isCol = false;
+				xx -= 8;
+				xy += 6;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 1)
 			{
-				x -= 33;
-				y += 2;
-				isCol = false;
+				xx -= 16;
+				xy += 6;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 2)
 			{
-				x -= 3;
-				y += 2;
-				isCol = true;
+				xx += 15;
+				xy += 6;
 			}
 		}
 		else
 		{
 			if (animations[ani]->GetCurrentFrame() < 4)
 			{
-				x -= 25;
-				y += 2;
-				isCol = false;
+				xx -= 8;
+				xy += 6;
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 8)
 			{
-				x -= 33;
-				y += 2;
-				isCol = false;
+				xx -= 17;
+				xy += 6;
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 8 && animations[ani]->GetCurrentFrame() < 12)
 			{
-				x -= 3;
-				y += 2;
-				isCol = true;
+				xx += 15;
+				xy += 6;
 			}
 		}
 	}
@@ -118,54 +109,54 @@ void CWeapon::Render()
 		{
 			if (animations[ani]->GetCurrentFrame() == 0)
 			{
-				x += 17;
-				y += 3;
-				isCol = false;
+				xx += 15;
+				xy += 6;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 1)
 			{
-				x += 17;
-				y += 3;
-				isCol = false;
+				xx += 15;
+				xy += 6;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 2)
 			{
-				x -= 39;
-				y += 3;
-				isCol = true;
+				//xx -= 39;
+				xy += 6;
 			}
 		}
 		else
 		{
 			if (animations[ani]->GetCurrentFrame() < 4)
 			{
-				y += 3;
-				isCol = false;
+				xy += 3;
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 8)
 			{
-				y += 3;
-				isCol = false;
+				xy += 3;
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 8 && animations[ani]->GetCurrentFrame() < 12)
 			{
-				x -= 39;
-				y += 3;
-				isCol = true;
+				xx -= 39;
+				xy += 3;
 			}
 		}
 	}
 	
 	int alpha = 255;
-	if (untouchable) alpha = 128;
+	//if (untouchable) alpha = 128;
 	
-	if (state != STATE_HIDDEN)
+	if (!isHidden)
 	{
-		animations[ani]->Render(x, y, alpha);
+		animations[ani]->Render(xx, xy, alpha);
 		//RenderBoundingBox();
 	}
-	
-	
+}
+
+void CWeapon::ResetAttack()
+{
+	for (int i = 0; i < animations.size(); i++)
+	{
+		animations[i]->ResetFrame();
+	}
 }
 
 void CWeapon::SetState(int state)

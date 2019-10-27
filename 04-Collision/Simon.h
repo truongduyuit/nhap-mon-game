@@ -36,7 +36,8 @@
 #define SIMON_BBOX_WIDTH  17
 #define SIMON_BBOX_HEIGHT 31
 
-#define SIMON_ATTACK_TIME			100
+#define SIMON_ATTACK_TIME			300
+#define SIMON_PICK_TIME				1500
 #define SIMON_THROW_TIME			1000
 #define SIMON_UNTOUCHABLE_TIME		3000
 
@@ -53,6 +54,9 @@ class CSimon : public CGameObject
 	bool isAttack;
 	bool isPick;
 	bool isthrow;
+	bool isSit;
+	bool canAction;
+
 
 	DWORD action_time;
 public:
@@ -76,6 +80,19 @@ public:
 	void SetState(int state);
 	void SetHP(int h) { hp = h; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+
+	bool get_isAttack() { return isAttack; }
+	bool get_isJump() { return isJump; }
+	bool get_isPick() { return isPick; }
+	bool get_isThrow() { return isthrow; }
+	bool get_isSit() { return isSit; }
+	bool get_canAction() { return canAction; }
+
+	void startAttack();
+	void startJump();
+	void startPick();
+	void startThrow();
+	void startSit();
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 };

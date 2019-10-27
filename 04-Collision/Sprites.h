@@ -68,6 +68,7 @@ public:
 	void Render(float x, float y, int alpha=255);
 	int GetCurrentFrame() { return currentFrame; }
 	void SetCurrentFrame(int Frame) { currentFrame = Frame; }
+	void ResetFrame() { currentFrame = -1;  }
 };
 
 typedef CAnimation *LPANIMATION;
