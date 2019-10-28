@@ -46,6 +46,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		dx = 0;
 	}
 
+	// throw
+
 	// pick
 	if (GetTickCount() - action_time >= SIMON_PICK_TIME)
 	{
@@ -197,7 +199,10 @@ void CSimon::Render()
 				{
 					ani = SIMON_ANI_ATTACK_RIGHT;
 				}
-				
+				else if (isthrow)
+				{
+					ani = SIMON_ANI_ATTACK_RIGHT;
+				}
 				else if (state == SIMON_STATE_WALKING_RIGHT && !isJump && !isAttack)
 				{
 					ani = SIMON_ANI_WALKING_RIGHT;
@@ -242,7 +247,7 @@ void CSimon::Render()
 	if (untouchable) alpha = 128;
 	animations[ani]->Render(x, y, alpha);
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 	
 }
 
@@ -278,9 +283,9 @@ void CSimon::SetState(int state)
 		case SIMON_STATE_ATTACK:
 			startAttack();
 			break;
-		/*case SIMON_STATE_THROW:
+		case SIMON_STATE_THROW:
 			startThrow();
-			break;*/
+			break;
 		case SIMON_STATE_PICK:
 			startPick();
 			break;
@@ -307,7 +312,8 @@ void CSimon::startAttack()
 
 void CSimon::startJump()
 {
-	if (!isPick && !isAttack && !isJump)
+	// Đang lụm, đánh, ngồi thì không cho nhảy
+	if (!isPick && !isAttack && !isJump && !isSit)
 	{
 		isJump = true;
 
@@ -328,6 +334,7 @@ void CSimon::startPick()
 
 void CSimon::startSit()
 {
+	// Đang lụm, đánh, ngồi thì không cho ngồi
 	if (!isPick && !isAttack && !isSit)
 	{
 		isSit = true;
