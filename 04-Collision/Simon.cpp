@@ -3,8 +3,8 @@
 
 
 #include "Simon.h"
+#include "Ground.h"
 #include "Game.h"
-#include "Brick.h"
 #include "SObject.h"
 #include "Weapon.h"
 #include "Skill.h"
@@ -133,7 +133,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (dynamic_cast<CBrick *>(e->obj))
+			if (dynamic_cast<CGround *>(e->obj))
 			{
 				if (isOverlapping(e->obj))
 				{
@@ -165,7 +165,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (dynamic_cast<CBrick *>(e->obj))
+			if (dynamic_cast<CGround *>(e->obj))
 			{
 				x += min_tx * dx + nx * 0.4f;
 				y += min_ty * dy + ny * 0.4f;

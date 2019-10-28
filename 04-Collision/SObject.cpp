@@ -1,5 +1,5 @@
 #include "SObject.h"
-#include "Brick.h"
+#include "Ground.h"
 #include "Simon.h"
 
 void CSObject::GetBoundingBox(float &left, float &top, float &right, float &bottom)
@@ -67,7 +67,7 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (dynamic_cast<CBrick *>(e->obj))
+			if (dynamic_cast<CGround *>(e->obj))
 			{
 				//x += min_tx * dx + nx * 0.4f;
 				y += min_ty * dy + ny * 0.4f;

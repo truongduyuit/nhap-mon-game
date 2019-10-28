@@ -31,14 +31,14 @@
     <Filter Include="src\GameObjects\Weapons">
       <UniqueIdentifier>{16fa796a-5ffb-47e8-930d-596619b5e570}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\GameObjects\grounds">
-      <UniqueIdentifier>{f26af7b1-9afd-47d5-b6e5-5c059e936a0d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Helpers">
       <UniqueIdentifier>{cf02316f-a6d8-43e4-ba88-bc6d3078a4df}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Maps">
       <UniqueIdentifier>{74bfa52d-c52c-44f7-994b-c2d2564c0628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GameObjects\ground">
+      <UniqueIdentifier>{f26af7b1-9afd-47d5-b6e5-5c059e936a0d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -52,9 +52,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Textures.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Brick.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">
@@ -75,6 +72,9 @@
     <ClInclude Include="Skill.h">
       <Filter>src\GameObjects\Weapons</Filter>
     </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>src\GameObjects\ground</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.cpp">
@@ -90,9 +90,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Textures.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Brick.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Map.cpp">
@@ -112,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="Skill.cpp">
       <Filter>src\GameObjects\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Ground.cpp">
+      <Filter>src\GameObjects\ground</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

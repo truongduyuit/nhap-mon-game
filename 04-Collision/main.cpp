@@ -10,7 +10,7 @@
 #include "Textures.h"
 #include "Map.h"
 
-#include "Brick.h"
+#include "Ground.h"
 #include "Simon.h"
 #include "SObject.h"
 #include "Weapon.h"
@@ -150,8 +150,6 @@ void LoadResources()
 	LPDIRECT3DTEXTURE9 texObj = textures->Get(ID_TEX_OBJECTS);
 
 	/*===========================================================*/
-		//brick
-	sprites->Add(90000, 0, 153, 9, 160, texBg);
 
 	sprites->Add(91001, 0, 0, 16, 32, texBigCandle);
 	sprites->Add(91002, 16, 0, 32, 32, texBigCandle);
@@ -241,7 +239,7 @@ void LoadResources()
 	sobject->AddAnimation(931);
 	sobject->AddAnimation(932);
 	sobject->AddAnimation(933);
-	sobject->SetPosition(90.0f, 135.0f);
+	sobject->SetPosition(90.0f, 100.0f);
 	sobject->SetState(1);
 	sobject->SetNextState(2);
 	objects.push_back(sobject);
@@ -252,7 +250,7 @@ void LoadResources()
 	sobject->AddAnimation(931);
 	sobject->AddAnimation(932);
 	sobject->AddAnimation(933);
-	sobject->SetPosition(220.0f, 135.0f);
+	sobject->SetPosition(220.0f, 100.0f);
 	sobject->SetState(1);
 	sobject->SetNextState(3);
 	objects.push_back(sobject);
@@ -263,7 +261,7 @@ void LoadResources()
 	sobject->AddAnimation(931);
 	sobject->AddAnimation(932);
 	sobject->AddAnimation(933);
-	sobject->SetPosition(345.0f, 135.0f);
+	sobject->SetPosition(345.0f, 100.0f);
 	sobject->SetState(1);
 	sobject->SetNextState(3);
 	objects.push_back(sobject);
@@ -274,7 +272,7 @@ void LoadResources()
 	sobject->AddAnimation(931);
 	sobject->AddAnimation(932);
 	sobject->AddAnimation(933);
-	sobject->SetPosition(475.0f, 135.0f);
+	sobject->SetPosition(475.0f, 100.0f);
 	sobject->SetState(1);
 	sobject->SetNextState(2);
 	objects.push_back(sobject);
@@ -285,7 +283,7 @@ void LoadResources()
 	sobject->AddAnimation(931);
 	sobject->AddAnimation(932);
 	sobject->AddAnimation(933);
-	sobject->SetPosition(600.0f, 135.0f);
+	sobject->SetPosition(600.0f, 100.0f);
 	sobject->SetState(1);
 	sobject->SetNextState(4);
 	objects.push_back(sobject);
@@ -400,6 +398,8 @@ void LoadResources()
 
 
 	/*===========================================================*/
+#pragma region Simon
+
 	in.open("data\\simon\\simon_sprites.txt", ios::in);
 
 	if (in.fail())
@@ -457,38 +457,29 @@ void LoadResources()
 	simon->SetPosition(40.0f, 50.0f);
 	objects.push_back(simon);
 
-
+#pragma endregion Simon
 	/*===========================================================*/
 
-	ani = new CAnimation(100);		// brick
-	ani->Add(90000);
-	animations->Add(901, ani);
-
-	for (int i = 0; i < 90; i++)
-	{
-		CBrick *brick = new CBrick();
-		brick->AddAnimation(901);
-		brick->SetPosition(0 + i * 8.0f, 173);
-		objects.push_back(brick);
-	}
-
-
+	CGround* ground = new CGround();
+	ground->setSize(720.0f, 10.0f);
+	ground->SetPosition(0.0f, 168.0f);
+	objects.push_back(ground);
 }
 
 
 void Update(DWORD dt)
 {
 	vector<LPGAMEOBJECT> coObjects;
-	vector<LPGAMEOBJECT> coObjectsBrick;
+	vector<LPGAMEOBJECT> coObjectGround;
 	vector<LPGAMEOBJECT> coObjectsFull;
 
 	for (int i = 0; i < objects.size(); i++)
 	{
 		coObjectsFull.push_back(objects[i]);
 
-		if (dynamic_cast<CBrick *>(objects[i]))
+		if (dynamic_cast<CGround *>(objects[i]))
 		{
-			coObjectsBrick.push_back(objects[i]);
+			coObjectGround.push_back(objects[i]);
 		}
 	
 		if (dynamic_cast<CSObject *>(objects[i]))
@@ -518,7 +509,7 @@ void Update(DWORD dt)
 
 		else if (dynamic_cast<CSObject *>(objects[i]))
 		{
-			objects[i]->Update(dt, &coObjectsBrick);
+			objects[i]->Update(dt, &coObjectGround);
 		}
 
 		else
