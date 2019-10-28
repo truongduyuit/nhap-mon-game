@@ -69,7 +69,7 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 			if (dynamic_cast<CBrick *>(e->obj))
 			{
-				x += min_tx * dx + nx * 0.4f;
+				//x += min_tx * dx + nx * 0.4f;
 				y += min_ty * dy + ny * 0.4f;
 			}
 		

@@ -27,7 +27,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 	CWeapon* weapon = CWeapon::GetInstance();
-
+	CSkill* skill = CSkill::GetInstance();
 
 	// attack
 	if (GetTickCount() - action_time >= SIMON_ATTACK_TIME)
@@ -38,7 +38,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		weapon->set_isHidden(true);
 		weapon->ResetAttack();
 	}
-	else
+	else if (isAttack)
 	{
 		weapon->set_isHidden(false);
 		weapon->SetPositionTemp(x, y);
@@ -47,6 +47,32 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 	// throw
+	if (GetTickCount() - action_time >= SIMON_ATTACK_TIME)
+	{
+		isthrow = false;
+		action_time = 0;
+	}
+	else if (isthrow)
+	{
+		// kết thúc sprite đánh dao mới xuất hiện
+		if (animations[SIMON_ANI_ATTACK_RIGHT]->GetCurrentFrame() == 2 || animations[SIMON_ANI_ATTACK_LEFT]->GetCurrentFrame() == 2)
+		{
+			if (skill->get_isHidden())
+			{
+				this->skill[0]--;
+
+				skill->SetState(STATE_KNIFE);
+				skill->nx = this->nx;
+
+				if (! isJump) skill->nx > 0 ? skill->SetPosition(x + 20, y+6) : skill->SetPosition(x - 3, y+6);
+				else skill->nx > 0 ? skill->SetPosition(x + 20, y+13) : skill->SetPosition(x - 3, y+13);
+				skill->startThrow();
+
+				OutputDebugString(L"t");
+			}
+		}
+	}
+
 
 	// pick
 	if (GetTickCount() - action_time >= SIMON_PICK_TIME)
@@ -169,7 +195,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void CSimon::Render()
 {
 	int ani;
-	
 
 	if (state == SIMON_STATE_DIE)
 	{
@@ -177,11 +202,7 @@ void CSimon::Render()
 	}
 	else
 	{
-		DWORD end_time = GetTickCount();
 
-		CWeapon* weapon = CWeapon::GetInstance();
-		CSkill* skill = CSkill::GetInstance();
-		
 		if (isPick)
 		{
 			nx > 0 ? ani = SIMON_ANI_PICK_RIGHT: ani = SIMON_ANI_PICK_LEFT;
@@ -226,6 +247,10 @@ void CSimon::Render()
 				{
 					ani = SIMON_ANI_ATTACK_LEFT;				
 				}
+				else if (isthrow)
+				{
+					ani = SIMON_ANI_ATTACK_LEFT;
+				}
 				else if (state == SIMON_STATE_WALKING_LEFT && !isJump && !isAttack)
 				{
 					ani = SIMON_ANI_WALKING_LEFT;
@@ -253,8 +278,6 @@ void CSimon::Render()
 
 void CSimon::SetState(int state)
 {
-	
-
 	if (!isPick)
 	{
 		CGameObject::SetState(state);
@@ -326,6 +349,7 @@ void CSimon::startPick()
 	isPick = true;
 
 	isAttack = false;
+	isthrow = false;
 
 	action_time = GetTickCount();
 
@@ -345,12 +369,23 @@ void CSimon::startSit()
 
 void CSimon::startThrow()
 {
-	if (!isPick && !isAttack && !isthrow)
-	{
-		isthrow = true;
+	CSkill* skill = CSkill::GetInstance();
 
-		vx = 0;
+	if (!isPick && !isAttack && !isthrow && skill->get_isHidden())
+	{
+		if (this->skill[0] > 0)
+		{
+			isthrow = true;
+
+			action_time = GetTickCount();
+
+			vx = 0;
+		}
 	}
+	//if (isJump)
+	//{
+	//	isJump = false;
+	//}
 }
 
 void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom)

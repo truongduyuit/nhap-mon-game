@@ -139,6 +139,9 @@ void LoadResources()
 	textures->Add(113, L"textures\\sprite\\item\\4.png", D3DCOLOR_XRGB(255, 0, 255));
 	LPDIRECT3DTEXTURE9 texKnife = textures->Get(113);
 
+	textures->Add(113, L"textures\\knife_left.png", D3DCOLOR_XRGB(255, 0, 255));
+	LPDIRECT3DTEXTURE9 texKnifeLeft = textures->Get(113);
+
 	CSprites * sprites = CSprites::GetInstance();
 	CAnimations * animations = CAnimations::GetInstance();
 	
@@ -158,8 +161,9 @@ void LoadResources()
 
 	sprites->Add(91021, 0, 0, 16, 16, texHeart);
 	sprites->Add(91031, 0, 0, 16, 16, texCane);
-	sprites->Add(91041, 0, 0, 16, 9, texKnife);
 
+	sprites->Add(91041, 0, 0, 16, 9, texKnife);
+	sprites->Add(91042, 0, 0, 16, 9, texKnifeLeft);
 
 	sprites->Add(92021, 0, 4, 9, 27, texWeapon);
 	sprites->Add(92022, 21, 0, 37, 20, texWeapon);
@@ -357,12 +361,16 @@ void LoadResources()
 #pragma endregion Weapon
 
 	ani = new CAnimation(100);
-	ani->Add(91041);
-
+	ani->Add(91042);
 	animations->Add(111, ani);
+
+	ani = new CAnimation(100);
+	ani->Add(91041);
+	animations->Add(112, ani);
 
 	skill = CSkill::GetInstance();
 	skill->AddAnimation(111);
+	skill->AddAnimation(112);
 
 	objects.push_back(skill);
 

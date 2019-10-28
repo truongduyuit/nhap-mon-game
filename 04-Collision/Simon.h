@@ -71,7 +71,7 @@ public:
 		isAttack = false;
 		isthrow = false;
 
-		skill.push_back(0);
+		skill.push_back(10);
 
 		untouchable = 0;
 	}

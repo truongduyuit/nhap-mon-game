@@ -6,22 +6,17 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
 
-	if (GetTickCount() - timethrow_start > TIME_THROW)
+	if (GetTickCount() - timethrow_start >= TIME_THROW)
 	{
-		state = STATE_HIDDEN;
+		set_isHidden(true);
 
 		timethrow_start = 0;
-		intimethrow = 0;
 	}
 	else
 	{
-		x += 2;
+		updateThrow();
 	}
 
-	if (intimethrow == 0)
-	{
-		StartThrow();
-	}
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -52,7 +47,7 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					int nextState = e->obj->GetNextState();
 					e->obj->SetState(nextState);
 
-					this->SetState(STATE_HIDDEN);
+					set_isHidden(true);
 				}
 			}
 		}
@@ -71,7 +66,7 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					int nextState = coObjects->at(i)->GetNextState();
 					coObjects->at(i)->SetState(nextState);
 
-					this->SetState(STATE_HIDDEN);
+					set_isHidden(true);
 				}
 			}
 		}
@@ -85,14 +80,14 @@ void CSkill::Render()
 
 	if (nx < 0)
 	{
-		ani = 0;
+		ani = ANI_THROW_KNIFE_LEFT;
 	}
 	else if (nx > 0)
 	{
-		ani = 0;
+		ani = ANI_THROW_KNIFE_RIGHT;
 	}
 	
-	if (state != STATE_HIDDEN)
+	if (!isHidden)
 	{
 		animations[ani]->Render(x, y);
 		RenderBoundingBox();
@@ -108,6 +103,24 @@ void CSkill::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	{
 		right = x + KNIFE_WIDTH;
 		bottom = y + KNIFE_HEIGHT;
+	}
+}
+
+void CSkill::startThrow()
+{
+	if (isHidden)
+	{
+		isHidden = false;
+
+		timethrow_start = GetTickCount();
+	}
+}
+
+void CSkill::updateThrow()
+{
+	if (state == STATE_KNIFE)
+	{
+		nx > 0 ? dx += 3 : dx -= 3;
 	}
 }
 
