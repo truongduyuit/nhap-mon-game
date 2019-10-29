@@ -269,6 +269,7 @@ void Update(DWORD dt)
 		if (dynamic_cast<CGround *>(objects[i]))
 		{
 			coObjectGround.push_back(objects[i]);
+			coObjects.push_back(objects[i]);
 		}
 	
 		if (dynamic_cast<CSObject *>(objects[i]))
@@ -277,10 +278,6 @@ void Update(DWORD dt)
 			{
 				coObjects.push_back(objects[i]);
 			}
-		}
-		else
-		{
-			coObjects.push_back(objects[i]);
 		}
 	}
 

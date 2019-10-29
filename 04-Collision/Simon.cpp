@@ -164,6 +164,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			if (dynamic_cast<CSObject *>(e->obj))
 			{
 
+				OutputDebugString(L"c");
+
 				// Lụm roi
 				if (e->obj->state == CANE_ITEM)
 				{
@@ -198,12 +200,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 
-
-
 		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
-
-		
+		if (ny != 0) vy = 0;	
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++)
