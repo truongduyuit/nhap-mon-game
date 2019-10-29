@@ -8,6 +8,27 @@
 #include "SObject.h"
 #include "Weapon.h"
 #include "Skill.h"
+#include "LoadResource.h"
+
+
+
+CSimon::CSimon()
+{
+	hp = SIMON_HP_START;
+	state = SIMON_STATE_WALKING_RIGHT;
+	nx = 1;
+
+	isJump = false;
+	isAttack = false;
+	isthrow = false;
+
+	skill.push_back(10);
+
+	untouchable = 0;
+
+	CLoadResourcesHelper::LoadSprites("data\\simon\\simon_sprites.txt");
+	CLoadResourcesHelper::LoadAnimations("data\\simon\\simon_anis.txt", this);
+}
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -67,8 +88,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (! isJump) skill->nx > 0 ? skill->SetPosition(x + 20, y+6) : skill->SetPosition(x - 3, y+6);
 				else skill->nx > 0 ? skill->SetPosition(x + 20, y+13) : skill->SetPosition(x - 3, y+13);
 				skill->startThrow();
-
-				OutputDebugString(L"t");
 			}
 		}
 	}
@@ -109,6 +128,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				}
 
 				coObjects->at(i)->SetState(SOBJECT_HIDDEN);
+				
 			}
 		}
 	}

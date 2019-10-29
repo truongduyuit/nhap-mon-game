@@ -2,6 +2,12 @@
 #include "SObject.h"
 #include "Simon.h"
 
+CSkill::CSkill()
+{
+	CLoadResourcesHelper::LoadSprites("data\\skills\\skill_sprites.txt");
+	CLoadResourcesHelper::LoadAnimations("data\\skills\\skill_anis.txt", this);
+}
+
 void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);

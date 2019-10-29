@@ -1,6 +1,15 @@
 #include "Weapon.h"
 #include "Simon.h"
 #include "SObject.h"
+#include "LoadResource.h"
+
+CWeapon::CWeapon()
+{
+	level = 1;
+
+	CLoadResourcesHelper::LoadSprites("data\\weapon\\weapon_sprites.txt");
+	CLoadResourcesHelper::LoadAnimations("data\\weapon\\weapon_anis.txt", this);
+}
 
 void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {

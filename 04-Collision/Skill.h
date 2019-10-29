@@ -15,8 +15,6 @@ class CSkill : public CGameObject
 {
 	static CSkill * __instance;
 
-	bool isHidden;
-
 	DWORD timethrow_start;
 public:
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
@@ -24,10 +22,10 @@ public:
 	virtual void SetState(int state);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 
-	bool get_isHidden() { return isHidden; }
-	void set_isHidden(bool hidden) { isHidden = hidden; }
 	void startThrow();
 	void updateThrow();
 
 	static CSkill * GetInstance();
+
+	CSkill();
 };

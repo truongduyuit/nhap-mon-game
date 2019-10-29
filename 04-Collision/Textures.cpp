@@ -69,6 +69,5 @@ LPDIRECT3DTEXTURE9 CTextures::Get(unsigned int i)
 
 void CTextures::LoadAllTextures()
 {
-	CLoadResourcesHelper * src = new CLoadResourcesHelper();
-	src->LoadAllTextures();
+	CLoadResourcesHelper::LoadAllTextures();
 }

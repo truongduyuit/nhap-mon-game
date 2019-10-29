@@ -39,8 +39,6 @@ public :
 	virtual void SetState(int state);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 
-	CSObject() : CGameObject()
-	{
-
-	}
+	CSObject();
+	~CSObject() {};
 };

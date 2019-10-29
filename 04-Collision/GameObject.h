@@ -46,6 +46,7 @@ public:
 
 	int state;
 	int nextState;
+	bool isHidden;
 
 	DWORD dt; 
 
@@ -59,6 +60,8 @@ public:
 
 	int GetState() { return this->state; }
 	int GetNextState() { return this->nextState; }
+	bool get_isHidden() { return isHidden; }
+	void set_isHidden(bool hidden) { isHidden = hidden; }
 
 	void RenderBoundingBox();
 

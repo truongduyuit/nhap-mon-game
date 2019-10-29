@@ -1,11 +1,13 @@
 #pragma once
+#include "GameObject.h"
 
 class CLoadResourcesHelper
 {
 public:
 
-	void LoadAllTextures();
-	void LoadSprites(string filePath, int tex_id);
+	void static LoadAllTextures();
+	void static LoadSprites(string filePath);
+	void static LoadAnimations(string filePath, CGameObject * object);
 
 	CLoadResourcesHelper() { ; }
 	~CLoadResourcesHelper() { ; }

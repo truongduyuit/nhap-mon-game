@@ -52,14 +52,11 @@ void CLoadResourcesHelper::LoadAllTextures()
 	in.close();
 }
 
-void CLoadResourcesHelper::LoadSprites(string filePath, int tex_id)
+void CLoadResourcesHelper::LoadSprites(string filePath)
 {
 	CTextures * textures = CTextures::GetInstance();
 	CSprites * sprites = CSprites::GetInstance();
-
-	LPDIRECT3DTEXTURE9 tex = textures->Get(tex_id);
-
-
+	LPDIRECT3DTEXTURE9 tex;
 	ifstream in;
 	in.open(filePath, ios::in);
 
@@ -70,13 +67,55 @@ void CLoadResourcesHelper::LoadSprites(string filePath, int tex_id)
 	}
 	while (!in.eof())
 	{
+		int id_tex;
 		int id, l, t, r, b;
+
+		in >> id_tex;
+		tex = textures->Get(id_tex);
+
 		in >> id;
 		in >> l;
 		in >> t;
 		in >> r;
 		in >> b;
 		sprites->Add(id, l, t, r, b, tex);
+	}
+
+	in.close();
+}
+
+void CLoadResourcesHelper::LoadAnimations(string filePath, CGameObject* object)
+{
+	LPANIMATION ani;
+	CAnimations *animations = CAnimations::GetInstance();
+
+	ifstream in;
+	in.open(filePath, ios::in);
+
+	if (in.fail())
+	{
+		OutputDebugString(L"[ERROR] Load animations failed ! \n");
+		return;
+	}
+
+	while (!in.eof())
+	{
+		int time, n, ani_id;
+		in >> time;
+		in >> n;
+
+		ani = new CAnimation(time);
+		for (int i = 0; i < n; i++)
+		{
+			int id;
+			in >> id;
+			ani->Add(id);
+		}
+
+		in >> ani_id;
+
+		animations->Add(ani_id, ani);
+		object->AddAnimation(ani_id);
 	}
 
 	in.close();

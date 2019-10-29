@@ -27,7 +27,6 @@ class CWeapon : public CGameObject
 	static CWeapon * __instance;
 	int level;
 
-	bool isHidden;
 	float xx;
 	float xy;
 	int frame;
@@ -41,16 +40,10 @@ public:
 			level++;
 	}
 
-	bool get_isHidden() { return isHidden; }
-	void set_isHidden(bool hidden) { isHidden = hidden; }
-
 	void ResetAttack();
 	void SetPositionTemp(float x, float y);
 
-	CWeapon()
-	{
-		level = 1;
-	}
+	CWeapon();
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 

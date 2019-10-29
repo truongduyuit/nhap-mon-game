@@ -1,6 +1,13 @@
 #include "SObject.h"
 #include "Ground.h"
 #include "Simon.h"
+#include "LoadResource.h"
+
+CSObject::CSObject()
+{
+	CLoadResourcesHelper::LoadSprites("data\\sobjects\\sobject_sprites.txt");
+	//CLoadResourcesHelper::LoadAnimations("data\\sobjects\\sobject_anis.txt", this);
+}
 
 void CSObject::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
@@ -116,7 +123,7 @@ void CSObject::Render()
 
 	if (state != SOBJECT_HIDDEN)
 	{
-		animations[ani]->Render(x, y);
+		animations[ani]->Render(x, y, 255);
 		RenderBoundingBox();
 	}
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "LoadResource.h"
 
 #define SIMON_WALKING_SPEED			0.1f
 #define SIMON_GRAVITY				0.001f
@@ -61,20 +62,9 @@ class CSimon : public CGameObject
 
 	DWORD action_time;
 public:
-	CSimon() : CGameObject()
-	{
-		hp = SIMON_HP_START;
-		state = SIMON_STATE_WALKING_RIGHT;
-		nx = 1;
 
-		isJump = false;
-		isAttack = false;
-		isthrow = false;
-
-		skill.push_back(10);
-
-		untouchable = 0;
-	}
+	CSimon();
+	~CSimon() { ; };
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
