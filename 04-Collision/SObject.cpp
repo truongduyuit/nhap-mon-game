@@ -52,6 +52,25 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	vy += SOBJECT_GRAVITY * dt;
 
+
+
+	if (isAppear)
+	{
+		if (GetTickCount() - appear_start >= SOBJECT_APPEAR_TIME)
+		{
+			SetState(SOBJECT_HIDDEN);
+			isAppear = false;
+		}
+	}
+	else
+	{
+		if (nextState == SOBJECT_HIDDEN)
+		{
+			isAppear = true;
+			appear_start = GetTickCount();
+		}
+	}
+
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -131,4 +150,10 @@ void CSObject::Render()
 void CSObject::SetState(int state)
 {
 	CGameObject::SetState(state);
+}
+
+void CSObject::ItemStart()
+{
+	isAppear = true;
+	appear_start = GetTickCount();
 }

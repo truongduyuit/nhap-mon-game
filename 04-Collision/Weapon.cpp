@@ -27,6 +27,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 					int nextState = coObjects->at(i)->GetNextState();
 					coObjects->at(i)->SetState(nextState);
+					coObjects->at(i)->SetNextState(SOBJECT_HIDDEN);
 				}
 			}
 		}
