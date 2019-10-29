@@ -16,9 +16,6 @@
     <Filter Include="src">
       <UniqueIdentifier>{63d742bd-4e0e-4e12-ab0a-489a6389cf1b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="assets">
-      <UniqueIdentifier>{4dea564a-7271-4f18-9791-14ad0dad5ca8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\GameObjects">
       <UniqueIdentifier>{ba9b54fb-df34-4fab-83ff-c4f6ff8b094a}</UniqueIdentifier>
     </Filter>

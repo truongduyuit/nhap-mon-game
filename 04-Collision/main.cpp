@@ -83,9 +83,13 @@ void CSampleKeyHander::KeyState(BYTE *states)
 {
 	if (simon->GetState() == SIMON_STATE_DIE) return;
 	if (game->IsKeyDown(DIK_RIGHT) && !simon->get_isAttack())
+	{
 		simon->SetState(SIMON_STATE_WALKING_RIGHT);
+	}
 	else if (game->IsKeyDown(DIK_LEFT) && !simon->get_isAttack())
+	{
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
+	}
 	//else if (game->IsKeyDown(DIK_D))
 	//	simon->SetState(SIMON_STATE_ATTACK);
 	//else if (game->IsKeyDown(DIK_A))
@@ -261,6 +265,7 @@ void Update(DWORD dt)
 	vector<LPGAMEOBJECT> coObjects;
 	vector<LPGAMEOBJECT> coObjectGround;
 	vector<LPGAMEOBJECT> coObjectsFull;
+	vector<LPGAMEOBJECT> coObjectsWithSkill;
 
 	for (int i = 0; i < objects.size(); i++)
 	{
@@ -277,6 +282,10 @@ void Update(DWORD dt)
 			if (objects[i]->GetState() != 1 && objects[i]->GetState() != 0)
 			{
 				coObjects.push_back(objects[i]);
+			}
+			else
+			{
+				coObjectsWithSkill.push_back(objects[i]);
 			}
 		}
 	}
@@ -296,6 +305,11 @@ void Update(DWORD dt)
 		else if (dynamic_cast<CSObject *>(objects[i]))
 		{
 			objects[i]->Update(dt, &coObjectGround);
+		}
+
+		else if (dynamic_cast<CSkill *>(objects[i]))
+		{
+			objects[i]->Update(dt, &coObjectsWithSkill);
 		}
 
 		else

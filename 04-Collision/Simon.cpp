@@ -87,6 +87,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (! isJump) skill->nx > 0 ? skill->SetPosition(x + 20, y+6) : skill->SetPosition(x - 3, y+6);
 				else skill->nx > 0 ? skill->SetPosition(x + 20, y+13) : skill->SetPosition(x - 3, y+13);
+
 				skill->startThrow();
 			}
 		}
@@ -146,6 +147,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 		if (ny < 0)
 		{
+			if (isJump) upBBox();
 			isJump = false;
 		}
 
@@ -236,11 +238,11 @@ void CSimon::Render()
 				}
 				else if (isAttack)
 				{
-					ani = SIMON_ANI_ATTACK_RIGHT;
+					isSit ? ani = SIMON_ANI_SIT_ATTACK_RIGHT : ani = SIMON_ANI_ATTACK_RIGHT;
 				}
 				else if (isthrow)
 				{
-					ani = SIMON_ANI_ATTACK_RIGHT;
+					isSit ? ani = SIMON_ANI_SIT_ATTACK_RIGHT : ani = SIMON_ANI_ATTACK_RIGHT;
 				}
 				else if (state == SIMON_STATE_WALKING_RIGHT && !isJump && !isAttack)
 				{
@@ -263,11 +265,11 @@ void CSimon::Render()
 				}
 				else if (isAttack)
 				{
-					ani = SIMON_ANI_ATTACK_LEFT;				
+					isSit ? ani = SIMON_ANI_SIT_ATTACK_LEFT : ani = SIMON_ANI_ATTACK_LEFT;
 				}
 				else if (isthrow)
 				{
-					ani = SIMON_ANI_ATTACK_LEFT;
+					isSit ? ani = SIMON_ANI_SIT_ATTACK_LEFT : ani = SIMON_ANI_ATTACK_LEFT;
 				}
 				else if (state == SIMON_STATE_WALKING_LEFT && !isJump && !isAttack)
 				{
@@ -306,7 +308,12 @@ void CSimon::SetState(int state)
 			if (!isAttack)
 			{
 				vx = -SIMON_WALKING_SPEED;
-				isSit = false;
+
+				if (isSit)
+				{
+					upBBox();
+					isSit = false;
+				}
 			}
 			nx = -1;
 			break;
@@ -314,7 +321,12 @@ void CSimon::SetState(int state)
 			if (!isAttack)
 			{
 				vx = SIMON_WALKING_SPEED;
-				isSit = false;
+
+				if (isSit)
+				{
+					upBBox();
+					isSit = false;
+				}
 			}
 			nx = 1;
 			break;
@@ -400,10 +412,14 @@ void CSimon::startThrow()
 			vx = 0;
 		}
 	}
-	//if (isJump)
-	//{
-	//	isJump = false;
-	//}
+}
+
+void CSimon::upBBox()
+{
+	if ((isSit || isJump))
+	{
+		y -= SIMON_RESET_BBOX;
+	}
 }
 
 void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
@@ -411,6 +427,14 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	left = x;
 	top = y;
 
-	right = x + SIMON_BBOX_WIDTH;
-	bottom = y + SIMON_BBOX_HEIGHT;
+	if ((isSit || isJump))
+	{
+		right = left + SIMON_SIT_BBOX_WIDTH;
+		bottom = top + SIMON_SIT_BBOX_HEIGHT;
+	}
+	else
+	{
+		right = left + SIMON_SIT_BBOX_WIDTH;
+		bottom = top + SIMON_BBOX_HEIGHT;
+	}
 }

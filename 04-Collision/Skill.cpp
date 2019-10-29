@@ -52,8 +52,10 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					int nextState = e->obj->GetNextState();
 					e->obj->SetState(nextState);
+					e->obj->SetNextState(SOBJECT_HIDDEN);
 
 					set_isHidden(true);
+					SetPosition(-100.0f, -100.0f);
 				}
 			}
 		}

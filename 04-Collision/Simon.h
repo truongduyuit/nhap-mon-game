@@ -33,11 +33,14 @@
 #define SIMON_ANI_ATTACK_RIGHT		12
 #define SIMON_ANI_PICK_LEFT			13
 #define SIMON_ANI_PICK_RIGHT		14
+#define SIMON_ANI_SIT_ATTACK_LEFT	15
+#define SIMON_ANI_SIT_ATTACK_RIGHT	16
 
-#define SIMON_BBOX_WIDTH  17
-#define SIMON_BBOX_HEIGHT 31
-#define SIMON_SIT_BBOX_WIDTH  17
-#define SIMON_SIT_BBOX_HEIGHT 24
+#define SIMON_BBOX_WIDTH		17
+#define SIMON_BBOX_HEIGHT		31
+#define SIMON_SIT_BBOX_WIDTH	17
+#define SIMON_SIT_BBOX_HEIGHT	24
+#define SIMON_RESET_BBOX		7
 
 #define SIMON_ATTACK_TIME			300
 #define SIMON_PICK_TIME				1500
@@ -83,6 +86,7 @@ public:
 	void startPick();
 	void startThrow();
 	void startSit();
+	void upBBox();
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 };
