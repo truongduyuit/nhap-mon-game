@@ -82,9 +82,9 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 void CSampleKeyHander::KeyState(BYTE *states)
 {
 	if (simon->GetState() == SIMON_STATE_DIE) return;
-	if (game->IsKeyDown(DIK_RIGHT))
+	if (game->IsKeyDown(DIK_RIGHT) && !simon->get_isAttack())
 		simon->SetState(SIMON_STATE_WALKING_RIGHT);
-	else if (game->IsKeyDown(DIK_LEFT))
+	else if (game->IsKeyDown(DIK_LEFT) && !simon->get_isAttack())
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
 	//else if (game->IsKeyDown(DIK_D))
 	//	simon->SetState(SIMON_STATE_ATTACK);
