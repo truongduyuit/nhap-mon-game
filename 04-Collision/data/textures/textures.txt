@@ -1,0 +1,12 @@
+0	textures\\simon.png 		255 255 255
+10	textures\\background.png	255 255 255
+20	textures\\objects.png		34 177 255
+105	textures\\sprite\\bbox.png	255 255 255
+100	textures\\sprite\\ground\\0.png	255 0 255
+101	textures\\sprite\\ground\\1.png	255 0 255
+102	textures\\weapon.png		255 255 255
+103	textures\\weapon2.png	255 255 255
+111	textures\\sprite\\item\\0.png	255 0 255
+112	textures\\sprite\\item\\3.png	255 0 255
+113	textures\\sprite\\item\\4.png	255 0 255
+114	textures\\knife_left.png	255 0 255

@@ -6,6 +6,7 @@
 #include "debug.h"
 #include "Game.h"
 #include "textures.h"
+#include "LoadResource.h"
 
 CTextures * CTextures::__instance = NULL;
 
@@ -66,4 +67,8 @@ LPDIRECT3DTEXTURE9 CTextures::Get(unsigned int i)
 }
 
 
-
+void CTextures::LoadAllTextures()
+{
+	CLoadResourcesHelper * src = new CLoadResourcesHelper();
+	src->LoadAllTextures();
+}

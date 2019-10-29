@@ -40,6 +40,9 @@
     <Filter Include="src\GameObjects\ground">
       <UniqueIdentifier>{f26af7b1-9afd-47d5-b6e5-5c059e936a0d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Common">
+      <UniqueIdentifier>{f5eee83f-254b-4359-9f6a-c7bc2acbea16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h">
@@ -74,6 +77,12 @@
     </ClInclude>
     <ClInclude Include="Ground.h">
       <Filter>src\GameObjects\ground</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadResource.h">
+      <Filter>src\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Contands.h">
+      <Filter>src\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +121,9 @@
     </ClCompile>
     <ClCompile Include="Ground.cpp">
       <Filter>src\GameObjects\ground</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadResource.cpp">
+      <Filter>src\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

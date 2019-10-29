@@ -10,6 +10,9 @@
 #include "Textures.h"
 #include "Map.h"
 
+#include "LoadResource.h"
+#include "Contands.h"
+
 #include "Ground.h"
 #include "Simon.h"
 #include "SObject.h"
@@ -24,10 +27,6 @@
 #define SCREEN_HEIGHT 300
 
 #define MAX_FRAME_RATE 120
-
-#define ID_TEX_SIMON			0
-#define ID_TEX_BACKBROUND		10
-#define ID_TEX_OBJECTS			20
 
 CGame *game;
 CSimon *simon;
@@ -112,42 +111,24 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 void LoadResources()
 {
 	CTextures * textures = CTextures::GetInstance();
+	textures->LoadAllTextures();
 
-	textures->Add(ID_TEX_SIMON, L"textures\\simon.png", D3DCOLOR_XRGB(255, 255, 255));
-	textures->Add(ID_TEX_BACKBROUND, L"textures\\background.png", D3DCOLOR_XRGB(255,255,255));
-	textures->Add(ID_TEX_OBJECTS, L"textures\\objects.png", D3DCOLOR_XRGB(34,177,76));
-	textures->Add(105, L"textures\\sprite\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
+	LPDIRECT3DTEXTURE9 texSimon = textures->Get(ID_TEX_SIMON);
+	LPDIRECT3DTEXTURE9 texBg = textures->Get(ID_TEX_BACKBROUND);
+	LPDIRECT3DTEXTURE9 texObj = textures->Get(ID_TEX_OBJECT);
+	LPDIRECT3DTEXTURE9 texBigCandle = textures->Get(ID_TEXT_BIG_CANDLE);
+	LPDIRECT3DTEXTURE9 texSmallCandle = textures->Get(ID_TEX_SMALL_CANDLE);
+	LPDIRECT3DTEXTURE9 texWeapon = textures->Get(ID_TEX_WEAPON_RIGHT);
+	LPDIRECT3DTEXTURE9 texWeapon2 = textures->Get(ID_TEX_WEAPON_LEFT);
+	LPDIRECT3DTEXTURE9 texHeart = textures->Get(ID_TEX_BIG_HEART);
+	LPDIRECT3DTEXTURE9 texCane = textures->Get(ID_TEX_WHIP);
+	LPDIRECT3DTEXTURE9 texKnife = textures->Get(ID_TEX_KNIFE_RIGHT);
+	LPDIRECT3DTEXTURE9 texKnifeLeft = textures->Get(ID_TEX_KNIFE_LEFT);
 
-	textures->Add(100, L"textures\\sprite\\ground\\0.png", D3DCOLOR_XRGB(255, 0, 255));
-	LPDIRECT3DTEXTURE9 texBigCandle = textures->Get(100);
 
-	textures->Add(101, L"textures\\sprite\\ground\\1.png", D3DCOLOR_XRGB(255, 0, 255));
-	LPDIRECT3DTEXTURE9 texSmallCandle = textures->Get(101);
-
-	textures->Add(102, L"textures\\weapon.png", D3DCOLOR_XRGB(255,255,255));
-	LPDIRECT3DTEXTURE9 texWeapon = textures->Get(102);
-
-	textures->Add(103, L"textures\\weapon2.png", D3DCOLOR_XRGB(255, 255, 255));
-	LPDIRECT3DTEXTURE9 texWeapon2 = textures->Get(103);
-
-	textures->Add(111, L"textures\\sprite\\item\\0.png", D3DCOLOR_XRGB(255, 0, 255));
-	LPDIRECT3DTEXTURE9 texHeart = textures->Get(111);
-
-	textures->Add(112, L"textures\\sprite\\item\\3.png", D3DCOLOR_XRGB(255, 0, 255));
-	LPDIRECT3DTEXTURE9 texCane = textures->Get(112);
-
-	textures->Add(113, L"textures\\sprite\\item\\4.png", D3DCOLOR_XRGB(255, 0, 255));
-	LPDIRECT3DTEXTURE9 texKnife = textures->Get(113);
-
-	textures->Add(113, L"textures\\knife_left.png", D3DCOLOR_XRGB(255, 0, 255));
-	LPDIRECT3DTEXTURE9 texKnifeLeft = textures->Get(113);
 
 	CSprites * sprites = CSprites::GetInstance();
 	CAnimations * animations = CAnimations::GetInstance();
-	
-	LPDIRECT3DTEXTURE9 texSimon = textures->Get(ID_TEX_SIMON);
-	LPDIRECT3DTEXTURE9 texBg = textures->Get(ID_TEX_BACKBROUND);
-	LPDIRECT3DTEXTURE9 texObj = textures->Get(ID_TEX_OBJECTS);
 
 	/*===========================================================*/
 

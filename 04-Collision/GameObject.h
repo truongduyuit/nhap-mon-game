@@ -5,11 +5,10 @@
 #include <vector>
 
 #include "Sprites.h"
+#include "Contands.h"
 
 
 using namespace std;
-
-#define ID_TEX_BBOX 105		// special texture to draw object bounding box
 
 class CGameObject; 
 typedef CGameObject * LPGAMEOBJECT;
