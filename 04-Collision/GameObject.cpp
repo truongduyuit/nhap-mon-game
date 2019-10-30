@@ -164,3 +164,9 @@ CGameObject::~CGameObject()
 {
 
 }
+
+void CGameObject::basicCollision(float &min_tx, float &min_ty, float& nx,float& ny)
+{
+	x += min_tx * dx + nx * 0.4f;
+	y += min_ty * dy + ny * 0.4f;
+}

@@ -78,7 +78,7 @@ public:
 	void AddAnimation(int aniId);
 
 	bool isOverlapping(CGameObject* other);
-	
+	void basicCollision(float &min_tx, float &min_ty,float& nx, float& ny);
 
 	CGameObject();
 

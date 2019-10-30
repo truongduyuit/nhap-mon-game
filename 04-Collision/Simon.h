@@ -62,6 +62,7 @@ class CSimon : public CGameObject
 	bool isthrow;
 	bool isSit;
 
+	bool renderBBox;
 
 	DWORD action_time;
 public:
@@ -87,6 +88,7 @@ public:
 	void startThrow();
 	void startSit();
 	void upBBox();
+	void toggleRenderBBox() { renderBBox = !renderBBox; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 };

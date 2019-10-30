@@ -54,9 +54,6 @@
     <ClInclude Include="Textures.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Simon.h">
       <Filter>src\GameObjects\player</Filter>
     </ClInclude>
@@ -81,6 +78,9 @@
     <ClInclude Include="Contands.h">
       <Filter>src\Common</Filter>
     </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>src\Maps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.cpp">
@@ -96,9 +96,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Textures.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Simon.cpp">
@@ -121,6 +118,9 @@
     </ClCompile>
     <ClCompile Include="LoadResource.cpp">
       <Filter>src\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>src\Maps</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

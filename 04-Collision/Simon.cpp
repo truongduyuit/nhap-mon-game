@@ -166,8 +166,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			if (dynamic_cast<CSObject *>(e->obj))
 			{
 
-				OutputDebugString(L"c");
-
 				// Lụm roi
 				if (e->obj->state == CANE_ITEM)
 				{
@@ -191,14 +189,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 			if (dynamic_cast<CGround *>(e->obj))
 			{
-				x += min_tx * dx + nx * 0.4f;
-				y += min_ty * dy + ny * 0.4f;
-
-				if (isOverlapping(e->obj))
-				{
-					x += min_tx * dx + nx * 0.4f;
-					y += min_ty * dy + ny * 0.4f;
-				}
+				basicCollision(min_tx, min_ty, nx, ny);
+				if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
 			}
 		}
 
@@ -292,7 +284,7 @@ void CSimon::Render()
 	if (untouchable) alpha = 128;
 	animations[ani]->Render(x, y, alpha);
 
-	RenderBoundingBox();
+	if (renderBBox )RenderBoundingBox();
 	
 }
 
@@ -434,7 +426,7 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	}
 	else
 	{
-		right = left + SIMON_SIT_BBOX_WIDTH;
+		right = left + SIMON_BBOX_WIDTH;
 		bottom = top + SIMON_BBOX_HEIGHT;
 	}
 }
