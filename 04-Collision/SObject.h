@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
-#define SOBJECT_GRAVITY		0.001f
+#define SOBJECT_GRAVITY		0.0001f
 
 #define SOBJECT_HIDDEN		-1
 #define SMALL_CANDLE		0
@@ -12,7 +12,7 @@
 #define MONEY_ITEM			5
 
 #define SOBJECT_APPEAR_TIME		3500
-
+#define SOBJECT_DESTROY_TIME	400
 
 #define BBOX_BIG_CANDLE_W	16
 #define BBOX_BIG_CANDLE_H	32
@@ -40,12 +40,15 @@ class CSObject : public CGameObject
 	bool isAppear;
 	DWORD appear_start;
 
+	bool isDestroy;
+	DWORD destroy_start;
+
 public :
 	virtual void SetState(int state);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 
 	void ItemStart();
-
+	virtual void BeDestroy();
 
 	CSObject();
 	~CSObject() {};

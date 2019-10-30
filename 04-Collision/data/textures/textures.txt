@@ -1,6 +1,6 @@
 0	textures\\simon.png 		255 255 255
 10	textures\\background.png	255 255 255
-20	textures\\objects.png		34 177 255
+20	textures\\objects.png		34 177 76
 105	textures\\sprite\\bbox.png	255 255 255
 100	textures\\sprite\\ground\\0.png	255 0 255
 101	textures\\sprite\\ground\\1.png	255 0 255

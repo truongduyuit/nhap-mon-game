@@ -2,48 +2,12 @@
 #include "Ground.h"
 #include "Simon.h"
 #include "LoadResource.h"
+#include "Effect.h"
 
 CSObject::CSObject()
 {
 	CLoadResourcesHelper::LoadSprites("data\\sobjects\\sobject_sprites.txt");
 	//CLoadResourcesHelper::LoadAnimations("data\\sobjects\\sobject_anis.txt", this);
-}
-
-void CSObject::GetBoundingBox(float &left, float &top, float &right, float &bottom)
-{
-	left = x;
-	top = y;
-
-	if (state == BIG_CANDLE)
-	{
-		right = x + BBOX_BIG_CANDLE_W;
-		bottom = y + BBOX_BIG_CANDLE_H;
-	}
-	else if (state == SMALL_CANDLE)
-	{
-		right = x + BBOX_SMALL_CANDLE_W;
-		bottom = y + BBOX_SMALL_CANDLE_H;
-	}
-	else if (state == HEART_ITEM)
-	{
-		right = x + BBOX_HEART_ITEM_W;
-		bottom = y + BBOX_HEART_ITEM_H;
-	}
-	else if (state == MONEY_ITEM)
-	{
-		right = x + BBOX_MONEY_ITEM_W;
-		bottom = y + BBOX_MONEY_ITEM_H;
-	}
-	else if (state == CANE_ITEM)
-	{
-		right = x + BBOX_CANE_ITEM_W;
-		bottom = y + BBOX_CANE_ITEM_H;
-	}
-	else if (state == KNIFE_ITEM)
-	{
-		right = x + BBOX_KNIFE_ITEM_W;
-		bottom = y + BBOX_KNIFE_ITEM_H;
-	}
 }
 
 void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
@@ -52,7 +16,16 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	vy += SOBJECT_GRAVITY * dt;
 
+	if (isDestroy)
+	{
+		if (GetTickCount() - destroy_start >= SOBJECT_DESTROY_TIME)
+		{
+			SetState(nextState);
 
+			isDestroy = false;
+			destroy_start = 0;
+		}
+	}
 
 	if (isAppear)
 	{
@@ -156,4 +129,56 @@ void CSObject::ItemStart()
 {
 	isAppear = true;
 	appear_start = GetTickCount();
+}
+
+void CSObject::BeDestroy()
+{
+	CEffect * effect = CEffect::GetInstance();
+	effect->SetPosition(x, y);
+	effect->StartShowEffect();
+
+	if (!isDestroy)
+	{
+		isDestroy = true;
+		destroy_start = GetTickCount();
+
+		SetState(SOBJECT_HIDDEN);
+	}
+}
+
+void CSObject::GetBoundingBox(float &left, float &top, float &right, float &bottom)
+{
+	left = x;
+	top = y;
+
+	if (state == BIG_CANDLE)
+	{
+		right = x + BBOX_BIG_CANDLE_W;
+		bottom = y + BBOX_BIG_CANDLE_H;
+	}
+	else if (state == SMALL_CANDLE)
+	{
+		right = x + BBOX_SMALL_CANDLE_W;
+		bottom = y + BBOX_SMALL_CANDLE_H;
+	}
+	else if (state == HEART_ITEM)
+	{
+		right = x + BBOX_HEART_ITEM_W;
+		bottom = y + BBOX_HEART_ITEM_H;
+	}
+	else if (state == MONEY_ITEM)
+	{
+		right = x + BBOX_MONEY_ITEM_W;
+		bottom = y + BBOX_MONEY_ITEM_H;
+	}
+	else if (state == CANE_ITEM)
+	{
+		right = x + BBOX_CANE_ITEM_W;
+		bottom = y + BBOX_CANE_ITEM_H;
+	}
+	else if (state == KNIFE_ITEM)
+	{
+		right = x + BBOX_KNIFE_ITEM_W;
+		bottom = y + BBOX_KNIFE_ITEM_H;
+	}
 }

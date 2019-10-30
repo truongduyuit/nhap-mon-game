@@ -1,6 +1,7 @@
 #include "Skill.h"
 #include "SObject.h"
 #include "Simon.h"
+#include "Effect.h"
 
 CSkill::CSkill()
 {
@@ -51,8 +52,9 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (e->obj->GetState() == BIG_CANDLE)
 				{
 					int nextState = e->obj->GetNextState();
-					e->obj->SetState(nextState);
-					e->obj->SetNextState(SOBJECT_HIDDEN);
+
+					// Load effect destroy
+					coObjects->at(i)->BeDestroy();
 
 					set_isHidden(true);
 					SetPosition(-100.0f, -100.0f);
@@ -72,8 +74,9 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 
 					int nextState = coObjects->at(i)->GetNextState();
-					coObjects->at(i)->SetState(nextState);
-					coObjects->at(i)->SetNextState(SOBJECT_HIDDEN);
+
+					// Load effect destroy
+					coObjects->at(i)->BeDestroy();
 
 					set_isHidden(true);
 					SetPosition(-100.0f, -100.0f);

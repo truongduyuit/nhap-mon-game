@@ -18,6 +18,7 @@
 #include "SObject.h"
 #include "Weapon.h"
 #include "Skill.h"
+#include "Effect.h"
 
 #define WINDOW_CLASS_NAME L"Window"
 #define MAIN_WINDOW_TITLE L"Game Castlevania"
@@ -32,6 +33,7 @@ CGame *game;
 CSimon *simon;
 CSkill *skill;
 CSObject* sobject;
+CEffect* effect;
 
 vector<CSObject*> listSobject;
 vector<LPGAMEOBJECT> objects;
@@ -178,7 +180,7 @@ void LoadResources()
 	sobject->AddAnimation(931);
 	sobject->AddAnimation(932);
 	sobject->AddAnimation(933);
-	sobject->SetPosition(90.0f, 100.0f);
+	sobject->SetPosition(90.0f, 135.0f);
 	sobject->SetState(1);
 	sobject->SetNextState(2);
 	objects.push_back(sobject);
@@ -189,7 +191,7 @@ void LoadResources()
 	sobject->AddAnimation(931);
 	sobject->AddAnimation(932);
 	sobject->AddAnimation(933);
-	sobject->SetPosition(220.0f, 100.0f);
+	sobject->SetPosition(220.0f, 135.0f);
 	sobject->SetState(1);
 	sobject->SetNextState(3);
 	objects.push_back(sobject);
@@ -200,7 +202,7 @@ void LoadResources()
 	sobject->AddAnimation(931);
 	sobject->AddAnimation(932);
 	sobject->AddAnimation(933);
-	sobject->SetPosition(345.0f, 100.0f);
+	sobject->SetPosition(345.0f, 135.0f);
 	sobject->SetState(1);
 	sobject->SetNextState(3);
 	objects.push_back(sobject);
@@ -211,7 +213,7 @@ void LoadResources()
 	sobject->AddAnimation(931);
 	sobject->AddAnimation(932);
 	sobject->AddAnimation(933);
-	sobject->SetPosition(475.0f, 100.0f);
+	sobject->SetPosition(475.0f, 135.0f);
 	sobject->SetState(1);
 	sobject->SetNextState(2);
 	objects.push_back(sobject);
@@ -222,7 +224,7 @@ void LoadResources()
 	sobject->AddAnimation(931);
 	sobject->AddAnimation(932);
 	sobject->AddAnimation(933);
-	sobject->SetPosition(600.0f, 100.0f);
+	sobject->SetPosition(600.0f, 135.0f);
 	sobject->SetState(1);
 	sobject->SetNextState(4);
 	objects.push_back(sobject);
@@ -275,6 +277,10 @@ void LoadResources()
 	ground->setSize(720.0f, 10.0f);
 	ground->SetPosition(0.0f, 168.0f);
 	objects.push_back(ground);
+
+	effect = CEffect::GetInstance();
+	effect->set_isHidden(true);
+	objects.push_back(effect);
 }
 
 
@@ -395,8 +401,8 @@ void Render()
 
 			if (y > 128)
 			{
-				x += 32;
-				y = 0;
+				x += 32.0f;
+				y = 0.0f;
 			}
 		}
 

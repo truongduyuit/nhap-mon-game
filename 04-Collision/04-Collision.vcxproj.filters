@@ -40,6 +40,9 @@
     <Filter Include="src\Common">
       <UniqueIdentifier>{f5eee83f-254b-4359-9f6a-c7bc2acbea16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GameObjects\effects">
+      <UniqueIdentifier>{6eaa22c4-2d2f-4aa0-a330-3053df5cbe4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h">
@@ -81,6 +84,9 @@
     <ClInclude Include="Map.h">
       <Filter>src\Maps</Filter>
     </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>src\GameObjects\effects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.cpp">
@@ -121,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="Map.cpp">
       <Filter>src\Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>src\GameObjects\effects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

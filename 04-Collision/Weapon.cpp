@@ -2,6 +2,7 @@
 #include "Simon.h"
 #include "SObject.h"
 #include "LoadResource.h"
+#include "Effect.h"
 
 CWeapon::CWeapon()
 {
@@ -24,10 +25,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				if (coObjects->at(i)->GetState() == 1)
 				{
-
-					int nextState = coObjects->at(i)->GetNextState();
-					coObjects->at(i)->SetState(nextState);
-					coObjects->at(i)->SetNextState(SOBJECT_HIDDEN);
+					coObjects->at(i)->BeDestroy();
 				}
 			}
 		}

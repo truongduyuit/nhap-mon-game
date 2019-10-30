@@ -7,6 +7,7 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Sprites.h"
+#include "Effect.h"
 
 CGameObject::CGameObject()
 {
@@ -169,4 +170,11 @@ void CGameObject::basicCollision(float &min_tx, float &min_ty, float& nx,float& 
 {
 	x += min_tx * dx + nx * 0.4f;
 	y += min_ty * dy + ny * 0.4f;
+}
+
+void CGameObject::BeDestroy()
+{
+	CEffect * effect = CEffect::GetInstance();
+	effect->SetPosition(x, y);
+	effect->StartShowEffect();
 }

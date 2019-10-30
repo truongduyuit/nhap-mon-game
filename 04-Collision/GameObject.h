@@ -87,6 +87,7 @@ public:
 	virtual void Render() = 0;
 	virtual void SetState(int state) { this->state = state; }
 	virtual void SetNextState(int nextState) { this->nextState = nextState; }
+	virtual void BeDestroy();
 
 	~CGameObject();
 };
