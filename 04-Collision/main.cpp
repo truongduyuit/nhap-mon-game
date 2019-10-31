@@ -34,7 +34,6 @@ CGame *game;
 CMap* map;
 CSimon *simon;
 CSkill *skill;
-CSObject* sobject;
 CEffect* effect;
 
 vector<CSObject*> listSobject;
@@ -137,96 +136,40 @@ void LoadResources()
 	CTextures * textures = CTextures::GetInstance();
 	textures->LoadAllTextures();
 
-
-
-	CSprites * sprites = CSprites::GetInstance();
-	CAnimations * animations = CAnimations::GetInstance();
-
-	LPANIMATION ani;
-
 	map = new CMap();
 	map->LoadMapSprites();
 	map->LoadTilesPosition();
 
 #pragma region SObject
 
-	sobject = new CSObject();
-
-	ani = new CAnimation(100);
-	ani->Add(91001);
-	ani->Add(91002);
-	animations->Add(911, ani);
-
-	ani = new CAnimation(100);
-	ani->Add(91011);
-	ani->Add(91012);
-	animations->Add(921, ani);
-
-	ani = new CAnimation(100);
-	ani->Add(91021);
-	animations->Add(931, ani);
-
-	ani = new CAnimation(100);
-	ani->Add(91031);
-	animations->Add(932, ani);
-
-	ani = new CAnimation(100);
-	ani->Add(91041);
-	animations->Add(933, ani);
-
-	sobject = new CSObject();
-	sobject->AddAnimation(911);
-	sobject->AddAnimation(921);
-	sobject->AddAnimation(931);
-	sobject->AddAnimation(932);
-	sobject->AddAnimation(933);
+	CSObject* sobject = new CSObject();
 	sobject->SetPosition(90.0f, 135.0f);
-	sobject->SetState(1);
-	sobject->SetNextState(2);
+	sobject->SetState(BIG_CANDLE);
+	sobject->SetNextState(HEART_ITEM);
 	objects.push_back(sobject);
 
 	sobject = new CSObject();
-	sobject->AddAnimation(911);
-	sobject->AddAnimation(921);
-	sobject->AddAnimation(931);
-	sobject->AddAnimation(932);
-	sobject->AddAnimation(933);
 	sobject->SetPosition(220.0f, 135.0f);
-	sobject->SetState(1);
-	sobject->SetNextState(3);
+	sobject->SetState(BIG_CANDLE);
+	sobject->SetNextState(CANE_ITEM);
 	objects.push_back(sobject);
 
 	sobject = new CSObject();
-	sobject->AddAnimation(911);
-	sobject->AddAnimation(921);
-	sobject->AddAnimation(931);
-	sobject->AddAnimation(932);
-	sobject->AddAnimation(933);
 	sobject->SetPosition(345.0f, 135.0f);
-	sobject->SetState(1);
-	sobject->SetNextState(3);
+	sobject->SetState(BIG_CANDLE);
+	sobject->SetNextState(CANE_ITEM);
 	objects.push_back(sobject);
 
 	sobject = new CSObject();
-	sobject->AddAnimation(911);
-	sobject->AddAnimation(921);
-	sobject->AddAnimation(931);
-	sobject->AddAnimation(932);
-	sobject->AddAnimation(933);
 	sobject->SetPosition(475.0f, 135.0f);
-	sobject->SetState(1);
-	sobject->SetNextState(2);
+	sobject->SetState(BIG_CANDLE);
+	sobject->SetNextState(HEART_ITEM);
 	objects.push_back(sobject);
 
 	sobject = new CSObject();
-	sobject->AddAnimation(911);
-	sobject->AddAnimation(921);
-	sobject->AddAnimation(931);
-	sobject->AddAnimation(932);
-	sobject->AddAnimation(933);
 	sobject->SetPosition(600.0f, 135.0f);
-	sobject->SetState(1);
-	sobject->SetNextState(4);
+	sobject->SetState(BIG_CANDLE);
+	sobject->SetNextState(KNIFE_ITEM);
 	objects.push_back(sobject);
 
 #pragma endregion SObject
@@ -235,15 +178,12 @@ void LoadResources()
 
 	CWeapon* weapon = CWeapon::GetInstance();
 	objects.push_back(weapon);
-
 	/*===========================================================*/
 
 	skill = CSkill::GetInstance();
 	objects.push_back(skill);
-
-
-
 	/*===========================================================*/
+
 
 	simon = new CSimon();
 	simon->SetPosition(40.0f, 50.0f);

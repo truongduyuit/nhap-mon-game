@@ -7,7 +7,7 @@
 CSObject::CSObject()
 {
 	CLoadResourcesHelper::LoadSprites("data\\sobjects\\sobject_sprites.txt");
-	//CLoadResourcesHelper::LoadAnimations("data\\sobjects\\sobject_anis.txt", this);
+	CLoadResourcesHelper::LoadAnimations("data\\sobjects\\sobject_anis.txt", this);
 }
 
 void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
