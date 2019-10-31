@@ -8,7 +8,7 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Textures.h"
-#include "Map.h"
+//#include "Map.h"
 
 #include "LoadResource.h"
 #include "Contands.h"
@@ -28,6 +28,8 @@
 #define SCREEN_HEIGHT 300
 
 #define MAX_FRAME_RATE 120
+
+#define ID_TEX_BACKBROUND		10
 
 CGame *game;
 CSimon *simon;

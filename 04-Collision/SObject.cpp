@@ -21,9 +21,12 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (GetTickCount() - destroy_start >= SOBJECT_DESTROY_TIME)
 		{
 			SetState(nextState);
+			nextState = SOBJECT_HIDDEN;
 
 			isDestroy = false;
 			destroy_start = 0;
+
+			ItemStart();
 		}
 	}
 
