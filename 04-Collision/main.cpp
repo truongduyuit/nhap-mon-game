@@ -1,4 +1,4 @@
-#include <windows.h>
+﻿#include <windows.h>
 #include<fstream>
 
 #include <d3d9.h>
@@ -32,7 +32,12 @@
 CGame *game;
 CMap* map;
 CSimon *simon;
-vector<LPGAMEOBJECT> objects;
+
+vector<LPGAMEOBJECT> coObjectsFull;
+vector<LPGAMEOBJECT> coObjectGround;
+vector<LPGAMEOBJECT> coObjectsWithSimon;
+vector<LPGAMEOBJECT> coObjectsWithSkill;
+
 
 class CSampleKeyHander: public CKeyEventHandler
 {
@@ -131,75 +136,54 @@ void LoadResources()
 	CTextures * textures = CTextures::GetInstance();
 	textures->LoadAllTextures();
 
-	map = new CMap();
+	map = CMap::GetInstance();
 	map->LoadMapSprites();
 	map->LoadTilesPosition();
-	map->LoadObjects(objects);
+	map->LoadObjects();
 
 	simon = CSimon::GetInstance();
+
+	// Chỉ cần tạo mới khi chuyển map
+	coObjectsFull = map->Get_coObjectsFull();
+	coObjectGround = map->Get_coObjectGround();
 }
 
 
 void Update(DWORD dt)
 {
-	vector<LPGAMEOBJECT> coObjects;
-	vector<LPGAMEOBJECT> coObjectGround;
-	vector<LPGAMEOBJECT> coObjectsFull;
-	vector<LPGAMEOBJECT> coObjectsWithSkill;
+	map = CMap::GetInstance();
 
-	for (int i = 0; i < objects.size(); i++)
+	// Cần Update liên tục vì có thể chuyển state
+	coObjectsWithSimon = map->Get_coObjectsWithSimon();
+	coObjectsWithSkill = map->Get_coObjectsWithSkill();
+
+	for (int i = 0; i < coObjectsFull.size(); i++)
 	{
-		coObjectsFull.push_back(objects[i]);
+		if (dynamic_cast<CSimon *>(coObjectsFull[i]))
+			coObjectsFull[i]->Update(dt, &coObjectsWithSimon);
 
-		if (dynamic_cast<CGround *>(objects[i]))
+		else if (dynamic_cast<CWeapon *>(coObjectsFull[i]))
 		{
-			coObjectGround.push_back(objects[i]);
-			coObjects.push_back(objects[i]);
-		}
-	
-		if (dynamic_cast<CSObject *>(objects[i]))
-		{
-			if (objects[i]->GetState() != 1 && objects[i]->GetState() != 0)
-			{
-				coObjects.push_back(objects[i]);
-			}
-			else
-			{
-				coObjectsWithSkill.push_back(objects[i]);
-			}
-		}
-	}
-
-
-
-	for (int i = 0; i < objects.size(); i++)
-	{
-		if (dynamic_cast<CSimon *>(objects[i]))
-			objects[i]->Update(dt, &coObjects);
-
-		else if (dynamic_cast<CWeapon *>(objects[i]))
-		{
-			objects[i]->Update(dt, &coObjectsFull);
+			coObjectsFull[i]->Update(dt, &coObjectsWithSkill);
 		}
 
-		else if (dynamic_cast<CSObject *>(objects[i]))
+		else if (dynamic_cast<CSObject *>(coObjectsFull[i]))
 		{
-			objects[i]->Update(dt, &coObjectGround);
+			coObjectsFull[i]->Update(dt, &coObjectGround);
 		}
 
-		else if (dynamic_cast<CSkill *>(objects[i]))
+		else if (dynamic_cast<CSkill *>(coObjectsFull[i]))
 		{
-			objects[i]->Update(dt, &coObjectsWithSkill);
+			coObjectsFull[i]->Update(dt, &coObjectsWithSkill);
 		}
-
 		else
 		{
-			objects[i]->Update(dt, &coObjectsFull);
+			coObjectsFull[i]->Update(dt, &coObjectsFull);
 		}
 	}
 
 
-	// Update camera to follow mario
+	// Update camera to follow simon
 	float cx, cy;
 	simon->GetPosition(cx, cy);
 
@@ -236,8 +220,8 @@ void Render()
 		
 		map->DrawMap();
 
-		for (int i = 0; i < objects.size(); i++)
-			objects[i]->Render();
+		for (int i = 0; i < coObjectsFull.size(); i++)
+			coObjectsFull[i]->Render();
 
 		spriteHandler->End();
 		d3ddv->EndScene();

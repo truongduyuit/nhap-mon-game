@@ -58,7 +58,7 @@ void CMap::DrawMap()
 	}
 }
 
-void CMap::LoadObjects(vector<LPGAMEOBJECT>& objects)
+void CMap::LoadObjects()
 {
 	CSimon* simon;
 
@@ -83,7 +83,7 @@ void CMap::LoadObjects(vector<LPGAMEOBJECT>& objects)
 			ground = new CGround();
 			ground->setSize(float(size_x), float(size_y));
 			ground->SetPosition(float(x), float(y));
-			objects.push_back(ground);
+			coObjectsFull.push_back(ground);
 		}
 		else if (id_object == 1)
 		{
@@ -92,7 +92,7 @@ void CMap::LoadObjects(vector<LPGAMEOBJECT>& objects)
 
 			simon = CSimon::GetInstance();
 			simon->SetPosition(float(x), float(y));
-			objects.push_back(simon);
+			coObjectsFull.push_back(simon);
 		}
 		else if (id_object == 2)
 		{
@@ -103,19 +103,87 @@ void CMap::LoadObjects(vector<LPGAMEOBJECT>& objects)
 			sobject->SetPosition(float(x), float(y));
 			sobject->SetState(state);
 			sobject->SetNextState(nextState);
-			objects.push_back(sobject);
+			coObjectsFull.push_back(sobject);
 		}
 	}
 
 	in.close();
 
 	CWeapon* weapon = CWeapon::GetInstance();
-	objects.push_back(weapon);
+	coObjectsFull.push_back(weapon);
+
 	CSkill* skill = CSkill::GetInstance();
-	objects.push_back(skill);
+	coObjectsFull.push_back(skill);
+
 	CEffect* effect = CEffect::GetInstance();
 	effect->set_isHidden(true);
-	objects.push_back(effect);
+	coObjectsFull.push_back(effect);
+}
+
+vector<LPGAMEOBJECT> CMap::MergeListCoObject(vector<LPGAMEOBJECT> result, vector<LPGAMEOBJECT> objects)
+{
+	for (int i = 0; i < objects.size(); i++)
+	{
+		result.push_back(objects[i]);
+	}
+
+	return result;
+}
+
+vector<LPGAMEOBJECT> CMap::Get_coObjectsFull()
+{
+	return coObjectsFull;
+}
+
+vector<LPGAMEOBJECT> CMap::Get_coObjectGround()
+{
+	vector<LPGAMEOBJECT> coObjectGround;
+
+	for (int i = 0; i < coObjectsFull.size(); i++)
+	{
+		if (dynamic_cast<CGround *>(coObjectsFull[i]))
+		{
+			coObjectGround.push_back(coObjectsFull[i]);
+		}
+	}
+
+	return coObjectGround;
+}
+
+vector<LPGAMEOBJECT> CMap::Get_coObjectsWithSimon()
+{
+	vector<LPGAMEOBJECT> coObjectsWithSimon;
+
+	for (int i = 0; i < coObjectsFull.size(); i++)
+	{
+		if (dynamic_cast<CSObject *>(coObjectsFull[i]))
+		{
+			if (coObjectsFull[i]->GetState() != 1 && coObjectsFull[i]->GetState() != 0)
+			{
+				coObjectsWithSimon.push_back(coObjectsFull[i]);
+			}
+		}
+	}
+
+	return MergeListCoObject(coObjectsWithSimon, Get_coObjectGround());
+}
+
+vector<LPGAMEOBJECT> CMap::Get_coObjectsWithSkill()
+{
+	vector<LPGAMEOBJECT> coObjectsWithSkill;
+
+	for (int i = 0; i < coObjectsFull.size(); i++)
+	{
+		if (dynamic_cast<CSObject *>(coObjectsFull[i]))
+		{
+			if (coObjectsFull[i]->GetState() == 1 || coObjectsFull[i]->GetState() == 0) 
+			{
+				coObjectsWithSkill.push_back(coObjectsFull[i]);
+			}
+		}
+	}
+
+	return coObjectsWithSkill;
 }
 
 CMap::CMap()
@@ -130,4 +198,11 @@ CMap::CMap(int lv, int maxx, int maxy)
 	this->level = lv;
 	this->max_x = maxx;
 	this->max_y = maxy;
+}
+
+CMap* CMap::__instance = NULL;
+CMap * CMap::GetInstance()
+{
+	if (__instance == NULL) __instance = new CMap();
+	return __instance;
 }

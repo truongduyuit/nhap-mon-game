@@ -7,10 +7,9 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
-#define ID_TEX_BACKBROUND		10
-
 class CMap
 {
+	static CMap* __instance;
 
 	int level;
 
@@ -18,6 +17,7 @@ class CMap
 	int max_y;
 
 	vector<CTileMat*> tiles;
+	vector<LPGAMEOBJECT> coObjectsFull;
 public :
 
 	CMap();
@@ -25,8 +25,15 @@ public :
 
 	void LoadMapSprites();
 	void LoadTilesPosition();
-	void LoadObjects(vector<LPGAMEOBJECT>& objects);
+	void LoadObjects();
 	void DrawMap();
 
+	vector<LPGAMEOBJECT> MergeListCoObject(vector<LPGAMEOBJECT> result, vector<LPGAMEOBJECT> objects);
+	vector<LPGAMEOBJECT> Get_coObjectsFull();
+	vector<LPGAMEOBJECT> Get_coObjectGround();
+	vector<LPGAMEOBJECT> Get_coObjectsWithSimon();
+	vector<LPGAMEOBJECT> Get_coObjectsWithSkill();
+
+	static CMap * GetInstance();
 	~CMap() { ; }
 };
