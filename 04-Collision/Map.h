@@ -1,24 +1,31 @@
 #pragma once
 #include <Windows.h>
-#include "Sprites.h"
+
+#include "LoadResource.h"
+#include "TileMat.h"
 
 #include <d3d9.h>
 #include <d3dx9.h>
 
 #define ID_TEX_BACKBROUND		10
-#define SCREEN_WIDTH			320
-#define SCREEN_HEIGHT			240
 
 class CMap
 {
-	//static CMap * __instance;
 
-	int end_col = 16;
-	int end_row = 11;
+	int level;
 
+	int max_x;
+	int max_y;
+
+	vector<CTileMat*> tiles;
 public :
-	void Load(int id, LPCWSTR filePath, int r, int g, int b);
-	void Render();
 
-	//static CMap * GetInstance();
+	CMap();
+	CMap(int lv, int maxx, int maxy);
+
+	void LoadMapSprites();
+	void LoadTilesPosition();
+	void DrawMap();
+
+	~CMap() { ; }
 };

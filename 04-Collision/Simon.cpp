@@ -50,6 +50,22 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	CWeapon* weapon = CWeapon::GetInstance();
 	CSkill* skill = CSkill::GetInstance();
 
+	// pick
+	if (GetTickCount() - action_time >= SIMON_PICK_TIME)
+	{
+		isPick = false;
+		action_time = 0;
+	}
+	else
+	{
+		dx = 0;
+	}
+
+	if (isPick)
+	{
+		weapon->set_isHidden(true);
+	}
+
 	// attack
 	if (GetTickCount() - action_time >= SIMON_ATTACK_TIME)
 	{
@@ -91,23 +107,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				skill->startThrow();
 			}
 		}
-	}
-
-
-	// pick
-	if (GetTickCount() - action_time >= SIMON_PICK_TIME)
-	{
-		isPick = false;
-		action_time = 0;
-	}
-	else
-	{		
-		dx = 0;
-	}
-
-	if (isPick)
-	{
-		weapon->set_isHidden(true);
 	}
 
 	if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
@@ -368,14 +367,17 @@ void CSimon::startJump()
 
 void CSimon::startPick()
 {
-	isPick = true;
+	if (!isPick)
+	{
+		isPick = true;
 
-	isAttack = false;
-	isthrow = false;
+		isAttack = false;
+		isthrow = false;
 
-	action_time = GetTickCount();
+		action_time = GetTickCount();
 
-	vx = 0;
+		vx = 0;
+	}
 }
 
 void CSimon::startSit()

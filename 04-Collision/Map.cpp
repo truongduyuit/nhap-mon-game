@@ -1,49 +1,63 @@
 #include "Map.h"
-#include "Game.h"
-#include "Textures.h"
-#include "Sprites.h"
+#include <fstream>
 
-void CMap::Load(int id, LPCWSTR filePath, int r , int g, int b)
+void CMap::LoadMapSprites()
 {
-	CTextures * textures = CTextures::GetInstance();
-	textures->Add(id, filePath, D3DCOLOR_XRGB(r, g, b));
-	LPDIRECT3DTEXTURE9 texBg = textures->Get(id);
-
-	CSprites * sprites = CSprites::GetInstance();
-	CGame* game = CGame::GetInstance();
-	float x = game->getCamPos_x();
-	float y = game->getCamPos_y();
-
-	for (int i = 0; i < end_row; i++)
-	{
-		for (int j = 0; j < end_col; j++)
-		{
-			sprites->Add(i * 9000 + j, x + j * 20, y + i * 20, x + j*20 + 20, y + i * 20 + 20, texBg);
-		}
-	}
-
-	
+	CLoadResourcesHelper::LoadSprites("data\\background\\background_sprites.txt");
 }
 
-void CMap::Render()
+void CMap::LoadTilesPosition()
 {
+	ifstream in;
 
-	CSprites * sprites = CSprites::GetInstance();
-	CGame* game = CGame::GetInstance();
-	float x = game->getCamPos_x();
-	float y = game->getCamPos_y();
+	in.open("data\\background\\background_tile_position.txt", ios::in);
 
-	for (int i = 0; i < end_row; i++)
+	if (in.fail())
 	{
-		for (int j = 0; j < end_col; j++)
+		OutputDebugString(L"[ERROR] Load BackgroundSprites position failed ! \n");
+		return;
+	}
+
+	in >> max_x;
+	in >> max_y;
+
+	CTileMat* tile;
+
+	while (!in.eof())
+	{
+		for (int i = 0; i < max_y; i++)
 		{
-			sprites->Get(i*9000 + j)->Draw(x + j*20, y + i*20);
+			for (int j = 0; j < max_x; j++)
+			{
+				int id;
+				in >> id;
+
+				tile = new CTileMat(id, i, j);
+				tiles.push_back(tile);
+			}
 		}
+	}
+	in.close();
+}
+
+void CMap::DrawMap()
+{
+	for (int i = 0; i < tiles.size(); i++)
+	{
+		tiles[i]->Render();
 	}
 }
 
-//CMap* CMap::GetInstance()
-//{
-//	if (__instance == NULL) __instance = new CMap();
-//	return __instance;
-//}
+CMap::CMap()
+{
+	this->level = 1;
+	this->max_x = MAP1_MAX_X;
+	this->max_y = MAP1_MAX_y;
+}
+
+CMap::CMap(int lv, int maxx, int maxy)
+{
+	this->level = lv;
+	this->max_x = maxx;
+	this->max_y = maxy;
+}

@@ -8,7 +8,7 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Textures.h"
-//#include "Map.h"
+#include "Map.h"
 
 #include "LoadResource.h"
 #include "Contands.h"
@@ -24,14 +24,14 @@
 #define MAIN_WINDOW_TITLE L"Game Castlevania"
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 200)
-#define SCREEN_WIDTH 420
-#define SCREEN_HEIGHT 300
+
 
 #define MAX_FRAME_RATE 120
 
 #define ID_TEX_BACKBROUND		10
 
 CGame *game;
+CMap* map;
 CSimon *simon;
 CSkill *skill;
 CSObject* sobject;
@@ -89,37 +89,34 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 void CSampleKeyHander::KeyState(BYTE *states)
 {
 	if (simon->GetState() == SIMON_STATE_DIE) return;
-	if (game->IsKeyDown(DIK_RIGHT) && !simon->get_isAttack())
+	if (!simon->get_isPick())
 	{
-		if (simon->get_isJump())
+		if (game->IsKeyDown(DIK_RIGHT) && !simon->get_isAttack())
 		{
-			if (simon->nx > 0) simon->SetState(SIMON_STATE_WALKING_RIGHT);
+			if (simon->get_isJump())
+			{
+				if (simon->nx > 0) simon->SetState(SIMON_STATE_WALKING_RIGHT);
+			}
+			else
+			{
+				simon->SetState(SIMON_STATE_WALKING_RIGHT);
+			}
+		}
+		else if (game->IsKeyDown(DIK_LEFT) && !simon->get_isAttack())
+		{
+			if (simon->get_isJump())
+			{
+				if (simon->nx < 0) simon->SetState(SIMON_STATE_WALKING_LEFT);
+			}
+			else
+			{
+				simon->SetState(SIMON_STATE_WALKING_LEFT);
+			}
 		}
 		else
-		{
-			simon->SetState(SIMON_STATE_WALKING_RIGHT);
-		}
+			simon->SetState(SIMON_STATE_IDLE);
 	}
-	else if (game->IsKeyDown(DIK_LEFT) && !simon->get_isAttack())
-	{
-		if (simon->get_isJump())
-		{
-			if (simon->nx < 0) simon->SetState(SIMON_STATE_WALKING_LEFT);
-		}
-		else
-		{
-			simon->SetState(SIMON_STATE_WALKING_LEFT);
-		}
-			
-	}
-	//else if (game->IsKeyDown(DIK_D))
-	//	simon->SetState(SIMON_STATE_ATTACK);
-	//else if (game->IsKeyDown(DIK_A))
-	//	simon->SetState(SIMON_STATE_THROW);
-	//else if (game->IsKeyDown(DIK_DOWN))
-	//	simon->SetState(SIMON_STATE_SIT);
-	else
-		simon->SetState(SIMON_STATE_IDLE);
+
 }
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -141,14 +138,15 @@ void LoadResources()
 	textures->LoadAllTextures();
 
 
-	LPDIRECT3DTEXTURE9 texBg = textures->Get(ID_TEX_BACKBROUND);
-
 
 	CSprites * sprites = CSprites::GetInstance();
 	CAnimations * animations = CAnimations::GetInstance();
 
 	LPANIMATION ani;
 
+	map = new CMap();
+	map->LoadMapSprites();
+	map->LoadTilesPosition();
 
 #pragma region SObject
 
@@ -243,29 +241,6 @@ void LoadResources()
 	skill = CSkill::GetInstance();
 	objects.push_back(skill);
 
-	/*===========================================================*/
-
-	ifstream in;
-	in.open("data\\background\\background_sprites.txt", ios::in);
-
-	if (in.fail())
-	{
-		OutputDebugString(L"[ERROR] Load BackgroundSprites failed ! \n");
-		return;
-	}
-
-	while (!in.eof())
-	{
-		int id, l, t, r, b;
-		in >> id;
-		in >> l;
-		in >> t;
-		in >> r;
-		in >> b;
-		sprites->Add(id, l, t, r, b, texBg);
-	}
-
-	in.close();
 
 
 	/*===========================================================*/
@@ -379,36 +354,8 @@ void Render()
 		d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
-
-		CSprites *sprites = CSprites::GetInstance();
-	
-		ifstream in;
-		in.open("data\\background\\background_sprites_position.txt", ios::in);
-
-		if (in.fail())
-		{
-			OutputDebugString(L"[ERROR] Load BackgroundSprites position failed ! \n");
-			return;
-		}
-
-		int x = 0, y = 0;
-		while (!in.eof())
-		{
-			int id;
-			in >> id;
-
-			sprites->Get(id)->Draw(x, y + 20.0f);
-
-			y += 32.0f;
-
-			if (y > 128)
-			{
-				x += 32.0f;
-				y = 0.0f;
-			}
-		}
-
-		in.close();
+		
+		map->DrawMap();
 
 		for (int i = 0; i < objects.size(); i++)
 			objects[i]->Render();

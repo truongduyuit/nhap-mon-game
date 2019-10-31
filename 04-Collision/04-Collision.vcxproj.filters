@@ -87,6 +87,9 @@
     <ClInclude Include="Effect.h">
       <Filter>src\GameObjects\effects</Filter>
     </ClInclude>
+    <ClInclude Include="TileMat.h">
+      <Filter>src\Maps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.cpp">
@@ -130,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="Effect.cpp">
       <Filter>src\GameObjects\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMat.cpp">
+      <Filter>src\Maps</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
