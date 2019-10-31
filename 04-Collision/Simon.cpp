@@ -432,3 +432,10 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		bottom = top + SIMON_BBOX_HEIGHT;
 	}
 }
+
+CSimon* CSimon::__instance = NULL;
+CSimon * CSimon::GetInstance()
+{
+	if (__instance == NULL) __instance = new CSimon();
+	return __instance;
+}

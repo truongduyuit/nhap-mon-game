@@ -18,7 +18,6 @@
 #include "SObject.h"
 #include "Weapon.h"
 #include "Skill.h"
-#include "Effect.h"
 
 #define WINDOW_CLASS_NAME L"Window"
 #define MAIN_WINDOW_TITLE L"Game Castlevania"
@@ -33,10 +32,6 @@
 CGame *game;
 CMap* map;
 CSimon *simon;
-CSkill *skill;
-CEffect* effect;
-
-vector<CSObject*> listSobject;
 vector<LPGAMEOBJECT> objects;
 
 class CSampleKeyHander: public CKeyEventHandler
@@ -139,65 +134,9 @@ void LoadResources()
 	map = new CMap();
 	map->LoadMapSprites();
 	map->LoadTilesPosition();
+	map->LoadObjects(objects);
 
-#pragma region SObject
-
-	CSObject* sobject = new CSObject();
-	sobject->SetPosition(90.0f, 135.0f);
-	sobject->SetState(BIG_CANDLE);
-	sobject->SetNextState(HEART_ITEM);
-	objects.push_back(sobject);
-
-	sobject = new CSObject();
-	sobject->SetPosition(220.0f, 135.0f);
-	sobject->SetState(BIG_CANDLE);
-	sobject->SetNextState(CANE_ITEM);
-	objects.push_back(sobject);
-
-	sobject = new CSObject();
-	sobject->SetPosition(345.0f, 135.0f);
-	sobject->SetState(BIG_CANDLE);
-	sobject->SetNextState(CANE_ITEM);
-	objects.push_back(sobject);
-
-	sobject = new CSObject();
-	sobject->SetPosition(475.0f, 135.0f);
-	sobject->SetState(BIG_CANDLE);
-	sobject->SetNextState(HEART_ITEM);
-	objects.push_back(sobject);
-
-	sobject = new CSObject();
-	sobject->SetPosition(600.0f, 135.0f);
-	sobject->SetState(BIG_CANDLE);
-	sobject->SetNextState(KNIFE_ITEM);
-	objects.push_back(sobject);
-
-#pragma endregion SObject
-
-	/*===========================================================*/
-
-	CWeapon* weapon = CWeapon::GetInstance();
-	objects.push_back(weapon);
-	/*===========================================================*/
-
-	skill = CSkill::GetInstance();
-	objects.push_back(skill);
-	/*===========================================================*/
-
-
-	simon = new CSimon();
-	simon->SetPosition(40.0f, 50.0f);
-	objects.push_back(simon);
-	/*===========================================================*/
-
-	CGround* ground = new CGround();
-	ground->setSize(720.0f, 10.0f);
-	ground->SetPosition(0.0f, 168.0f);
-	objects.push_back(ground);
-
-	effect = CEffect::GetInstance();
-	effect->set_isHidden(true);
-	objects.push_back(effect);
+	simon = CSimon::GetInstance();
 }
 
 

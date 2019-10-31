@@ -25,6 +25,7 @@ public :
 
 	void LoadMapSprites();
 	void LoadTilesPosition();
+	void LoadObjects(vector<LPGAMEOBJECT>& objects);
 	void DrawMap();
 
 	~CMap() { ; }

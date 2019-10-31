@@ -49,6 +49,8 @@
 
 class CSimon : public CGameObject
 {
+	static CSimon * __instance;
+
 	int hp;
 	vector<int> skill;
 	int sthrow;
@@ -91,4 +93,6 @@ public:
 	void toggleRenderBBox() { renderBBox = !renderBBox; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
+
+	static CSimon * GetInstance();
 };
