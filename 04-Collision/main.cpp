@@ -53,6 +53,10 @@ void LoadRoundGame(int round)
 	map = CMap::GetInstance();
 	map->SetRound(round);
 
+	coObjectsFull.clear();
+	coObjectGround.clear();
+	coObjectsWithSimon.clear();
+	coObjectsWithSkill.clear();
 
 	// Chỉ cần tạo mới khi chuyển map
 	map->LoadTilesPosition();
@@ -76,7 +80,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		}
 		break;
 	case DIK_A:
-		if (!simon->get_isAttack() && !simon->get_isPick() && !simon->get_isJump())
+		if (!simon->get_isAttack() && !simon->get_isPick() && !simon->get_isJump() && !simon->get_isThrow())
 		{
 			simon->SetState(SIMON_STATE_THROW);
 		}
@@ -157,14 +161,10 @@ void LoadResources()
 
 	map = CMap::GetInstance();
 	map->LoadMapSprites(); 
-	map->SetRound(1);
 
 	simon = CSimon::GetInstance();
 
-	map->LoadTilesPosition();
-	map->LoadObjects();
-	coObjectsFull = map->Get_coObjectsFull();
-	coObjectGround = map->Get_coObjectGround();
+	LoadRoundGame(1);
 }
 
 

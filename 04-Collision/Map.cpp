@@ -75,7 +75,7 @@ void CMap::LoadObjects()
 	if (coObjectsFull.size() > 0)
 		coObjectsFull.clear();
 
-	CSimon* simon;
+	CSimon* simon = CSimon::GetInstance();
 
 	ifstream in;
 
@@ -87,7 +87,7 @@ void CMap::LoadObjects()
 	{
 		in.open("data\\background\\map2_objects.txt", ios::in);
 	}
-	
+	//in.open("data\\background\\map1_objects.txt", ios::in);
 
 	if (in.fail())
 	{
