@@ -18,9 +18,20 @@ void CMap::LoadMapSprites()
 
 void CMap::LoadTilesPosition()
 {
+	if (tiles.size() > 0)
+		tiles.clear();
+
 	ifstream in;
 
-	in.open("data\\background\\background_tile_position.txt", ios::in);
+	if (this->round == 1)
+	{
+		in.open("data\\background\\map1_tile_position.txt", ios::in);
+	}
+	else if (this->round == 2)
+	{
+		in.open("data\\background\\map2_tile_position.txt", ios::in);
+	}
+	
 
 	if (in.fail())
 	{
@@ -28,8 +39,7 @@ void CMap::LoadTilesPosition()
 		return;
 	}
 
-	in >> max_x;
-	in >> max_y;
+	in >> max_x >> max_y >> tile_size_x >> tile_size_y;
 
 	CTileMat* tile;
 
@@ -43,6 +53,7 @@ void CMap::LoadTilesPosition()
 				in >> id;
 
 				tile = new CTileMat(id, i, j);
+				tile->SetTileSize(tile_size_x, tile_size_y);
 				tiles.push_back(tile);
 			}
 		}
@@ -60,10 +71,23 @@ void CMap::DrawMap()
 
 void CMap::LoadObjects()
 {
+
+	if (coObjectsFull.size() > 0)
+		coObjectsFull.clear();
+
 	CSimon* simon;
 
 	ifstream in;
-	in.open("data\\background\\map1_objects.txt", ios::in);
+
+	if (this->round == 1)
+	{
+		in.open("data\\background\\map1_objects.txt", ios::in);
+	}
+	else if (this->round == 2)
+	{
+		in.open("data\\background\\map2_objects.txt", ios::in);
+	}
+	
 
 	if (in.fail())
 	{
@@ -188,16 +212,12 @@ vector<LPGAMEOBJECT> CMap::Get_coObjectsWithSkill()
 
 CMap::CMap()
 {
-	this->level = 1;
-	this->max_x = MAP1_MAX_X;
-	this->max_y = MAP1_MAX_y;
+	this->round = 1;
 }
 
-CMap::CMap(int lv, int maxx, int maxy)
+void CMap::SetRound(int r)
 {
-	this->level = lv;
-	this->max_x = maxx;
-	this->max_y = maxy;
+	this->round = r;
 }
 
 CMap* CMap::__instance = NULL;

@@ -6,7 +6,13 @@ void CTileMat::Render()
 {
 	CSprites *sprites = CSprites::GetInstance();
 
-	sprites->Get(id)->Draw(index_y*TILE_SIZE, index_x * TILE_SIZE + 20);
+	sprites->Get(id)->Draw(index_y*tile_size_x, index_x * tile_size_y + 20);
+}
+
+void CTileMat::SetTileSize(int size_x, int size_y)
+{
+	this->tile_size_x = size_x;
+	this->tile_size_y = size_y;
 }
 
 

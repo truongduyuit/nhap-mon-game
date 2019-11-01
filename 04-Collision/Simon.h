@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "LoadResource.h"
 
-#define SIMON_WALKING_SPEED			0.1f
+#define SIMON_WALKING_SPEED			0.05f
 #define SIMON_GRAVITY				0.001f
 #define SIMON_JUMP_SPEED_Y			0.3f
 

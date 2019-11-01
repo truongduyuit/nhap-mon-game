@@ -48,6 +48,19 @@ class CSampleKeyHander: public CKeyEventHandler
 
 CSampleKeyHander * keyHandler; 
 
+void LoadRoundGame(int round)
+{
+	map = CMap::GetInstance();
+	map->SetRound(round);
+
+
+	// Chỉ cần tạo mới khi chuyển map
+	map->LoadTilesPosition();
+	map->LoadObjects();
+	coObjectsFull = map->Get_coObjectsFull();
+	coObjectGround = map->Get_coObjectGround();
+}
+
 void CSampleKeyHander::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
@@ -73,6 +86,12 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		{
 			simon->SetState(SIMON_STATE_SIT);
 		}	
+		break;
+	case DIK_F1:
+		LoadRoundGame(1);
+		break;
+	case DIK_F2:
+		LoadRoundGame(2);
 		break;
 	case DIK_P:
 		simon->toggleRenderBBox();
@@ -137,13 +156,13 @@ void LoadResources()
 	textures->LoadAllTextures();
 
 	map = CMap::GetInstance();
-	map->LoadMapSprites();
-	map->LoadTilesPosition();
-	map->LoadObjects();
+	map->LoadMapSprites(); 
+	map->SetRound(1);
 
 	simon = CSimon::GetInstance();
 
-	// Chỉ cần tạo mới khi chuyển map
+	map->LoadTilesPosition();
+	map->LoadObjects();
 	coObjectsFull = map->Get_coObjectsFull();
 	coObjectGround = map->Get_coObjectGround();
 }
@@ -187,11 +206,13 @@ void Update(DWORD dt)
 	float cx, cy;
 	simon->GetPosition(cx, cy);
 
+	int sizeMap = map->GetRound() == 1 ? 32 * 23 : 64 * 43;
+
 	if (cx - SCREEN_WIDTH / 2 < 0)
 	{
 		cx = 0;
 	}
-	else if (cx + SCREEN_WIDTH / 2 > 32*23)
+	else if (cx + SCREEN_WIDTH / 2 > sizeMap)
 	{
 		cx = 32 * 23 - SCREEN_WIDTH;
 	}

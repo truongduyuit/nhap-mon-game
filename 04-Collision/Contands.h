@@ -7,8 +7,6 @@
 #define MAP1_MAX_X	24
 #define MAP1_MAX_y	5
 
-#define TILE_SIZE	32
-
 #pragma region Textures
 #define TEX_PATH "data\\textures\\textures.txt"
 

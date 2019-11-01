@@ -11,22 +11,26 @@ class CMap
 {
 	static CMap* __instance;
 
-	int level;
+	int round;
 
 	int max_x;
 	int max_y;
 
 	vector<CTileMat*> tiles;
 	vector<LPGAMEOBJECT> coObjectsFull;
+
+	int tile_size_x;
+	int tile_size_y;
 public :
 
 	CMap();
-	CMap(int lv, int maxx, int maxy);
 
 	void LoadMapSprites();
 	void LoadTilesPosition();
 	void LoadObjects();
 	void DrawMap();
+	void SetRound(int r);
+	int GetRound() { return this->round; }
 
 	vector<LPGAMEOBJECT> MergeListCoObject(vector<LPGAMEOBJECT> result, vector<LPGAMEOBJECT> objects);
 	vector<LPGAMEOBJECT> Get_coObjectsFull();
