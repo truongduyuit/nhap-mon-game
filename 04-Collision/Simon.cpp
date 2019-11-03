@@ -101,7 +101,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				skill->SetState(STATE_KNIFE);
 				skill->nx = this->nx;
 
-				if (! isJump) skill->nx > 0 ? skill->SetPosition(x + 20, y+6) : skill->SetPosition(x - 3, y+6);
+				if (!isJump) skill->nx > 0 ? skill->SetPosition(x + 20, y+6) : skill->SetPosition(x - 3, y+6);
 				else skill->nx > 0 ? skill->SetPosition(x + 20, y+13) : skill->SetPosition(x - 3, y+13);
 
 				skill->startThrow();
@@ -162,7 +162,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				}
 			}
 
-			if (dynamic_cast<CSObject *>(e->obj))
+			if (dynamic_cast<CSObject *>(e->obj) && !e->obj->get_isHidden())
 			{
 
 				// Lụm roi

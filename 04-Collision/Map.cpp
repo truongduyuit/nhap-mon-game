@@ -127,6 +127,15 @@ void CMap::LoadObjects()
 			sobject->SetPosition(float(x), float(y));
 			sobject->SetState(state);
 			sobject->SetNextState(nextState);
+
+			if (state == 5)
+			{
+				int xAppear;
+				in >> xAppear;
+				sobject->SetxAppear(xAppear);
+				sobject->set_isHidden(true);
+			}
+
 			coObjectsFull.push_back(sobject);
 		}
 	}
@@ -142,6 +151,13 @@ void CMap::LoadObjects()
 	CEffect* effect = CEffect::GetInstance();
 	effect->set_isHidden(true);
 	coObjectsFull.push_back(effect);
+
+	/*sobject = new CSObject();
+	sobject->SetPosition(float(150), float(135));
+	sobject->set_isHidden(true);
+	sobject->SetState(5);
+	sobject->SetNextState(5);
+	coObjectsFull.push_back(sobject);*/
 }
 
 vector<LPGAMEOBJECT> CMap::MergeListCoObject(vector<LPGAMEOBJECT> result, vector<LPGAMEOBJECT> objects)
@@ -180,7 +196,7 @@ vector<LPGAMEOBJECT> CMap::Get_coObjectsWithSimon()
 
 	for (int i = 0; i < coObjectsFull.size(); i++)
 	{
-		if (dynamic_cast<CSObject *>(coObjectsFull[i]))
+		if (dynamic_cast<CSObject *>(coObjectsFull[i]) && !coObjectsFull[i]->get_isHidden())
 		{
 			if (coObjectsFull[i]->GetState() != 1 && coObjectsFull[i]->GetState() != 0)
 			{

@@ -206,7 +206,7 @@ void Update(DWORD dt)
 	float cx, cy;
 	simon->GetPosition(cx, cy);
 
-	int sizeMap = map->GetRound() == 1 ? 32 * 23 : 64 * 34;
+	int sizeMap = map->GetRound() == 1 ? 32 * 24 : 64 * 34;
 
 	if (cx - SCREEN_WIDTH / 2 < 0)
 	{
@@ -214,7 +214,7 @@ void Update(DWORD dt)
 	}
 	else if (cx + SCREEN_WIDTH / 2 > sizeMap)
 	{
-		cx = 32 * 23 - SCREEN_WIDTH;
+		cx = sizeMap - SCREEN_WIDTH;
 	}
 	else
 	{

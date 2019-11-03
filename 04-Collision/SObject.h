@@ -9,9 +9,9 @@
 #define HEART_ITEM			2
 #define CANE_ITEM			3
 #define KNIFE_ITEM			4
-#define MONEY_ITEM			5
+#define MONEY_ITEM_1k		5
 
-#define SOBJECT_APPEAR_TIME		3500
+#define SOBJECT_APPEAR_TIME		5000
 #define SOBJECT_DESTROY_TIME	400
 
 #define BBOX_BIG_CANDLE_W	16
@@ -23,8 +23,8 @@
 #define BBOX_HEART_ITEM_W		16
 #define BBOX_HEART_ITEM_H		16
 
-#define BBOX_MONEY_ITEM_W		30
-#define BBOX_MONEY_ITEM_H		30
+#define BBOX_MONEY_1K_W		16
+#define BBOX_MONEY_1K_H		16
 
 #define	BBOX_CANE_ITEM_W		16
 #define BBOX_CANE_ITEM_H		16
@@ -38,6 +38,7 @@ class CSObject : public CGameObject
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Render();
 
+	int xAppear;
 	bool isAppear;
 	DWORD appear_start;
 
@@ -50,6 +51,7 @@ public :
 
 	void ItemStart();
 	virtual void BeDestroy();
+	void SetxAppear(int x) { xAppear = x; }
 
 	CSObject();
 	~CSObject() {};

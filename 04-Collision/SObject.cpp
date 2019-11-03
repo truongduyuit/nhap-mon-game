@@ -16,6 +16,17 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	vy += SOBJECT_GRAVITY * dt;
 
+	if (state == MONEY_ITEM_1k && isHidden)
+	{
+		CSimon * simon = CSimon::GetInstance();
+		float x, y;
+		simon->GetPosition(x, y);
+		if (x > xAppear)
+		{
+			set_isHidden(false);
+		}
+	}
+
 	if (isDestroy)
 	{
 		if (GetTickCount() - destroy_start >= SOBJECT_DESTROY_TIME)
@@ -103,9 +114,9 @@ void CSObject::Render()
 	{
 		ani = HEART_ITEM;
 	}
-	else if (state == MONEY_ITEM)
+	else if (state == MONEY_ITEM_1k)
 	{
-		ani = MONEY_ITEM;
+		ani = MONEY_ITEM_1k;
 	}
 	else if (state == CANE_ITEM)
 	{
@@ -116,7 +127,7 @@ void CSObject::Render()
 		ani = KNIFE_ITEM;
 	}
 
-	if (state != SOBJECT_HIDDEN)
+	if (state != SOBJECT_HIDDEN && !isHidden)
 	{
 		animations[ani]->Render(x, y, 255);
 		RenderBoundingBox();
@@ -169,10 +180,10 @@ void CSObject::GetBoundingBox(float &left, float &top, float &right, float &bott
 		right = x + BBOX_HEART_ITEM_W;
 		bottom = y + BBOX_HEART_ITEM_H;
 	}
-	else if (state == MONEY_ITEM)
+	else if (state == MONEY_ITEM_1k)
 	{
-		right = x + BBOX_MONEY_ITEM_W;
-		bottom = y + BBOX_MONEY_ITEM_H;
+		right = x + BBOX_MONEY_1K_W;
+		bottom = y + BBOX_MONEY_1K_H;
 	}
 	else if (state == CANE_ITEM)
 	{

@@ -3,7 +3,6 @@
 
 CEffect::CEffect()
 {
-
 	CLoadResourcesHelper::LoadSprites("data\\effects\\effect_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\effects\\effect_anis.txt", this);
 }

@@ -25,44 +25,6 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 
-	vector<LPCOLLISIONEVENT> coEvents;
-	vector<LPCOLLISIONEVENT> coEventsResult;
-
-	coEvents.clear();
-
-	CalcPotentialCollisions(coObjects, coEvents);
-
-	if (coEvents.size() == 0)
-	{
-		x += dx;
-		y += dy;
-	}
-	else
-	{
-		float min_tx, min_ty, nx = 0, ny;
-
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-
-		for (UINT i = 0; i < coEventsResult.size(); i++)
-		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
-
-			if (dynamic_cast<CSObject *>(e->obj))
-			{
-				if (e->obj->GetState() == BIG_CANDLE)
-				{
-					int nextState = e->obj->GetNextState();
-
-					// Load effect destroy
-					coObjects->at(i)->BeDestroy();
-
-					set_isHidden(true);
-					SetPosition(-100.0f, -100.0f);
-				}
-			}
-		}
-	}
-
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
 
@@ -70,21 +32,21 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			if (isOverlapping(coObjects->at(i)))
 			{
-				if (coObjects->at(i)->GetState() == 1)
+				if (coObjects->at(i)->GetState() == BIG_CANDLE)
 				{
-
-					int nextState = coObjects->at(i)->GetNextState();
-
 					// Load effect destroy
 					coObjects->at(i)->BeDestroy();
 
-					set_isHidden(true);
+					//set_isHidden(true);
 					SetPosition(-100.0f, -100.0f);
 				}
 			}
 		}
 
 	}
+
+	x += dx;
+	y += dy;
 }
 
 void CSkill::Render()
@@ -131,9 +93,9 @@ void CSkill::startThrow()
 
 void CSkill::updateThrow()
 {
-	if (state == STATE_KNIFE)
+	if (state == STATE_KNIFE && !isHidden)
 	{
-		nx > 0 ? dx += 3 : dx -= 3;
+		nx > 0 ? dx = 3 : dx = -3;
 	}
 }
 

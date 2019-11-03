@@ -10,3 +10,4 @@
 112	textures\\sprite\\item\\3.png	255 0 255
 113	textures\\sprite\\item\\4.png	255 0 255
 114	textures\\knife_left.png	255 0 255
+115	textures\\sprite\\items.png	128 0 0

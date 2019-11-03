@@ -23,7 +23,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		{
 			if (isOverlapping(coObjects->at(i)))
 			{
-				if (coObjects->at(i)->GetState() == 1)
+				if (coObjects->at(i)->GetState() == BIG_CANDLE)
 				{
 					coObjects->at(i)->BeDestroy();
 				}
