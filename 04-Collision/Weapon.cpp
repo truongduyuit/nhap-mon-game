@@ -23,7 +23,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		{
 			if (isOverlapping(coObjects->at(i)))
 			{
-				if (coObjects->at(i)->GetState() == BIG_CANDLE)
+				if (coObjects->at(i)->GetState() == BIG_CANDLE || coObjects->at(i)->GetState() == SMALL_CANDLE)
 				{
 					coObjects->at(i)->BeDestroy();
 				}
@@ -170,7 +170,7 @@ void CWeapon::Render()
 	if (!isHidden)
 	{
 		animations[ani]->Render(x, y, alpha);
-		RenderBoundingBox();
+		if (renderBBox) RenderBoundingBox();
 	}
 }
 

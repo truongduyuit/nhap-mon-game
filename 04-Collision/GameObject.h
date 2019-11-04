@@ -47,6 +47,7 @@ public:
 	int state;
 	int nextState;
 	bool isHidden;
+	bool renderBBox;
 
 	DWORD dt; 
 
@@ -64,6 +65,7 @@ public:
 	void set_isHidden(bool hidden) { isHidden = hidden; }
 
 	void RenderBoundingBox();
+	void toggleRenderBBox() { renderBBox = !renderBBox; }
 
 	LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
 	void CalcPotentialCollisions(vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents); // Tính toán những TH có thể va chạm

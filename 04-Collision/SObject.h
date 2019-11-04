@@ -1,7 +1,8 @@
 #pragma once
 #include "GameObject.h"
 
-#define SOBJECT_GRAVITY		0.0001f
+#define SOBJECT_GRAVITY			0.0001f
+#define SMALL_HEART_GRAVITY		0.00002f
 
 #define SOBJECT_HIDDEN		-1
 #define SMALL_CANDLE		0
@@ -10,15 +11,17 @@
 #define CANE_ITEM			3
 #define KNIFE_ITEM			4
 #define MONEY_ITEM_1k		5
+#define HEART_SMALL_ITEM	6
 
 #define SOBJECT_APPEAR_TIME		5000
 #define SOBJECT_DESTROY_TIME	400
+#define SMALL_HEART_X_TIME		250
 
 #define BBOX_BIG_CANDLE_W	16
 #define BBOX_BIG_CANDLE_H	32
 
 #define BBOX_SMALL_CANDLE_W		8
-#define BBOX_SMALL_CANDLE_H		8
+#define BBOX_SMALL_CANDLE_H		16
 
 #define BBOX_HEART_ITEM_W		16
 #define BBOX_HEART_ITEM_H		16
@@ -31,6 +34,9 @@
 
 #define BBOX_KNIFE_ITEM_W		16
 #define BBOX_KNIFE_ITEM_H		9
+
+#define BBOX_HEART_SMALL_W		6
+#define BBOX_HEART_SMALL_H		11
 
 class CSObject : public CGameObject
 {

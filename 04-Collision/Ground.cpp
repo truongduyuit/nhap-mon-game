@@ -8,7 +8,7 @@ void CGround::setSize(int w, int h)
 
 void CGround::Render()
 {
-	RenderBoundingBox();
+	if (renderBBox)RenderBoundingBox();
 }
 
 void CGround::GetBoundingBox(float &left, float &top, float &right, float &bottom)

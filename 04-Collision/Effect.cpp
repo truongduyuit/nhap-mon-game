@@ -30,7 +30,8 @@ void CEffect::Render()
 	if (!isHidden)
 	{
 		animations[ani]->Render(x, y);
-		//RenderBoundingBox();
+		
+		if (renderBBox) RenderBoundingBox();
 	}
 }
 

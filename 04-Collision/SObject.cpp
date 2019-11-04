@@ -14,7 +14,15 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	CGameObject::Update(dt);
 
-	vy += SOBJECT_GRAVITY * dt;
+
+	if (state == HEART_SMALL_ITEM)
+	{
+		vy += SMALL_HEART_GRAVITY * dt;
+	}
+	else if (state != SMALL_CANDLE && state != HEART_SMALL_ITEM)
+	{
+		vy += SOBJECT_GRAVITY * dt;
+	}
 
 	if (state == MONEY_ITEM_1k && isHidden)
 	{
@@ -41,6 +49,18 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 
+	if (state == HEART_SMALL_ITEM)
+	{
+		if (GetTickCount() - appear_start < SMALL_HEART_X_TIME)
+		{
+			x += 0.5f;
+		}
+		else if (GetTickCount() - appear_start >= SMALL_HEART_X_TIME && GetTickCount() - appear_start < 2* SMALL_HEART_X_TIME)
+		{
+			x -= 0.5f;
+		}
+	}
+
 	if (isAppear)
 	{
 		if (GetTickCount() - appear_start >= SOBJECT_APPEAR_TIME)
@@ -48,6 +68,7 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			SetState(SOBJECT_HIDDEN);
 			isAppear = false;
 		}
+
 	}
 	else
 	{
@@ -126,11 +147,16 @@ void CSObject::Render()
 	{
 		ani = KNIFE_ITEM;
 	}
+	else if (state == HEART_SMALL_ITEM)
+	{
+		ani = HEART_SMALL_ITEM;
+	}
 
 	if (state != SOBJECT_HIDDEN && !isHidden)
 	{
 		animations[ani]->Render(x, y, 255);
-		RenderBoundingBox();
+
+		if (renderBBox)RenderBoundingBox();
 	}
 }
 
@@ -194,5 +220,10 @@ void CSObject::GetBoundingBox(float &left, float &top, float &right, float &bott
 	{
 		right = x + BBOX_KNIFE_ITEM_W;
 		bottom = y + BBOX_KNIFE_ITEM_H;
+	}
+	else if (state == HEART_SMALL_ITEM)
+	{
+		right = x + BBOX_HEART_SMALL_W;
+		bottom = y + BBOX_HEART_SMALL_H;
 	}
 }

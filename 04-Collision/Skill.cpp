@@ -32,7 +32,7 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			if (isOverlapping(coObjects->at(i)))
 			{
-				if (coObjects->at(i)->GetState() == BIG_CANDLE)
+				if (coObjects->at(i)->GetState() == BIG_CANDLE || coObjects->at(i)->GetState() == SMALL_CANDLE)
 				{
 					// Load effect destroy
 					coObjects->at(i)->BeDestroy();
@@ -65,7 +65,7 @@ void CSkill::Render()
 	if (!isHidden)
 	{
 		animations[ani]->Render(x, y);
-		RenderBoundingBox();
+		if (renderBBox)RenderBoundingBox();
 	}
 }
 

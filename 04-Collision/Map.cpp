@@ -76,6 +76,7 @@ void CMap::LoadObjects()
 		coObjectsFull.clear();
 
 	CSimon* simon = CSimon::GetInstance();
+	simon->nx = 1;
 
 	ifstream in;
 
@@ -87,7 +88,6 @@ void CMap::LoadObjects()
 	{
 		in.open("data\\background\\map2_objects.txt", ios::in);
 	}
-	//in.open("data\\background\\map1_objects.txt", ios::in);
 
 	if (in.fail())
 	{
@@ -152,12 +152,6 @@ void CMap::LoadObjects()
 	effect->set_isHidden(true);
 	coObjectsFull.push_back(effect);
 
-	/*sobject = new CSObject();
-	sobject->SetPosition(float(150), float(135));
-	sobject->set_isHidden(true);
-	sobject->SetState(5);
-	sobject->SetNextState(5);
-	coObjectsFull.push_back(sobject);*/
 }
 
 vector<LPGAMEOBJECT> CMap::MergeListCoObject(vector<LPGAMEOBJECT> result, vector<LPGAMEOBJECT> objects)

@@ -65,6 +65,14 @@ void LoadRoundGame(int round)
 	coObjectGround = map->Get_coObjectGround();
 }
 
+void toggleRenderBBox()
+{
+	for (int i = 0; i < coObjectsFull.size(); i++)
+	{
+		coObjectsFull[i]->toggleRenderBBox();
+	}
+}
+
 void CSampleKeyHander::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
@@ -98,7 +106,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		LoadRoundGame(2);
 		break;
 	case DIK_P:
-		simon->toggleRenderBBox();
+		toggleRenderBBox();
 		break;
 	}
 }
