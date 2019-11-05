@@ -75,6 +75,16 @@ void CMap::LoadObjects()
 	if (coObjectsFull.size() > 0)
 		coObjectsFull.clear();
 
+	CWeapon* weapon = CWeapon::GetInstance();
+	coObjectsFull.push_back(weapon);
+
+	CSkill* skill = CSkill::GetInstance();
+	coObjectsFull.push_back(skill);
+
+	CEffect* effect = CEffect::GetInstance();
+	effect->set_isHidden(true);
+	coObjectsFull.push_back(effect);
+
 	CSimon* simon = CSimon::GetInstance();
 	simon->nx = 1;
 
@@ -141,17 +151,6 @@ void CMap::LoadObjects()
 	}
 
 	in.close();
-
-	CWeapon* weapon = CWeapon::GetInstance();
-	coObjectsFull.push_back(weapon);
-
-	CSkill* skill = CSkill::GetInstance();
-	coObjectsFull.push_back(skill);
-
-	CEffect* effect = CEffect::GetInstance();
-	effect->set_isHidden(true);
-	coObjectsFull.push_back(effect);
-
 }
 
 vector<LPGAMEOBJECT> CMap::MergeListCoObject(vector<LPGAMEOBJECT> result, vector<LPGAMEOBJECT> objects)

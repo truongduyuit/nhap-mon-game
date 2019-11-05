@@ -26,9 +26,6 @@ class CWeapon : public CGameObject
 {
 	static CWeapon * __instance;
 	int level;
-
-	float xx;
-	float xy;
 	int frame;
 public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> * colliable_objects = NULL);
@@ -41,7 +38,8 @@ public:
 	}
 
 	void ResetAttack();
-	void SetPositionTemp(float x, float y);
+	void SetPositionWithSimon(int ani);
+	int GetCurrentAnimation();
 
 	CWeapon();
 

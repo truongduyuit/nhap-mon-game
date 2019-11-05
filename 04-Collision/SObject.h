@@ -40,10 +40,6 @@
 
 class CSObject : public CGameObject
 {
-
-	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
-	virtual void Render();
-
 	int xAppear;
 	bool isAppear;
 	DWORD appear_start;
@@ -54,6 +50,8 @@ class CSObject : public CGameObject
 public :
 	virtual void SetState(int state);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
+	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
+	virtual void Render();
 
 	void ItemStart();
 	virtual void BeDestroy();

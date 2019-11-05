@@ -48,7 +48,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 	CWeapon* weapon = CWeapon::GetInstance();
-	CSkill* skill = CSkill::GetInstance();
 
 	// pick
 	if (GetTickCount() - action_time >= SIMON_PICK_TIME)
@@ -78,7 +77,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	else if (isAttack)
 	{
 		weapon->set_isHidden(false);
-		weapon->SetPositionTemp(x, y);
+		weapon->SetPosition(x, y);
 		nx > 0 ? weapon->SetState(STATE_ATTACK_RIGHT) : weapon->SetState(STATE_ATTACK_LEFT);
 		dx = 0;
 	}
@@ -94,6 +93,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		// kết thúc sprite đánh dao mới xuất hiện
 		if (animations[SIMON_ANI_ATTACK_RIGHT]->GetCurrentFrame() == 2 || animations[SIMON_ANI_ATTACK_LEFT]->GetCurrentFrame() == 2)
 		{
+			CSkill* skill = CSkill::GetInstance();
+
 			if (skill->get_isHidden())
 			{
 				this->skill[0]--;

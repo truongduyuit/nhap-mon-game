@@ -64,6 +64,7 @@ void CSkill::Render()
 	
 	if (!isHidden)
 	{
+
 		animations[ani]->Render(x, y);
 		if (renderBBox)RenderBoundingBox();
 	}

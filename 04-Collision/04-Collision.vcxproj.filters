@@ -43,6 +43,9 @@
     <Filter Include="src\GameObjects\effects">
       <UniqueIdentifier>{6eaa22c4-2d2f-4aa0-a330-3053df5cbe4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GameObjects\enemies">
+      <UniqueIdentifier>{cb8e5fe2-6e50-43f8-a80d-6ca5ad01665a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h">
@@ -90,6 +93,9 @@
     <ClInclude Include="TileMat.h">
       <Filter>src\Maps</Filter>
     </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>src\GameObjects\enemies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.cpp">
@@ -136,6 +142,9 @@
     </ClCompile>
     <ClCompile Include="TileMat.cpp">
       <Filter>src\Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>src\GameObjects\enemies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

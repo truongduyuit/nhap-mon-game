@@ -2,7 +2,7 @@
 
 
 #define SCREEN_WIDTH 420
-#define SCREEN_HEIGHT 300
+#define SCREEN_HEIGHT 250
 
 #define MAP1_MAX_X	24
 #define MAP1_MAX_y	5

@@ -12,8 +12,10 @@ CWeapon::CWeapon()
 	CLoadResourcesHelper::LoadAnimations("data\\weapon\\weapon_anis.txt", this);
 }
 
+
 void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+
 	CGameObject::Update(dt);
 
 	for (UINT i = 0; i < coObjects->size(); i++)
@@ -37,9 +39,34 @@ void CWeapon::Render()
 {
 
 	int ani;
+	ani = GetCurrentAnimation();
+	
+	int alpha = 255;
+	//if (untouchable) alpha = 128;
+	
+	if (!isHidden)
+	{
+		animations[ani]->Render(x, y, alpha);
+		if (renderBBox) RenderBoundingBox();
+	}
+}
 
-	x = xx;
-	y = xy;
+void CWeapon::ResetAttack()
+{
+	for (int i = 0; i < animations.size(); i++)
+	{
+		animations[i]->ResetFrame();
+	}
+}
+
+void CWeapon::SetState(int state)
+{
+	CGameObject::SetState(state);
+}
+
+int CWeapon::GetCurrentAnimation()
+{
+	int ani;
 
 	if (state == STATE_ATTACK_RIGHT)
 	{
@@ -72,7 +99,64 @@ void CWeapon::Render()
 		}
 	}
 
+	SetPositionWithSimon(ani);
+	return ani;
+}
 
+void CWeapon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
+{
+	left = x;
+	top = y;
+
+
+	if (level != 3)
+	{
+		if (frame == 0)
+		{
+			right = left + WEAPON_BBOX_FRAME_1_WIDTH;
+			bottom = top + WEAPON_BBOX_FRAME_1_HEIGHT;
+		}
+		else if (frame == 1)
+		{
+			right = left + WEAPON_BBOX_FRAME_2_WIDTH;
+			bottom = top + WEAPON_BBOX_FRAME_2_HEIGHT;
+		}
+		else
+		{
+			right = left + WEAPON_BBOX_FRAME_3_WIDTH;
+			bottom = top + WEAPON_BBOX_FRAME_3_HEIGHT;
+		}
+	}
+	else
+	{
+		if (frame == 0)
+		{
+			right = left + WEAPON_BBOX_FRAME_1_WIDTH;
+			bottom = top + WEAPON_BBOX_FRAME_1_HEIGHT;
+		}
+		else if (frame == 1)
+		{
+			right = left + WEAPON_BBOX_FRAME_2_WIDTH;
+			bottom = top + WEAPON_BBOX_FRAME_2_HEIGHT;
+		}
+		else
+		{
+			right = left + WEAPON_BBOX_FRAME_3_3_WIDTH;
+			bottom = top + WEAPON_BBOX_FRAME_3_3_HEIGHT;
+		}
+	}
+
+}
+
+CWeapon* CWeapon::__instance = NULL;
+CWeapon * CWeapon::GetInstance()
+{
+	if (__instance == NULL) __instance = new CWeapon();
+	return __instance;
+}
+
+void CWeapon::SetPositionWithSimon(int ani)
+{
 	if (state == STATE_ATTACK_RIGHT)
 	{
 		if (level != 3)
@@ -163,84 +247,4 @@ void CWeapon::Render()
 			}
 		}
 	}
-	
-	int alpha = 255;
-	//if (untouchable) alpha = 128;
-	
-	if (!isHidden)
-	{
-		animations[ani]->Render(x, y, alpha);
-		if (renderBBox) RenderBoundingBox();
-	}
-}
-
-void CWeapon::ResetAttack()
-{
-	for (int i = 0; i < animations.size(); i++)
-	{
-		animations[i]->ResetFrame();
-	}
-}
-
-void CWeapon::SetPositionTemp(float x, float y)
-{
-	xx = x;
-	xy = y;
-}
-
-void CWeapon::SetState(int state)
-{
-	CGameObject::SetState(state);
-}
-
-void CWeapon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
-{
-	left = x;
-	top = y;
-
-
-	if (level != 3)
-	{
-		if (frame == 0)
-		{
-			right = left + WEAPON_BBOX_FRAME_1_WIDTH;
-			bottom = top + WEAPON_BBOX_FRAME_1_HEIGHT;
-		}
-		else if (frame == 1)
-		{
-			right = left + WEAPON_BBOX_FRAME_2_WIDTH;
-			bottom = top + WEAPON_BBOX_FRAME_2_HEIGHT;
-		}
-		else
-		{
-			right = left + WEAPON_BBOX_FRAME_3_WIDTH;
-			bottom = top + WEAPON_BBOX_FRAME_3_HEIGHT;
-		}
-	}
-	else
-	{
-		if (frame == 0)
-		{
-			right = left + WEAPON_BBOX_FRAME_1_WIDTH;
-			bottom = top + WEAPON_BBOX_FRAME_1_HEIGHT;
-		}
-		else if (frame == 1)
-		{
-			right = left + WEAPON_BBOX_FRAME_2_WIDTH;
-			bottom = top + WEAPON_BBOX_FRAME_2_HEIGHT;
-		}
-		else
-		{
-			right = left + WEAPON_BBOX_FRAME_3_3_WIDTH;
-			bottom = top + WEAPON_BBOX_FRAME_3_3_HEIGHT;
-		}
-	}
-
-}
-
-CWeapon* CWeapon::__instance = NULL;
-CWeapon * CWeapon::GetInstance()
-{
-	if (__instance == NULL) __instance = new CWeapon();
-	return __instance;
 }
