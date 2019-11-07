@@ -96,6 +96,9 @@
     <ClInclude Include="Enemy.h">
       <Filter>src\GameObjects\enemies</Filter>
     </ClInclude>
+    <ClInclude Include="Flag.h">
+      <Filter>src\GameObjects\ground</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.cpp">
@@ -145,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="Enemy.cpp">
       <Filter>src\GameObjects\enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Flag.cpp">
+      <Filter>src\GameObjects\ground</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -18,6 +18,10 @@ class CMap
 
 	vector<CTileMat*> tiles;
 	vector<LPGAMEOBJECT> coObjectsFull;
+	vector<LPGAMEOBJECT> coObjectGround;
+	vector<LPGAMEOBJECT> coObjectFlag;
+	vector<LPGAMEOBJECT> coObjectsWithSimon;
+	vector<LPGAMEOBJECT> coObjectsWithSkill;
 
 	int tile_size_x;
 	int tile_size_y;
@@ -35,6 +39,7 @@ public :
 	vector<LPGAMEOBJECT> MergeListCoObject(vector<LPGAMEOBJECT> result, vector<LPGAMEOBJECT> objects);
 	vector<LPGAMEOBJECT> Get_coObjectsFull();
 	vector<LPGAMEOBJECT> Get_coObjectGround();
+	vector<LPGAMEOBJECT> Get_coObjectFlag();
 	vector<LPGAMEOBJECT> Get_coObjectsWithSimon();
 	vector<LPGAMEOBJECT> Get_coObjectsWithSkill();
 

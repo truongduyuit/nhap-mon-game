@@ -53,6 +53,8 @@
 #define SIMON_THROW_TIME			1000
 #define SIMON_UNTOUCHABLE_TIME		3000
 
+#define SIMON_UPSTAIR 2
+
 class CSimon : public CGameObject
 {
 	static CSimon * __instance;
@@ -60,6 +62,7 @@ class CSimon : public CGameObject
 	int hp;
 	vector<int> skill;
 	int sthrow;
+
 
 	int untouchable;
 	DWORD untouchable_start;
@@ -69,6 +72,13 @@ class CSimon : public CGameObject
 	bool isPick;
 	bool isthrow;
 	bool isSit;
+	bool onStair;
+	bool onTimeStair;
+
+	bool isBeMoving;
+	float be_x;
+	int be_nx;
+	int be_updown;
 
 	DWORD action_time;
 public:
@@ -79,6 +89,7 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 	void SetState(int state);
+	void SetOnStair(bool stair);
 	void SetHP(int h) { hp = h; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 
@@ -87,6 +98,7 @@ public:
 	bool get_isPick() { return isPick; }
 	bool get_isThrow() { return isthrow; }
 	bool get_isSit() { return isSit; }
+	bool get_onstair() { return onStair; }
 
 	void startAttack();
 	void startJump();
@@ -94,6 +106,8 @@ public:
 	void startThrow();
 	void startSit();
 	void upBBox();
+	void beMoving(int bnx, float bx, int updown);
+	void moveOnStair();
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 

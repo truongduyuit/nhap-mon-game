@@ -4,6 +4,7 @@
 #include "Simon.h"
 #include "SObject.h"
 #include "Ground.h"
+#include "Flag.h"
 #include "Weapon.h"
 #include "Skill.h"
 #include "Effect.h"
@@ -117,6 +118,8 @@ void CMap::LoadObjects()
 			ground = new CGround();
 			ground->setSize(float(size_x), float(size_y));
 			ground->SetPosition(float(x), float(y));
+
+			coObjectGround.push_back(ground);
 			coObjectsFull.push_back(ground);
 		}
 		else if (id_object == 1)
@@ -146,7 +149,25 @@ void CMap::LoadObjects()
 				sobject->set_isHidden(true);
 			}
 
+			if (state == 0 || state == 1)
+			{
+				coObjectsWithSkill.push_back(sobject);
+			}
 			coObjectsFull.push_back(sobject);
+		}
+		else if (id_object == 3)
+		{
+			int size_x, size_y, x, y, state, nextState;
+			in >> size_x >> size_y >> x >> y >> state >> nextState;
+
+			CFlag* flag = new CFlag();
+			flag->setSize(float(size_x), float(size_y));
+			flag->SetPosition(float(x), float(y));
+			flag->SetState(state);
+			flag->SetNextState(nextState);
+
+			coObjectFlag.push_back(flag);
+			coObjectsFull.push_back(flag);
 		}
 	}
 
@@ -170,17 +191,12 @@ vector<LPGAMEOBJECT> CMap::Get_coObjectsFull()
 
 vector<LPGAMEOBJECT> CMap::Get_coObjectGround()
 {
-	vector<LPGAMEOBJECT> coObjectGround;
-
-	for (int i = 0; i < coObjectsFull.size(); i++)
-	{
-		if (dynamic_cast<CGround *>(coObjectsFull[i]))
-		{
-			coObjectGround.push_back(coObjectsFull[i]);
-		}
-	}
-
 	return coObjectGround;
+}
+
+vector<LPGAMEOBJECT> CMap::Get_coObjectFlag()
+{
+	return coObjectFlag;
 }
 
 vector<LPGAMEOBJECT> CMap::Get_coObjectsWithSimon()
@@ -203,19 +219,6 @@ vector<LPGAMEOBJECT> CMap::Get_coObjectsWithSimon()
 
 vector<LPGAMEOBJECT> CMap::Get_coObjectsWithSkill()
 {
-	vector<LPGAMEOBJECT> coObjectsWithSkill;
-
-	for (int i = 0; i < coObjectsFull.size(); i++)
-	{
-		if (dynamic_cast<CSObject *>(coObjectsFull[i]))
-		{
-			if (coObjectsFull[i]->GetState() == 1 || coObjectsFull[i]->GetState() == 0) 
-			{
-				coObjectsWithSkill.push_back(coObjectsFull[i]);
-			}
-		}
-	}
-
 	return coObjectsWithSkill;
 }
 
@@ -227,6 +230,12 @@ CMap::CMap()
 void CMap::SetRound(int r)
 {
 	this->round = r;
+
+	coObjectsFull.clear();
+	coObjectGround.clear();
+	coObjectFlag.clear();
+	coObjectsWithSimon.clear();
+	coObjectsWithSkill.clear();
 }
 
 CMap* CMap::__instance = NULL;

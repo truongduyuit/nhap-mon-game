@@ -130,6 +130,7 @@
     <ClInclude Include="debug.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Flag.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Ground.h" />
@@ -147,6 +148,7 @@
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Flag.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Ground.cpp" />

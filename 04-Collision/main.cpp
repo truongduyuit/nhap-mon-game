@@ -35,6 +35,7 @@ CSimon *simon;
 
 vector<LPGAMEOBJECT> coObjectsFull;
 vector<LPGAMEOBJECT> coObjectGround;
+vector<LPGAMEOBJECT> coObjectFlag;
 vector<LPGAMEOBJECT> coObjectsWithSimon;
 vector<LPGAMEOBJECT> coObjectsWithSkill;
 
@@ -50,19 +51,17 @@ CSampleKeyHander * keyHandler;
 
 void LoadRoundGame(int round)
 {
+	map = NULL;
 	map = CMap::GetInstance();
 	map->SetRound(round);
-
-	coObjectsFull.clear();
-	coObjectGround.clear();
-	coObjectsWithSimon.clear();
-	coObjectsWithSkill.clear();
 
 	// Chỉ cần tạo mới khi chuyển map
 	map->LoadTilesPosition();
 	map->LoadObjects();
 	coObjectsFull = map->Get_coObjectsFull();
 	coObjectGround = map->Get_coObjectGround();
+	coObjectFlag = map->Get_coObjectFlag();
+
 }
 
 void toggleRenderBBox()
@@ -70,6 +69,18 @@ void toggleRenderBBox()
 	for (int i = 0; i < coObjectsFull.size(); i++)
 	{
 		coObjectsFull[i]->toggleRenderBBox();
+	}
+}
+
+void onFlag()
+{
+	for (int i = 0; i < coObjectFlag.size(); i++)
+	{
+		if (simon->isOverlapping(coObjectFlag[i]))
+		{
+			if (!simon->get_onstair() && coObjectFlag[i]->nextState == SIMON_UPSTAIR)
+				simon->beMoving(coObjectFlag[i]->state, coObjectFlag[i]->x, coObjectFlag[i]->nextState);
+		}
 	}
 }
 
@@ -98,6 +109,10 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		{
 			simon->SetState(SIMON_STATE_SIT);
 		}	
+		break;
+	case DIK_UP:
+		if (!simon->get_onstair())
+			onFlag();
 		break;
 	case DIK_F1:
 		LoadRoundGame(1);
