@@ -64,7 +64,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (onStair)
 	{
-		for (int i = 0; i < coObjectFlag.size(); i++)
+		for (unsigned int i = 0; i < coObjectFlag.size(); i++)
 		{
 			if (isOverlapping(coObjectFlag[i]))
 			{
@@ -137,20 +137,21 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 	// attack
-	if (GetTickCount() - action_time >= SIMON_ATTACK_TIME)
+	if (GetTickCount() - action_time > SIMON_ATTACK_TIME)
 	{
 		isAttack = false;
 		action_time = 0;
 
 		weapon->set_isHidden(true);
 		weapon->ResetAttack();
+		weapon->SetPosTemp(x, y);
 	}
 	else if (isAttack)
 	{
-		weapon->set_isHidden(false);
-		weapon->SetPosition(x, y);
+		weapon->SetPosTemp(x, y);
 		nx > 0 ? weapon->SetState(STATE_ATTACK_RIGHT) : weapon->SetState(STATE_ATTACK_LEFT);
 		dx = 0;
+		weapon->set_isHidden(false);
 	}
 
 	// throw
@@ -187,7 +188,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		untouchable = 0;
 	}
 
-	for (int i = 0; i < coObjects->size(); i++)
+	for (unsigned int i = 0; i < coObjects->size(); i++)
 	{
 		if (dynamic_cast<CSObject *>(coObjects->at(i)))
 		{

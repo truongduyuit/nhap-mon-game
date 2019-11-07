@@ -64,7 +64,7 @@ void CMap::LoadTilesPosition()
 
 void CMap::DrawMap()
 {
-	for (int i = 0; i < tiles.size(); i++)
+	for (unsigned int i = 0; i < tiles.size(); i++)
 	{
 		tiles[i]->Render();
 	}
@@ -116,7 +116,7 @@ void CMap::LoadObjects()
 			in >> size_x >> size_y >> x >> y;
 
 			ground = new CGround();
-			ground->setSize(float(size_x), float(size_y));
+			ground->setSize(size_x, size_y);
 			ground->SetPosition(float(x), float(y));
 
 			coObjectGround.push_back(ground);
@@ -161,7 +161,7 @@ void CMap::LoadObjects()
 			in >> size_x >> size_y >> x >> y >> state >> nextState;
 
 			CFlag* flag = new CFlag();
-			flag->setSize(float(size_x), float(size_y));
+			flag->setSize(size_x, size_y);
 			flag->SetPosition(float(x), float(y));
 			flag->SetState(state);
 			flag->SetNextState(nextState);
@@ -176,7 +176,7 @@ void CMap::LoadObjects()
 
 vector<LPGAMEOBJECT> CMap::MergeListCoObject(vector<LPGAMEOBJECT> result, vector<LPGAMEOBJECT> objects)
 {
-	for (int i = 0; i < objects.size(); i++)
+	for (unsigned int i = 0; i < objects.size(); i++)
 	{
 		result.push_back(objects[i]);
 	}
@@ -203,7 +203,7 @@ vector<LPGAMEOBJECT> CMap::Get_coObjectsWithSimon()
 {
 	vector<LPGAMEOBJECT> coObjectsWithSimon;
 
-	for (int i = 0; i < coObjectsFull.size(); i++)
+	for (unsigned int i = 0; i < coObjectsFull.size(); i++)
 	{
 		if (dynamic_cast<CSObject *>(coObjectsFull[i]) && !coObjectsFull[i]->get_isHidden())
 		{

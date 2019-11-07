@@ -7,6 +7,8 @@
 CWeapon::CWeapon()
 {
 	level = 1;
+	x = -100;
+	y = -100;
 
 	CLoadResourcesHelper::LoadSprites("data\\weapon\\weapon_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\weapon\\weapon_anis.txt", this);
@@ -15,23 +17,25 @@ CWeapon::CWeapon()
 
 void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	UpdatePositionWithSimon();
 
-	CGameObject::Update(dt);
-
-	for (UINT i = 0; i < coObjects->size(); i++)
+	if (!isHidden)
 	{
-
-		if (dynamic_cast<CSObject *>(coObjects->at(i)))
+		for (UINT i = 0; i < coObjects->size(); i++)
 		{
-			if (isOverlapping(coObjects->at(i)))
+
+			if (dynamic_cast<CSObject *>(coObjects->at(i)))
 			{
-				if (coObjects->at(i)->GetState() == BIG_CANDLE || coObjects->at(i)->GetState() == SMALL_CANDLE)
+				if (isOverlapping(coObjects->at(i)))
 				{
-					coObjects->at(i)->BeDestroy();
+					if (coObjects->at(i)->GetState() == BIG_CANDLE || coObjects->at(i)->GetState() == SMALL_CANDLE)
+					{
+						coObjects->at(i)->BeDestroy();
+					}
 				}
 			}
-		}
 
+		}
 	}
 }
 
@@ -99,15 +103,20 @@ int CWeapon::GetCurrentAnimation()
 		}
 	}
 
-	SetPositionWithSimon(ani);
+	//SetPositionWithSimon(ani);
 	return ani;
+}
+
+void CWeapon::SetPosTemp(float xt, float yt)
+{
+	xx = xt;
+	xy = yt;
 }
 
 void CWeapon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	left = x;
 	top = y;
-
 
 	if (level != 3)
 	{
@@ -131,6 +140,7 @@ void CWeapon::GetBoundingBox(float &left, float &top, float &right, float &botto
 	{
 		if (frame == 0)
 		{
+
 			right = left + WEAPON_BBOX_FRAME_1_WIDTH;
 			bottom = top + WEAPON_BBOX_FRAME_1_HEIGHT;
 		}
@@ -155,8 +165,14 @@ CWeapon * CWeapon::GetInstance()
 	return __instance;
 }
 
-void CWeapon::SetPositionWithSimon(int ani)
+void CWeapon::UpdatePositionWithSimon()
 {
+	int ani;
+	ani = GetCurrentAnimation();
+
+	x = xx;
+	y = xy;
+
 	if (state == STATE_ATTACK_RIGHT)
 	{
 		if (level != 3)
