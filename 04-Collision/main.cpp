@@ -66,19 +66,19 @@ void LoadRoundGame(int round)
 
 void toggleRenderBBox()
 {
-	for (int i = 0; i < coObjectsFull.size(); i++)
+	for (unsigned int i = 0; i < coObjectsFull.size(); i++)
 	{
 		coObjectsFull[i]->toggleRenderBBox();
 	}
 }
 
-void onFlag()
+void onFlag(int st)
 {
-	for (int i = 0; i < coObjectFlag.size(); i++)
+	for (unsigned int i = 0; i < coObjectFlag.size(); i++)
 	{
 		if (simon->isOverlapping(coObjectFlag[i]))
 		{
-			if (!simon->get_onstair() && coObjectFlag[i]->nextState == SIMON_UPSTAIR)
+			if (!simon->get_onstair() && coObjectFlag[i]->nextState == st)
 				simon->beMoving(coObjectFlag[i]->state, coObjectFlag[i]->x, coObjectFlag[i]->nextState);
 		}
 	}
@@ -90,7 +90,10 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		simon->SetState(SIMON_STATE_JUMP);
+		if (!simon->get_onstair())
+		{
+			simon->SetState(SIMON_STATE_JUMP);
+		}
 		break;
 	case DIK_D:
 		if (!simon->get_isAttack() && !simon->get_isPick())
@@ -104,7 +107,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 			simon->SetState(SIMON_STATE_THROW);
 		}
 		break;
-	case DIK_DOWN:
+	case DIK_S:
 		if (!simon->get_isAttack() && !simon->get_isPick())
 		{
 			simon->SetState(SIMON_STATE_SIT);
@@ -112,7 +115,11 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		break;
 	case DIK_UP:
 		if (!simon->get_onstair())
-			onFlag();
+			onFlag(SIMON_UPSTAIR);
+		break;
+	case DIK_DOWN:
+		if (!simon->get_onstair())
+			onFlag(SIMON_DOWNSTAIR);
 		break;
 	case DIK_F1:
 		LoadRoundGame(1);
@@ -199,7 +206,7 @@ void Update(DWORD dt)
 	coObjectsWithSimon = map->Get_coObjectsWithSimon();
 	coObjectsWithSkill = map->Get_coObjectsWithSkill();
 
-	for (int i = 0; i < coObjectsFull.size(); i++)
+	for (unsigned int i = 0; i < coObjectsFull.size(); i++)
 	{
 		if (dynamic_cast<CSimon *>(coObjectsFull[i]))
 			coObjectsFull[i]->Update(dt, &coObjectsWithSimon);
@@ -264,7 +271,7 @@ void Render()
 		
 		map->DrawMap();
 
-		for (int i = 0; i < coObjectsFull.size(); i++)
+		for (unsigned int i = 0; i < coObjectsFull.size(); i++)
 			coObjectsFull[i]->Render();
 
 		spriteHandler->End();

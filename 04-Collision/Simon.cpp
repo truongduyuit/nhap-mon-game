@@ -74,6 +74,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					y = coObjectFlag[i]->y - 27.0f;
 
 					onStair = false;
+					onTimeStair = false;
 				}
 			}
 		}
@@ -110,9 +111,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (GetTickCount() - action_time <= 100)
 		{
 			if (be_nx == 1)
-				x += 0.45f;			 
+				x += 0.45f;	
+			else
+				x -= 0.45f;
+
 			if (be_updown == SIMON_UPSTAIR)
 				dy = -0.45f;
+			else
+				dy = 0.45f;
 		}
 		else
 		{
@@ -275,13 +281,27 @@ void CSimon::Render()
 
 	if (onStair)
 	{
-		if (onTimeStair)
+		if (be_nx > 0)
 		{
-			ani = SIMON_ANI_UPSTAIR_RIGHT;
+			if (be_updown == 2)
+			{
+				onTimeStair ? ani = SIMON_ANI_UPSTAIR_RIGHT : ani = SIMON_ANI_IDLE_UPSTAIR_RIGHT;
+			}
+			else
+			{
+				onTimeStair ? ani = SIMON_ANI_DOWNSTAIR_RIGHT : ani = SIMON_ANI_IDLE_DOWNSTAIR_RIGHT;
+			}
 		}
 		else
 		{
-			ani = SIMON_ANI_IDLE_UPSTAIR_RIGHT;
+			if (be_updown == 2)
+			{
+				onTimeStair ? ani = SIMON_ANI_UPSTAIR_LEFT : ani = SIMON_ANI_IDLE_UPSTAIR_LEFT;
+			}
+			else
+			{
+				onTimeStair ? ani = SIMON_ANI_DOWNSTAIR_LEFT : ani = SIMON_ANI_IDLE_DOWNSTAIR_LEFT;
+			}
 		}
 	}
 	else
@@ -376,7 +396,16 @@ void CSimon::SetState(int state)
 		switch (state)
 		{
 		case SIMON_STATE_WALKING_LEFT:
-			if (!isAttack)
+			if (onStair)
+			{
+				if (be_nx != -1)
+				{
+					be_nx = -1;
+					be_updown = -be_updown;
+				}
+				moveOnStair();
+			}
+			else if (!isAttack)
 			{
 				vx = -SIMON_WALKING_SPEED;
 
@@ -389,7 +418,15 @@ void CSimon::SetState(int state)
 			nx = -1;
 			break;
 		case SIMON_STATE_WALKING_RIGHT:
-			if (onStair) moveOnStair();
+			if (onStair)
+			{
+				if (be_nx != 1)
+				{
+					be_nx = 1;
+					be_updown = -be_updown;
+				}
+				moveOnStair();
+			}
 			else if (!isAttack)
 			{
 				vx = SIMON_WALKING_SPEED;
@@ -495,8 +532,15 @@ void CSimon::beMoving(int bnx, float bx, int updown)
 	{
 		isBeMoving = true;
 		be_nx = bnx;
-		be_x = bx;
 		be_updown = updown;
+
+		if (be_updown == SIMON_DOWNSTAIR)
+		{
+			be_nx < 0 ? be_x = bx - SIMON_BBOX_WIDTH / 2 - 1 : be_x = bx + SIMON_BBOX_WIDTH / 2 + 1;
+		}
+		else
+			be_x = bx;
+		
 	}
 }
 
