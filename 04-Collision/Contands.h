@@ -1,6 +1,16 @@
 #pragma once
 
 
+#define WINDOW_CLASS_NAME L"Window"
+#define MAIN_WINDOW_TITLE L"Game Castlevania"
+
+#define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 200)
+
+
+#define MAX_FRAME_RATE 120
+
+#define ID_TEX_BACKBROUND		10
+
 #define SCREEN_WIDTH 420
 #define SCREEN_HEIGHT 250
 

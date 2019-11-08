@@ -11,6 +11,7 @@
 #include "Weapon.h"
 #include "Skill.h"
 #include "LoadResource.h"
+#include "Enemy.h"
 
 
 
@@ -79,8 +80,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 	}
-
-	//
 
 	if (isBeMoving)
 	{
@@ -208,6 +207,22 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				coObjects->at(i)->SetState(SOBJECT_HIDDEN);
 				
+			}
+		}
+
+		if (untouchable == 0)
+		{
+			if (dynamic_cast<CEnemy *>(coObjects->at(i)))
+			{
+				if (isOverlapping(coObjects->at(i)))
+				{
+					if (hp > 0)
+					{
+						StartUntouchable();
+					}
+					else
+						state = SIMON_STATE_DIE;
+				}
 			}
 		}
 	}

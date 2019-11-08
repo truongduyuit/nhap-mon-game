@@ -13,3 +13,4 @@
 115	textures\\sprite\\items.png	128 0 0
 116	textures\\sprite\\item\\1.png	255 0 255
 1	textures\\simon_2.png 	255 0 255
+2	textures\\enemies.png		96 68 106

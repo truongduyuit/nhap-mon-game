@@ -8,9 +8,11 @@
 #include "Weapon.h"
 #include "Skill.h"
 #include "Effect.h"
+#include "Enemy.h"
 
 CGround* ground;
 CSObject* sobject;
+CEnemy* enemy;
 
 void CMap::LoadMapSprites()
 {
@@ -149,10 +151,6 @@ void CMap::LoadObjects()
 				sobject->set_isHidden(true);
 			}
 
-			if (state == 0 || state == 1)
-			{
-				coObjectsWithSkill.push_back(sobject);
-			}
 			coObjectsFull.push_back(sobject);
 		}
 		else if (id_object == 3)
@@ -168,6 +166,22 @@ void CMap::LoadObjects()
 
 			coObjectFlag.push_back(flag);
 			coObjectsFull.push_back(flag);
+		}
+		else if (id_object == 4)
+		{
+			int x, y, state, nextState;
+			float x_min, x_max;
+
+			in >> x >> y >> state >> nextState;
+			in >> x_min >> x_max;
+
+			enemy = new CEnemy();
+			enemy->SetPosition(float(x), float(y));
+			enemy->SetState(state);
+			enemy->SetNextState(nextState);
+			enemy->SetMaxMin(x_min, x_max);
+
+			coObjectsFull.push_back(enemy);
 		}
 	}
 
@@ -212,6 +226,10 @@ vector<LPGAMEOBJECT> CMap::Get_coObjectsWithSimon()
 				coObjectsWithSimon.push_back(coObjectsFull[i]);
 			}
 		}
+		if (dynamic_cast<CEnemy *>(coObjectsFull[i]) && !coObjectsFull[i]->get_isHidden())
+		{
+			coObjectsWithSimon.push_back(coObjectsFull[i]);
+		}
 	}
 
 	return MergeListCoObject(coObjectsWithSimon, Get_coObjectGround());
@@ -219,7 +237,24 @@ vector<LPGAMEOBJECT> CMap::Get_coObjectsWithSimon()
 
 vector<LPGAMEOBJECT> CMap::Get_coObjectsWithSkill()
 {
-	return coObjectsWithSkill;
+	vector<LPGAMEOBJECT> coObjectsWithSkill;
+
+	for (unsigned int i = 0; i < coObjectsFull.size(); i++)
+	{
+		if (dynamic_cast<CSObject *>(coObjectsFull[i]) && !coObjectsFull[i]->get_isHidden())
+		{
+			if (coObjectsFull[i]->GetState() == 1 || coObjectsFull[i]->GetState() == 0)
+			{
+				coObjectsWithSkill.push_back(coObjectsFull[i]);
+			}
+		}
+		if (dynamic_cast<CEnemy *>(coObjectsFull[i]) && !coObjectsFull[i]->get_isHidden())
+		{
+			coObjectsWithSkill.push_back(coObjectsFull[i]);
+		}
+	}
+
+	return MergeListCoObject(coObjectsWithSkill, Get_coObjectGround());
 }
 
 CMap::CMap()

@@ -3,6 +3,7 @@
 #include "SObject.h"
 #include "LoadResource.h"
 #include "Effect.h"
+#include "Enemy.h"
 
 CWeapon::CWeapon()
 {
@@ -35,6 +36,13 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				}
 			}
 
+			if (dynamic_cast<CEnemy *>(coObjects->at(i)))
+			{
+				if (isOverlapping(coObjects->at(i)))
+				{
+					coObjects->at(i)->BeDestroy();
+				}
+			}
 		}
 	}
 }
@@ -180,13 +188,13 @@ void CWeapon::UpdatePositionWithSimon()
 			if (animations[ani]->GetCurrentFrame() == 0)
 			{
 				x -= 8;
-				y += 6;
+				y += 8;
 				frame = 0;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 1)
 			{
 				x -= 16;
-				y += 6;
+				y += 8;
 				frame = 1;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 2)
@@ -200,14 +208,14 @@ void CWeapon::UpdatePositionWithSimon()
 		{
 			if (animations[ani]->GetCurrentFrame() < 4)
 			{
-				x -= 8;
-				y += 6;
+				x -= 6;
+				y += 8;
 				frame = 0;
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 8)
 			{
-				x -= 17;
-				y += 6;
+				x -= 15;
+				y += 8;
 				frame = 1;
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 8 && animations[ani]->GetCurrentFrame() < 12)
@@ -225,19 +233,19 @@ void CWeapon::UpdatePositionWithSimon()
 			if (animations[ani]->GetCurrentFrame() == 0)
 			{
 				x += 15;
-				y += 6;
+				y += 8;
 				frame = 0;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 1)
 			{
 				x += 15;
-				y += 6;
+				y += 8;
 				frame = 1;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 2)
 			{
 				x -= 20;
-				y += 6;
+				y += 8;
 				frame = 2;
 			}
 		}
@@ -246,13 +254,13 @@ void CWeapon::UpdatePositionWithSimon()
 			if (animations[ani]->GetCurrentFrame() < 4)
 			{
 				x += 15;
-				y += 6;
+				y += 8;
 				frame = 0;
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 7)
 			{
 				x += 15;
-				y += 6;
+				y += 8;
 				frame = 1;
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 7 && animations[ani]->GetCurrentFrame() < 12)

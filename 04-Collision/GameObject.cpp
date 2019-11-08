@@ -174,7 +174,10 @@ void CGameObject::basicCollision(float &min_tx, float &min_ty, float& nx,float& 
 
 void CGameObject::BeDestroy()
 {
+
 	CEffect * effect = CEffect::GetInstance();
 	effect->SetPosition(x, y);
 	effect->StartShowEffect();
+
+	isHidden = true;
 }

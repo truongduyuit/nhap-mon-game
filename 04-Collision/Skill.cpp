@@ -2,6 +2,7 @@
 #include "SObject.h"
 #include "Simon.h"
 #include "Effect.h"
+#include "Enemy.h"
 
 CSkill::CSkill()
 {
@@ -40,6 +41,17 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					//set_isHidden(true);
 					SetPosition(-100.0f, -100.0f);
 				}
+			}
+		}
+
+		if (dynamic_cast<CEnemy *>(coObjects->at(i)))
+		{
+			if (isOverlapping(coObjects->at(i)))
+			{
+				coObjects->at(i)->BeDestroy();
+
+				//set_isHidden(true);
+				SetPosition(-100.0f, -100.0f);
 			}
 		}
 

@@ -4,7 +4,6 @@ void CFlag::setSize(int w, int h)
 {
 	this->width = w;
 	this->height = h;
-	bool isFlag;
 }
 
 void CFlag::Render()

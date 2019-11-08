@@ -18,16 +18,7 @@
 #include "SObject.h"
 #include "Weapon.h"
 #include "Skill.h"
-
-#define WINDOW_CLASS_NAME L"Window"
-#define MAIN_WINDOW_TITLE L"Game Castlevania"
-
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 200)
-
-
-#define MAX_FRAME_RATE 120
-
-#define ID_TEX_BACKBROUND		10
+#include "Enemy.h"
 
 CGame *game;
 CMap* map;
@@ -225,6 +216,12 @@ void Update(DWORD dt)
 		{
 			coObjectsFull[i]->Update(dt, &coObjectsWithSkill);
 		}
+
+		else if (dynamic_cast<CEnemy *>(coObjectsFull[i]))
+		{
+			coObjectsFull[i]->Update(dt, &coObjectGround);
+		}
+
 		else
 		{
 			coObjectsFull[i]->Update(dt, &coObjectsFull);
