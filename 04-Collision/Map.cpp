@@ -25,16 +25,7 @@ void CMap::LoadTilesPosition()
 		tiles.clear();
 
 	ifstream in;
-
-	if (this->round == 1)
-	{
-		in.open("data\\background\\map1_tile_position.txt", ios::in);
-	}
-	else if (this->round == 2)
-	{
-		in.open("data\\background\\map2_tile_position.txt", ios::in);
-	}
-	
+	in.open("data\\background\\map_tile_position.txt", ios::in);
 
 	if (in.fail())
 	{
@@ -42,12 +33,13 @@ void CMap::LoadTilesPosition()
 		return;
 	}
 
-	in >> max_x >> max_y >> tile_size_x >> tile_size_y;
-
 	CTileMat* tile;
 
 	while (!in.eof())
 	{
+		int lv;
+		in >> lv >> max_x >> max_y >> tile_size_x >> tile_size_y;
+
 		for (int i = 0; i < max_y; i++)
 		{
 			for (int j = 0; j < max_x; j++)
@@ -55,9 +47,12 @@ void CMap::LoadTilesPosition()
 				int id;
 				in >> id;
 
-				tile = new CTileMat(id, i, j);
-				tile->SetTileSize(tile_size_x, tile_size_y);
-				tiles.push_back(tile);
+				if (lv == this->round)
+				{
+					tile = new CTileMat(id, i, j);
+					tile->SetTileSize(tile_size_x, tile_size_y);
+					tiles.push_back(tile);
+				}
 			}
 		}
 	}
@@ -85,15 +80,7 @@ void CMap::LoadObjects()
 	simon->nx = 1;
 
 	ifstream in;
-
-	if (this->round == 1)
-	{
-		in.open("data\\background\\map1_objects.txt", ios::in);
-	}
-	else if (this->round == 2)
-	{
-		in.open("data\\background\\map2_objects.txt", ios::in);
-	}
+	in.open("data\\background\\map_objects.txt", ios::in);
 
 	if (in.fail())
 	{
@@ -102,63 +89,75 @@ void CMap::LoadObjects()
 	}
 	while (!in.eof())
 	{
-		int id_object;
-		in >> id_object;
+		int lv, id_object;
+		in >> lv >> id_object;
 
 		if (id_object == 0)
 		{
 			int size_x, size_y, x, y;
 			in >> size_x >> size_y >> x >> y;
 
-			ground = new CGround();
-			ground->setSize(size_x, size_y);
-			ground->SetPosition(float(x), float(y));
+			if (lv == this->round)
+			{
+				ground = new CGround();
+				ground->setSize(size_x, size_y);
+				ground->SetPosition(float(x), float(y));
 
-			coObjectGround.push_back(ground);
-			coObjectsFull.push_back(ground);
+				coObjectGround.push_back(ground);
+				coObjectsFull.push_back(ground);
+			}
 		}
 		else if (id_object == 1)
 		{
 			int x, y;
 			in >> x >> y;
 
-			simon = CSimon::GetInstance();
-			simon->SetPosition(float(x), float(y));
-			coObjectsFull.push_back(simon);
+			if (lv == this->round)
+			{
+				simon = CSimon::GetInstance();
+				simon->SetPosition(float(x), float(y));
+				coObjectsFull.push_back(simon);
+			}
 		}
 		else if (id_object == 2)
 		{
 			int x, y, state, nextState;
 			in >> x >> y >> state >> nextState;
 
-			sobject = new CSObject();
-			sobject->SetPosition(float(x), float(y));
-			sobject->SetState(state);
-			sobject->SetNextState(nextState);
-
-			if (state == 5)
+			if (lv == this->round)
 			{
-				int xAppear;
-				in >> xAppear;
-				sobject->SetxAppear(xAppear);
-				sobject->set_isHidden(true);
-			}
+				sobject = new CSObject();
+				sobject->SetPosition(float(x), float(y));
+				sobject->SetState(state);
+				sobject->SetNextState(nextState);
 
-			coObjectsFull.push_back(sobject);
+				if (state == 5)
+				{
+					int xAppear;
+					in >> xAppear;
+					sobject->SetxAppear(xAppear);
+					sobject->set_isHidden(true);
+				}
+
+				coObjectsFull.push_back(sobject);
+			}
 		}
 		else if (id_object == 3)
 		{
 			int size_x, size_y, x, y, state, nextState;
 			in >> size_x >> size_y >> x >> y >> state >> nextState;
 
-			CFlag* flag = new CFlag();
-			flag->setSize(size_x, size_y);
-			flag->SetPosition(float(x), float(y));
-			flag->SetState(state);
-			flag->SetNextState(nextState);
+			if (lv == this->round)
+			{
+				CFlag* flag = new CFlag();
+				flag->setSize(size_x, size_y);
+				flag->SetPosition(float(x), float(y));
+				flag->SetState(state);
+				flag->SetNextState(nextState);
 
-			coObjectFlag.push_back(flag);
-			coObjectsFull.push_back(flag);
+				coObjectFlag.push_back(flag);
+				coObjectsFull.push_back(flag);
+			}
 		}
 		else if (id_object == 4)
 		{
@@ -168,13 +167,16 @@ void CMap::LoadObjects()
 			in >> x >> y >> state >> nextState;
 			in >> x_min >> x_max;
 
-			enemy = new CEnemy();
-			enemy->SetPosition(float(x), float(y));
-			enemy->SetState(state);
-			enemy->SetNextState(nextState);
-			enemy->SetMaxMin(x_min, x_max);
+			if (lv == this->round)
+			{
+				enemy = new CEnemy();
+				enemy->SetPosition(float(x), float(y));
+				enemy->SetState(state);
+				enemy->SetNextState(nextState);
+				enemy->SetMaxMin(x_min, x_max);
 
-			coObjectsFull.push_back(enemy);
+				coObjectsFull.push_back(enemy);
+			}
 		}
 	}
 

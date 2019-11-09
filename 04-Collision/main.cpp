@@ -207,7 +207,7 @@ void LoadResources()
 
 	simon = CSimon::GetInstance();
 
-	LoadRoundGame(1);
+	LoadRoundGame(2);
 }
 
 
