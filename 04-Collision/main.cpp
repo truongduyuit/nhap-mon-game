@@ -83,7 +83,10 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_SPACE:
 		if (!simon->get_onstair())
 		{
-			simon->SetState(SIMON_STATE_JUMP);
+			if (simon->state == SIMON_STATE_WALKING_RIGHT)simon->startJumpMove(true);
+			else if (simon->state == SIMON_STATE_WALKING_LEFT) simon->startJumpMove(false);
+			else simon->startJump();
+				
 		}
 		break;
 	case DIK_D:
@@ -98,12 +101,6 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 			simon->SetState(SIMON_STATE_THROW);
 		}
 		break;
-	/*case DIK_S:
-		if (!simon->get_isAttack() && !simon->get_isPick())
-		{
-			simon->SetState(SIMON_STATE_SIT);
-		}	
-		break;*/
 	case DIK_UP:
 		if (!simon->get_onstair())
 			onFlag(SIMON_UPSTAIR);
@@ -145,7 +142,7 @@ void CSampleKeyHander::KeyState(BYTE *states)
 	if (simon->GetState() == SIMON_STATE_DIE) return;
 	if (!simon->get_isPick())
 	{
-		if (game->IsKeyDown(DIK_RIGHT) && !simon->get_isAttack())
+		if (game->IsKeyDown(DIK_RIGHT) && !simon->get_isAttack() && !simon->get_isJump())
 		{
 			if (simon->get_isJump())
 			{
@@ -156,7 +153,7 @@ void CSampleKeyHander::KeyState(BYTE *states)
 				simon->SetState(SIMON_STATE_WALKING_RIGHT);
 			}
 		}
-		else if (game->IsKeyDown(DIK_LEFT) && !simon->get_isAttack())
+		else if (game->IsKeyDown(DIK_LEFT) && !simon->get_isAttack() && !simon->get_isJump())
 		{
 			if (simon->get_isJump())
 			{
@@ -207,7 +204,7 @@ void LoadResources()
 
 	simon = CSimon::GetInstance();
 
-	LoadRoundGame(2);
+	LoadRoundGame(1);
 }
 
 

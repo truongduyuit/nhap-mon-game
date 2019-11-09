@@ -111,6 +111,7 @@ public:
 
 	void startAttack();
 	void startJump();
+	void startJumpMove(bool nxx);
 	void startPick();
 	void startThrow();
 	void startSit();

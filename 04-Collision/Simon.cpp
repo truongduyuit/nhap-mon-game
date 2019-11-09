@@ -458,9 +458,6 @@ void CSimon::SetState(int state)
 			sit_time = 0;
 			nx = 1;
 			break;
-		case SIMON_STATE_JUMP:
-			startJump();
-			break;
 		case SIMON_STATE_ATTACK:
 			startAttack();
 			break;
@@ -474,7 +471,7 @@ void CSimon::SetState(int state)
 			startSit();
 			break;
 		default:
-			vx = 0;
+			if (!isJump) vx = 0;
 			break;
 		}
 	}
@@ -496,10 +493,19 @@ void CSimon::startJump()
 	// Đang lụm, đánh thì không cho nhảy
 	if (!isPick && !isAttack && !isJump)
 	{
-		isJump = true;
 
+		SetState(SIMON_STATE_JUMP);
+
+		isJump = true;
 		vy = -SIMON_JUMP_SPEED_Y;
 	}
+}
+
+void CSimon::startJumpMove(bool nxx)
+{
+	isJump = true;
+	vy = -SIMON_JUMP_SPEED_Y;
+	nxx ? vx = SIMON_WALKING_SPEED : vx = -SIMON_WALKING_SPEED;
 }
 
 void CSimon::startPick()
