@@ -52,8 +52,7 @@
 #define SIMON_SIT_BBOX_HEIGHT	24
 #define SIMON_RESET_BBOX		7
 
-#define SIMON_ATTACK_TIME			450
-#define SIMON_SIT_TIME				600
+#define SIMON_ATTACK_TIME			600
 #define SIMON_PICK_TIME				1600
 #define SIMON_THROW_TIME			1000
 #define SIMON_UNTOUCHABLE_TIME		1500
@@ -114,7 +113,8 @@ public:
 	void startJumpMove(bool nxx);
 	void startPick();
 	void startThrow();
-	void startSit();
+	void startSit(bool sit);
+	void resetSit();
 	void upBBox();
 	void beMoving(int bnx, float bx, int updown);
 	void moveOnStair();

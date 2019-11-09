@@ -67,7 +67,7 @@ void CWeapon::Render()
 
 void CWeapon::ResetAttack()
 {
-	for (int i = 0; i < animations.size(); i++)
+	for (unsigned int i = 0; i < animations.size(); i++)
 	{
 		animations[i]->ResetFrame();
 	}
@@ -199,18 +199,18 @@ void CWeapon::UpdatePositionWithSimon()
 			if (animations[ani]->GetCurrentFrame() == 0)
 			{
 				frame = 0;
-				x -= 6;
+				x -= 10;
 				y += 8;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 1)
 			{
-				x -= 8;
+				x -= 10;
 				y += 8;
 				frame = 1;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 2)
 			{
-				x -= 16;
+				x -= 10;
 				y += 8;
 				frame = 2;
 			}
@@ -223,25 +223,19 @@ void CWeapon::UpdatePositionWithSimon()
 		}
 		else
 		{
-			if (animations[ani]->GetCurrentFrame() < 4)
+			if (animations[ani]->GetCurrentFrame() < 8)
 			{
 				frame = 0;
-				x -= 6;
+				x -= 10;
 				y += 8;
 			}
-			if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 8)
+			else if (animations[ani]->GetCurrentFrame() >= 8 && animations[ani]->GetCurrentFrame() < 11)
 			{
-				x -= 6;
-				y += 8;
-				frame = 1;
-			}
-			else if (animations[ani]->GetCurrentFrame() >= 8 && animations[ani]->GetCurrentFrame() < 12)
-			{
-				x -= 15;
+				x -= 10;
 				y += 8;
 				frame = 2;
 			}
-			else if (animations[ani]->GetCurrentFrame() >= 12 && animations[ani]->GetCurrentFrame() < 16)
+			else if (animations[ani]->GetCurrentFrame() >= 11)
 			{
 				x += 13;
 				y += 8;

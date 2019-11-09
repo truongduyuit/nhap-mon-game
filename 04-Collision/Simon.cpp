@@ -186,20 +186,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 
-	// sit
-	if (isSit)
-	{
-		if (GetTickCount() - sit_time >= SIMON_SIT_TIME)
-		{
-			upBBox();
-			isSit = false;
-			sit_time = 0;
-			
-		}
-	}
-
-
-
 	if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
 	{
 		untouchable_start = 0;
@@ -435,10 +421,9 @@ void CSimon::SetState(int state)
 			}
 			else if (!isAttack)
 			{
-				vx = -SIMON_WALKING_SPEED;
-				
+				isSit ? resetSit() : vx = -SIMON_WALKING_SPEED;
 			}
-			sit_time = 0;
+			resetSit();
 			nx = -1;
 			break;
 		case SIMON_STATE_WALKING_RIGHT:
@@ -453,9 +438,8 @@ void CSimon::SetState(int state)
 			}
 			else if (!isAttack)
 			{
-				vx = SIMON_WALKING_SPEED;
+				isSit? resetSit() : vx = SIMON_WALKING_SPEED;
 			}
-			sit_time = 0;
 			nx = 1;
 			break;
 		case SIMON_STATE_ATTACK:
@@ -467,11 +451,9 @@ void CSimon::SetState(int state)
 		case SIMON_STATE_PICK:
 			startPick();
 			break;
-		case SIMON_STATE_SIT:
-			startSit();
-			break;
 		default:
 			if (!isJump) vx = 0;
+			if (!isAttack) resetSit();
 			break;
 		}
 	}
@@ -523,15 +505,24 @@ void CSimon::startPick()
 	}
 }
 
-void CSimon::startSit()
+void CSimon::startSit(bool sit)
 {
 	// Đang lụm, đánh, ngồi thì không cho ngồi
 	if (!isPick && !isAttack && !isSit)
 	{
 		isSit = true;
-		vx = 0;
+		dx = 0;
+		y += SIMON_RESET_BBOX;
 	}
-	sit_time = GetTickCount();
+}
+
+void CSimon::resetSit()
+{
+	if (isSit)
+	{
+		upBBox();		
+		isSit = false;
+	}
 }
 
 void CSimon::startThrow()
