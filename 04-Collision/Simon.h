@@ -3,8 +3,8 @@
 #include "LoadResource.h"
 
 #define SIMON_WALKING_SPEED			0.07f
-#define SIMON_GRAVITY				0.001f
-#define SIMON_JUMP_SPEED_Y			0.3f
+#define SIMON_GRAVITY				0.0005f
+#define SIMON_JUMP_SPEED_Y			0.18f
 
 #define SIMON_HP_START				100
 
@@ -52,7 +52,7 @@
 #define SIMON_SIT_BBOX_HEIGHT	24
 #define SIMON_RESET_BBOX		7
 
-#define SIMON_ATTACK_TIME			300
+#define SIMON_ATTACK_TIME			500
 #define SIMON_PICK_TIME				1600
 #define SIMON_THROW_TIME			1000
 #define SIMON_UNTOUCHABLE_TIME		1500

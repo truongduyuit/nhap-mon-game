@@ -29,6 +29,7 @@ class CWeapon : public CGameObject
 	int frame;
 
 	float xx, xy;
+	bool isCol;
 public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> * colliable_objects = NULL);
 	virtual void Render();

@@ -147,31 +147,33 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		isAttack = false;
 		action_time = 0;
 
-		weapon->set_isHidden(true);
+		
 		weapon->ResetAttack();
 		weapon->SetPosTemp(x, y);
+		weapon->set_isHidden(true);
 	}
 	else if (isAttack)
 	{
-		weapon->SetPosTemp(x, y);
+		
 		nx > 0 ? weapon->SetState(STATE_ATTACK_RIGHT) : weapon->SetState(STATE_ATTACK_LEFT);
 		dx = 0;
+		weapon->SetPosTemp(x, y);
 		weapon->set_isHidden(false);
 	}
 
 	// throw
 	if (GetTickCount() - action_time >= SIMON_ATTACK_TIME)
 	{
+		isAttack = false;
 		isthrow = false;
 		action_time = 0;
 	}
 	else if (isthrow)
 	{
 		// kết thúc sprite đánh dao mới xuất hiện
-		if (animations[SIMON_ANI_ATTACK_RIGHT]->GetCurrentFrame() == 2 || animations[SIMON_ANI_ATTACK_LEFT]->GetCurrentFrame() == 2)
+		if (animations[SIMON_ANI_ATTACK_RIGHT]->GetCurrentFrame() >= 2 || animations[SIMON_ANI_ATTACK_LEFT]->GetCurrentFrame() >= 2)
 		{
 			CSkill* skill = CSkill::GetInstance();
-
 			if (skill->get_isHidden())
 			{
 				this->skill[0]--;
@@ -179,8 +181,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				skill->SetState(STATE_KNIFE);
 				skill->nx = this->nx;
 
-				if (!isJump) skill->nx > 0 ? skill->SetPosition(x + 20, y+6) : skill->SetPosition(x - 3, y+6);
-				else skill->nx > 0 ? skill->SetPosition(x + 20, y+13) : skill->SetPosition(x - 3, y+13);
+				if (!isJump) skill->nx > 0 ? skill->SetPosition(x + 20, y + 6) : skill->SetPosition(x - 3, y + 6);
+				else skill->nx > 0 ? skill->SetPosition(x + 20, y + 13) : skill->SetPosition(x - 3, y + 13);
 
 				skill->startThrow();
 			}
