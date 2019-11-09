@@ -186,6 +186,19 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 
+	// sit
+	if (isSit)
+	{
+		if (GetTickCount() - sit_time >= SIMON_SIT_TIME)
+		{
+			upBBox();
+			isSit = false;
+			sit_time = 0;
+			
+		}
+	}
+
+
 
 	if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
 	{
@@ -280,8 +293,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 
-		/*if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;*/	
+		if (nx != 0) vx = 0;
+		if (ny != 0) vy = 0;	
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++)
@@ -423,13 +436,9 @@ void CSimon::SetState(int state)
 			else if (!isAttack)
 			{
 				vx = -SIMON_WALKING_SPEED;
-
-				if (isSit)
-				{
-					upBBox();
-					isSit = false;
-				}
+				
 			}
+			sit_time = 0;
 			nx = -1;
 			break;
 		case SIMON_STATE_WALKING_RIGHT:
@@ -445,13 +454,8 @@ void CSimon::SetState(int state)
 			else if (!isAttack)
 			{
 				vx = SIMON_WALKING_SPEED;
-
-				if (isSit)
-				{
-					upBBox();
-					isSit = false;
-				}
 			}
+			sit_time = 0;
 			nx = 1;
 			break;
 		case SIMON_STATE_JUMP:
@@ -519,9 +523,9 @@ void CSimon::startSit()
 	if (!isPick && !isAttack && !isSit)
 	{
 		isSit = true;
-
 		vx = 0;
 	}
+	sit_time = GetTickCount();
 }
 
 void CSimon::startThrow()
@@ -551,7 +555,7 @@ void CSimon::beMoving(int bnx, float bx, int updown)
 
 		if (be_updown == SIMON_DOWNSTAIR)
 		{
-			be_nx < 0 ? be_x = bx - SIMON_BBOX_WIDTH / 2 - 1 : be_x = bx + SIMON_BBOX_WIDTH / 2 + 1;
+			be_nx < 0 ? be_x = bx - SIMON_BBOX_WIDTH / 2 - 3 : be_x = bx + SIMON_BBOX_WIDTH / 2 + 1;
 		}
 		else
 			be_x = bx;
@@ -608,4 +612,26 @@ CSimon * CSimon::GetInstance()
 {
 	if (__instance == NULL) __instance = new CSimon();
 	return __instance;
+}
+
+bool CSimon::get_candownstair()
+{
+	CMap* map = CMap::GetInstance();
+	vector<LPGAMEOBJECT> coObjectFlag;
+	coObjectFlag = map->Get_coObjectFlag();
+
+	if (!onStair)
+	{
+		for (unsigned int i = 0; i < coObjectFlag.size(); i++)
+		{
+			if (isOverlapping(coObjectFlag[i]))
+			{
+				if (coObjectFlag[i]->nextState == SIMON_DOWNSTAIR)
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
 }

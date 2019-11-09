@@ -53,6 +53,7 @@
 #define SIMON_RESET_BBOX		7
 
 #define SIMON_ATTACK_TIME			450
+#define SIMON_SIT_TIME				600
 #define SIMON_PICK_TIME				1600
 #define SIMON_THROW_TIME			1000
 #define SIMON_UNTOUCHABLE_TIME		1500
@@ -79,6 +80,7 @@ class CSimon : public CGameObject
 	bool isSit;
 	bool onStair;
 	bool onTimeStair;
+	bool canDownstair;
 
 	bool isBeMoving;
 	float be_x;
@@ -86,6 +88,7 @@ class CSimon : public CGameObject
 	int be_updown;
 
 	DWORD action_time;
+	DWORD sit_time;
 public:
 
 	CSimon();
@@ -104,6 +107,7 @@ public:
 	bool get_isThrow() { return isthrow; }
 	bool get_isSit() { return isSit; }
 	bool get_onstair() { return onStair; }
+	bool get_candownstair();
 
 	void startAttack();
 	void startJump();
