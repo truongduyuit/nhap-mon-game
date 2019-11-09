@@ -93,7 +93,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		}
 		break;
 	case DIK_A:
-		if (!simon->get_isAttack() && !simon->get_isPick() && !simon->get_isThrow())
+		if (!simon->get_isAttack() && !simon->get_isPick() && !simon->get_isThrow() && !simon->get_isSit())
 		{
 			simon->SetState(SIMON_STATE_THROW);
 		}
