@@ -199,25 +199,25 @@ void CWeapon::UpdatePositionWithSimon()
 			if (animations[ani]->GetCurrentFrame() == 0)
 			{
 				frame = 0;
-				x -= 10;
-				y += 8;
+				x -= 9;
+				y += 7;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 1)
 			{
-				x -= 10;
-				y += 8;
+				x -= 9;
+				y += 7;
 				frame = 1;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 2)
 			{
-				x -= 10;
-				y += 8;
+				x -= 9;
+				y += 7;
 				frame = 2;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 3)
 			{
 				x += 15;
-				y += 7;
+				y += 6;
 				frame = 3;
 			}
 		}
@@ -268,7 +268,7 @@ void CWeapon::UpdatePositionWithSimon()
 			else if (animations[ani]->GetCurrentFrame() == 3)
 			{
 				x -= 20;
-				y += 5;
+				y += 6;
 				frame = 3;
 			}
 		}

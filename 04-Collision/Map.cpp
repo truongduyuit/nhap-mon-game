@@ -174,7 +174,6 @@ void CMap::LoadObjects()
 				enemy->SetState(state);
 				enemy->SetNextState(nextState);
 				enemy->SetMaxMin(x_min, x_max);
-
 				coObjectsFull.push_back(enemy);
 			}
 		}

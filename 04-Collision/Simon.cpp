@@ -201,6 +201,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	else if (isInJure)
 	{
 		weapon->set_isHidden(true);
+		weapon->ResetAttack();
 		dy = -SIMON_INJURE_Y;
 		x += be_nx * SIMON_INJURE_X;
 		nx = -be_nx;
