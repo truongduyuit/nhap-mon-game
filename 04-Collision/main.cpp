@@ -134,50 +134,50 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 void CSampleKeyHander::KeyState(BYTE *states)
 {
 	if (simon->GetState() == SIMON_STATE_DIE) return;
-	if (!simon->get_isPick())
+	if (simon->get_isPick()) return;
+	if (simon->get_isInjure()) return;
+
+	if (game->IsKeyDown(DIK_DOWN))
 	{
-		if (game->IsKeyDown(DIK_DOWN))
+		if (!simon->get_candownstair())
 		{
-			if (!simon->get_candownstair())
-			{
-				simon->startSit(true);
-			}
+			simon->startSit(true);
 		}
-		else if (game->IsKeyDown(DIK_RIGHT) && !simon->get_isAttack() && !simon->get_isJump())
+	}
+	else if (game->IsKeyDown(DIK_RIGHT) && !simon->get_isAttack() && !simon->get_isJump())
+	{
+		if (simon->get_isJump())
 		{
-			if (simon->get_isJump())
-			{
-				if (simon->nx > 0) simon->SetState(SIMON_STATE_WALKING_RIGHT);
-			}
-			else
-			{
-				simon->SetState(SIMON_STATE_WALKING_RIGHT);
-			}
-		}
-		else if (game->IsKeyDown(DIK_LEFT) && !simon->get_isAttack() && !simon->get_isJump())
-		{
-			if (simon->get_isJump())
-			{
-				if (simon->nx < 0) simon->SetState(SIMON_STATE_WALKING_LEFT);
-			}
-			else
-			{
-				simon->SetState(SIMON_STATE_WALKING_LEFT);
-			}
-		}		
-		else if (game->IsKeyDown(DIK_UP))
-		{
-			if (game->IsKeyDown(DIK_D))
-			{
-				if (!simon->get_isAttack() && !simon->get_isPick() && !simon->get_isThrow() && !simon->get_isSit())
-				{
-					simon->SetState(SIMON_STATE_THROW);
-				}
-			}
+			if (simon->nx > 0) simon->SetState(SIMON_STATE_WALKING_RIGHT);
 		}
 		else
-			simon->SetState(SIMON_STATE_IDLE);
+		{
+			simon->SetState(SIMON_STATE_WALKING_RIGHT);
+		}
 	}
+	else if (game->IsKeyDown(DIK_LEFT) && !simon->get_isAttack() && !simon->get_isJump())
+	{
+		if (simon->get_isJump())
+		{
+			if (simon->nx < 0) simon->SetState(SIMON_STATE_WALKING_LEFT);
+		}
+		else
+		{
+			simon->SetState(SIMON_STATE_WALKING_LEFT);
+		}
+	}
+	else if (game->IsKeyDown(DIK_UP))
+	{
+		if (game->IsKeyDown(DIK_D))
+		{
+			if (!simon->get_isAttack() && !simon->get_isPick() && !simon->get_isThrow() && !simon->get_isSit())
+			{
+				simon->SetState(SIMON_STATE_THROW);
+			}
+		}
+	}
+	else
+		simon->SetState(SIMON_STATE_IDLE);
 
 }
 
@@ -204,7 +204,7 @@ void LoadResources()
 
 	simon = CSimon::GetInstance();
 
-	LoadRoundGame(1);
+	LoadRoundGame(2);
 }
 
 

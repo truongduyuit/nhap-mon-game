@@ -28,6 +28,7 @@ CSimon::CSimon()
 	skill.push_back(10);
 
 	untouchable = 0;
+	alpha = 255;
 
 	CLoadResourcesHelper::LoadSprites("data\\simon\\simon_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\simon\\simon_anis.txt", this);
@@ -186,10 +187,30 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 
+
+	// Injure
+	if (GetTickCount() - action_time > SIMON_ENJURE_TIME)
+	{
+		if (isInJure)
+		{
+			StartUntouchable();
+			isInJure = false;
+			action_time = 0;
+		}
+	}
+	else if (isInJure)
+	{
+		weapon->set_isHidden(true);
+		dy = -SIMON_INJURE_Y;
+		x += be_nx * SIMON_INJURE_X;
+		nx = -be_nx;
+	}
+
 	if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
 	{
 		untouchable_start = 0;
 		untouchable = 0;
+		alpha = 255;
 	}
 
 	for (unsigned int i = 0; i < coObjects->size(); i++)
@@ -209,18 +230,20 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 
-		if (untouchable == 0)
+		if (untouchable == 0 && !isInJure)
 		{
 			if (dynamic_cast<CEnemy *>(coObjects->at(i)))
 			{
 				if (isOverlapping(coObjects->at(i)))
 				{
-					if (hp > 0)
+					if (coObjects->at(i)->x > x)
 					{
-						StartUntouchable();
+						startInjure(-1);
 					}
 					else
-						state = SIMON_STATE_DIE;
+					{
+						startInjure(1);
+					}
 				}
 			}
 		}
@@ -239,8 +262,12 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 		if (ny < 0)
 		{
-			if (isJump) upBBox();
-			isJump = false;
+			if (isJump)
+			{
+				//upBBox();
+				isJump = false;
+				isSit = true;
+			}
 		}
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
@@ -257,6 +284,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				basicCollision(min_tx, min_ty, nx, ny);
 				if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
+
 			}
 
 			if (dynamic_cast<CSObject *>(e->obj) && !e->obj->get_isHidden())
@@ -317,6 +345,10 @@ void CSimon::Render()
 				onTimeStair ? ani = SIMON_ANI_DOWNSTAIR_LEFT : ani = SIMON_ANI_IDLE_DOWNSTAIR_LEFT;
 			}
 		}
+	}
+	else if (isInJure)
+	{
+		nx > 0 ? ani = SIMON_ANI_INJURE_RIGHT : ani = SIMON_ANI_INJURE_LEFT;
 	}
 	else
 	{
@@ -393,8 +425,10 @@ void CSimon::Render()
 
 	}
 
-	int alpha = 255;
-	if (untouchable) alpha = 128;
+	if (untouchable)
+	{
+		alpha == 255 ? alpha = 128 : alpha = 255;
+	}
 	animations[ani]->Render(x, y, alpha);
 
 	if (renderBBox )RenderBoundingBox();
@@ -403,59 +437,56 @@ void CSimon::Render()
 
 void CSimon::SetState(int state)
 {
-	if (!isPick)
-	{
-		CGameObject::SetState(state);
+	CGameObject::SetState(state);
 
-		switch (state)
+	switch (state)
+	{
+	case SIMON_STATE_WALKING_LEFT:
+		if (onStair)
 		{
-		case SIMON_STATE_WALKING_LEFT:
-			if (onStair)
+			if (be_nx != -1)
 			{
-				if (be_nx != -1)
-				{
-					be_nx = -1;
-					be_updown = -be_updown;
-				}
-				moveOnStair();
+				be_nx = -1;
+				be_updown = -be_updown;
 			}
-			else if (!isAttack)
-			{
-				isSit ? resetSit() : vx = -SIMON_WALKING_SPEED;
-			}
-			resetSit();
-			nx = -1;
-			break;
-		case SIMON_STATE_WALKING_RIGHT:
-			if (onStair)
-			{
-				if (be_nx != 1)
-				{
-					be_nx = 1;
-					be_updown = -be_updown;
-				}
-				moveOnStair();
-			}
-			else if (!isAttack)
-			{
-				isSit? resetSit() : vx = SIMON_WALKING_SPEED;
-			}
-			nx = 1;
-			break;
-		case SIMON_STATE_ATTACK:
-			startAttack();
-			break;
-		case SIMON_STATE_THROW:
-			startThrow();
-			break;
-		case SIMON_STATE_PICK:
-			startPick();
-			break;
-		default:
-			if (!isJump) vx = 0;
-			if (!isAttack) resetSit();
-			break;
+			moveOnStair();
 		}
+		else if (!isAttack)
+		{
+			isSit ? resetSit() : vx = -SIMON_WALKING_SPEED;
+		}
+		resetSit();
+		nx = -1;
+		break;
+	case SIMON_STATE_WALKING_RIGHT:
+		if (onStair)
+		{
+			if (be_nx != 1)
+			{
+				be_nx = 1;
+				be_updown = -be_updown;
+			}
+			moveOnStair();
+		}
+		else if (!isAttack)
+		{
+			isSit ? resetSit() : vx = SIMON_WALKING_SPEED;
+		}
+		nx = 1;
+		break;
+	case SIMON_STATE_ATTACK:
+		startAttack();
+		break;
+	case SIMON_STATE_THROW:
+		startThrow();
+		break;
+	case SIMON_STATE_PICK:
+		startPick();
+		break;
+	default:
+		if (!isJump) vx = 0;
+		if (!isAttack) resetSit();
+		break;
 	}
 }
 
@@ -522,6 +553,18 @@ void CSimon::resetSit()
 	{
 		upBBox();		
 		isSit = false;
+	}
+}
+
+void CSimon::startInjure(int nxx)
+{
+	if (!isInJure)
+	{
+		isInJure = true;
+
+		action_time = GetTickCount();
+
+		be_nx = nxx;
 	}
 }
 
