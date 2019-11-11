@@ -3,6 +3,7 @@
 
 CEffect::CEffect()
 {
+	state = STATE_DESTROY;
 	CLoadResourcesHelper::LoadSprites("data\\effects\\effect_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\effects\\effect_anis.txt", this);
 }
@@ -25,6 +26,9 @@ void CEffect::Render()
 {
 
 	int ani = 0;
+	
+	if (state == STATE_DESTROY) ani = STATE_DESTROY;
+	//else if (state == STATE_FIRE) ani = STATE_FIRE;
 
 
 	if (!isHidden)

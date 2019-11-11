@@ -2,22 +2,35 @@
 #include "SObject.h"
 #include "Simon.h"
 #include "Effect.h"
+#include "Ground.h"
 #include "Enemy.h"
 
 CSkill::CSkill()
 {
 	CLoadResourcesHelper::LoadSprites("data\\skills\\skill_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\skills\\skill_anis.txt", this);
+	state = STATE_HOLY_WATER;
+	nextState = STATE_HOLY_WATER;
 }
 
 void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
 
-	if (GetTickCount() - timethrow_start >= TIME_THROW)
-	{
-		set_isHidden(true);
+	vector<LPCOLLISIONEVENT> coEvents;
+	vector<LPCOLLISIONEVENT> coEventsResult;
+	coEvents.clear();
 
+	if (state != STATE_KNIFE)
+	{
+		dy = 1.0f;
+		CalcPotentialCollisions(coObjects, coEvents);
+	}
+
+	if (GetTickCount() - timethrow_start > TIME_THROW)
+	{
+
+		set_isHidden(true);
 		timethrow_start = 0;
 	}
 	else
@@ -26,16 +39,29 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 
-	for (UINT i = 0; i < coObjects->size(); i++)
+	if (state != STATE_HOLY_WATER)
 	{
-
-		if (dynamic_cast<CSObject *>(coObjects->at(i)))
+		for (UINT i = 0; i < coObjects->size(); i++)
 		{
-			if (isOverlapping(coObjects->at(i)))
+			if (dynamic_cast<CSObject *>(coObjects->at(i)))
 			{
-				if (coObjects->at(i)->GetState() == BIG_CANDLE || coObjects->at(i)->GetState() == SMALL_CANDLE)
+				if (isOverlapping(coObjects->at(i)))
 				{
-					// Load effect destroy
+					if (coObjects->at(i)->GetState() == BIG_CANDLE || coObjects->at(i)->GetState() == SMALL_CANDLE)
+					{
+						// Load effect destroy
+						coObjects->at(i)->BeDestroy();
+
+						//set_isHidden(true);
+						SetPosition(-100.0f, -100.0f);
+					}
+				}
+			}
+
+			if (dynamic_cast<CEnemy *>(coObjects->at(i)))
+			{
+				if (isOverlapping(coObjects->at(i)))
+				{
 					coObjects->at(i)->BeDestroy();
 
 					//set_isHidden(true);
@@ -43,40 +69,65 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 		}
-
-		if (dynamic_cast<CEnemy *>(coObjects->at(i)))
+	}
+	else
+	{
+		if (coEvents.size() == 0)
 		{
-			if (isOverlapping(coObjects->at(i)))
-			{
-				coObjects->at(i)->BeDestroy();
+			x += dx;
+			y += dy;
+		}
+		else
+		{
+			float min_tx, min_ty, nx = 0, ny;
 
-				//set_isHidden(true);
-				SetPosition(-100.0f, -100.0f);
+			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+
+			for (UINT i = 0; i < coEventsResult.size(); i++)
+			{
+				LPCOLLISIONEVENT e = coEventsResult[i];
+
+				if (dynamic_cast<CGround *>(e->obj))
+				{
+					SetState(STATE_HOLY_FIRE);
+
+					basicCollision(min_tx, min_ty, nx, ny);
+					if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
+
+				}
 			}
+
+			if (nx != 0) vx = 0;
+			if (ny != 0) vy = 0;
 		}
 
+		for (UINT i = 0; i < coEvents.size(); i++)
+		{
+			delete coEvents[i];
+		}
 	}
-
-	x += dx;
-	y += dy;
 }
 
 void CSkill::Render()
 {
 	int ani;
 
-	if (nx < 0)
+
+	if (state == STATE_KNIFE)
 	{
-		ani = ANI_THROW_KNIFE_LEFT;
+		nx < 0 ? ani = ANI_THROW_KNIFE_LEFT : ani = ANI_THROW_KNIFE_RIGHT;
 	}
-	else if (nx > 0)
+	else if (state == STATE_HOLY_WATER)
 	{
-		ani = ANI_THROW_KNIFE_RIGHT;
+		nx < 0 ? ani = ANI_HOLY_WATER_LEFT : ani = ANI_HOLY_WATER_RIGHT;
 	}
-	
+	else if (state == STATE_HOLY_FIRE)
+	{
+		ani = ANI_HOLY_FIRE;
+	}
+
 	if (!isHidden)
 	{
-
 		animations[ani]->Render(x, y);
 		if (renderBBox)RenderBoundingBox();
 	}
@@ -92,6 +143,16 @@ void CSkill::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		right = x + KNIFE_WIDTH;
 		bottom = y + KNIFE_HEIGHT;
 	}
+	else if (state == STATE_HOLY_WATER)
+	{
+		right = x + HOLY_WATER_SKILL_WIDTH;
+		bottom = y + HOLY_WATER_SKILL_HEIGHT;
+	}
+	else if (state == STATE_HOLY_FIRE)
+	{
+		right = x + HOLY_WATER_SKILL_WIDTH;
+		bottom = y + HOLY_WATER_SKILL_HEIGHT;
+	}
 }
 
 void CSkill::startThrow()
@@ -101,6 +162,8 @@ void CSkill::startThrow()
 		isHidden = false;
 
 		timethrow_start = GetTickCount();
+
+		SetState(nextState);
 	}
 }
 
@@ -110,11 +173,28 @@ void CSkill::updateThrow()
 	{
 		nx > 0 ? dx = 3 : dx = -3;
 	}
+	else if (state == STATE_HOLY_WATER)
+	{
+		nx > 0 ? vx = 0.095f : vx = -0.095f;
+	}
+	else if (state == STATE_HOLY_FIRE)
+	{
+		vx = 0;
+	}
 }
 
 void CSkill::SetState(int state)
 {
-	this->state = state;
+	CGameObject::SetState(state);
+
+	switch (state)
+	{
+	case STATE_HOLY_WATER:
+		timeshow = 10000;
+	default:
+		timeshow = TIME_THROW;
+		break;
+	}
 }
 
 CSkill* CSkill::__instance = NULL;

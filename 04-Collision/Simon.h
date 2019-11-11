@@ -92,7 +92,7 @@ class CSimon : public CGameObject
 	int be_updown;
 
 	DWORD action_time;
-	DWORD sit_time;
+	DWORD injure_time;
 public:
 
 	CSimon();

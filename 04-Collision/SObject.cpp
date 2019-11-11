@@ -151,6 +151,10 @@ void CSObject::Render()
 	{
 		ani = HEART_SMALL_ITEM;
 	}
+	else if (state == HOLY_WATER_ITEM)
+	{
+		ani = HOLY_WATER_ITEM;
+	}
 
 	if (state != SOBJECT_HIDDEN && !isHidden)
 	{
@@ -176,6 +180,7 @@ void CSObject::BeDestroy()
 	CEffect * effect = CEffect::GetInstance();
 	effect->SetPosition(x, y);
 	effect->StartShowEffect();
+	effect->SetState(STATE_DESTROY);
 
 	if (!isDestroy)
 	{
@@ -225,5 +230,10 @@ void CSObject::GetBoundingBox(float &left, float &top, float &right, float &bott
 	{
 		right = x + BBOX_HEART_SMALL_W;
 		bottom = y + BBOX_HEART_SMALL_H;
+	}
+	else if (state == HOLY_WATER_ITEM)
+	{
+		right = x + HOLY_WATER_WIDTH;
+		bottom = y + HOLY_WATER_HEIGHT;
 	}
 }

@@ -12,6 +12,7 @@
 #define KNIFE_ITEM			4
 #define MONEY_ITEM_1k		5
 #define HEART_SMALL_ITEM	6
+#define HOLY_WATER_ITEM		7
 
 #define SOBJECT_APPEAR_TIME		5000
 #define SOBJECT_DESTROY_TIME	400
@@ -37,6 +38,9 @@
 
 #define BBOX_HEART_SMALL_W		6
 #define BBOX_HEART_SMALL_H		11
+
+#define HOLY_WATER_WIDTH	16
+#define HOLY_WATER_HEIGHT	16
 
 class CSObject : public CGameObject
 {

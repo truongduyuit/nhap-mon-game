@@ -178,8 +178,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			if (skill->get_isHidden())
 			{
 				this->skill[0]--;
-
-				skill->SetState(STATE_KNIFE);
 				skill->nx = this->nx;
 				skill->nx > 0 ? skill->SetPosition(x + 10, y + 6) : skill->SetPosition(x - 3, y + 6);
 				skill->startThrow();
@@ -189,7 +187,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 
 	// Injure
-	if (GetTickCount() - action_time > SIMON_ENJURE_TIME)
+	if (GetTickCount() - injure_time > SIMON_ENJURE_TIME)
 	{
 		if (isInJure)
 		{
@@ -240,10 +238,12 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					if (coObjects->at(i)->x > x)
 					{
 						startInjure(-1);
+						weapon->ResetAttack();
 					}
 					else
 					{
 						startInjure(1);
+						weapon->ResetAttack();
 					}
 				}
 			}
@@ -302,6 +302,15 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				else if (e->obj->state == KNIFE_ITEM)
 				{
 					this->skill[0] += 5;
+					skill->SetState(STATE_KNIFE);
+					skill->SetNextState(STATE_KNIFE);
+				}
+
+				else if (e->obj->state == HOLY_WATER_ITEM)
+				{
+					this->skill[0] += 5;
+					skill->SetState(STATE_HOLY_WATER);
+					skill->SetNextState(STATE_HOLY_WATER);
 				}
 
 				e->obj->SetState(SOBJECT_HIDDEN);
@@ -563,7 +572,7 @@ void CSimon::startInjure(int nxx)
 	{
 		isInJure = true;
 
-		action_time = GetTickCount();
+		injure_time = GetTickCount();
 
 		be_nx = nxx;
 	}

@@ -2,6 +2,7 @@
 #include "GameObject.h"
 
 #define STATE_HIDDEN -1
+#define STATE_DESTROY	0
 
 #define DESTROY_EFFECT_WIDTH	8
 #define DESTROY_EFFECT_HEIGHT	16
