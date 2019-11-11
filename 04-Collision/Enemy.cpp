@@ -114,6 +114,10 @@ bool CEnemy::onFlag()
 			{
 				return true;
 			}
+			if (coObjectFlag[i]->nextState == 2 && coObjectFlag[i]->state == -1)
+			{
+				return true;
+			}
 		}
 	}
 

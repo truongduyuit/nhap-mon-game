@@ -78,6 +78,9 @@ void onFlag(int st)
 void CSampleKeyHander::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+	if (simon->get_isPick()) return;
+	if (simon->get_isInjure()) return;
+
 	switch (KeyCode)
 	{
 	case DIK_SPACE:

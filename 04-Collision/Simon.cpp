@@ -73,7 +73,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				if (coObjectFlag[i]->state != nx && onStair)
 				{
-					nx > 0 ? x = coObjectFlag[i]->x - 15.0f : x = coObjectFlag[i]->x;
+					if (nx > 0)
+					{
+						coObjectFlag[i]->nextState == 2 ? x = coObjectFlag[i]->x + 17.0f : x = coObjectFlag[i]->x - 15.0f;
+					}
+					else
+					{
+						x = coObjectFlag[i]->x;
+					}
 					y = coObjectFlag[i]->y - 27.0f;
 					onStair = false;
 					onTimeStair = false;
@@ -203,8 +210,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		onTimeStair = false;
 
 		vy = -SIMON_INJURE_Y;
-		x += be_nx * SIMON_INJURE_X;
 		nx = -be_nx;
+		x += be_nx * SIMON_INJURE_X;
 	}
 
 	if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
@@ -323,6 +330,26 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				}
 
 				e->obj->SetState(SOBJECT_HIDDEN);
+			}
+
+			if (untouchable == 0 && !isInJure)
+			{
+				if (dynamic_cast<CEnemy *>(e->obj))
+				{
+					if (isOverlapping(e->obj))
+					{
+						if (e->obj->x > x)
+						{
+							startInjure(-1);
+							weapon->ResetAttack();
+						}
+						else
+						{
+							startInjure(1);
+							weapon->ResetAttack();
+						}
+					}
+				}
 			}
 		}
 
@@ -609,16 +636,21 @@ void CSimon::beMoving(int bnx, float bx, int updown)
 	if (!isBeMoving)
 	{
 		isBeMoving = true;
+
+
 		be_nx = bnx;
 		be_updown = updown;
+
+
 
 		if (be_updown == SIMON_DOWNSTAIR)
 		{
 			be_nx < 0 ? be_x = bx - SIMON_BBOX_WIDTH / 2 - 3 : be_x = bx + SIMON_BBOX_WIDTH / 2 + 1;
 		}
 		else
-			be_x = bx;
-		
+		{
+			be_nx == -1 ? be_x = bx + 15.0f : be_x = bx;
+		}	
 	}
 }
 
