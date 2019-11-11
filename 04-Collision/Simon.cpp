@@ -73,9 +73,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				if (coObjectFlag[i]->state != nx && onStair)
 				{
-					x = coObjectFlag[i]->x - 15.0f;
+					nx > 0 ? x = coObjectFlag[i]->x - 15.0f : x = coObjectFlag[i]->x;
 					y = coObjectFlag[i]->y - 27.0f;
-
 					onStair = false;
 					onTimeStair = false;
 				}
@@ -200,7 +199,10 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	{
 		weapon->set_isHidden(true);
 		weapon->ResetAttack();
-		dy = -SIMON_INJURE_Y;
+		onStair = false;
+		onTimeStair = false;
+
+		vy = -SIMON_INJURE_Y;
 		x += be_nx * SIMON_INJURE_X;
 		nx = -be_nx;
 	}
@@ -265,7 +267,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		{
 			if (isJump)
 			{
-				//upBBox();
 				isJump = false;
 				isSit = true;
 			}
@@ -283,9 +284,17 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 			if (dynamic_cast<CGround *>(e->obj))
 			{
-				basicCollision(min_tx, min_ty, nx, ny);
-				if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
-
+				if (ny < 0)
+				{
+					if (isJump) isSit = true;
+					basicCollision(min_tx, min_ty, nx, ny);
+					if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
+				}
+				else
+				{
+					x += dx;
+					y += dy;
+				}
 			}
 
 			if (dynamic_cast<CSObject *>(e->obj) && !e->obj->get_isHidden())
@@ -317,8 +326,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 
-		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;	
+		/*if (nx != 0) vx = 0;
+		if (ny != 0) vy = 0;	*/
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++)

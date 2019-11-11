@@ -5,8 +5,8 @@
 #define SIMON_WALKING_SPEED			0.07f
 #define SIMON_GRAVITY				0.0005f
 #define SIMON_JUMP_SPEED_Y			0.18f
-#define SIMON_INJURE_X				0.5f
-#define SIMON_INJURE_Y				0.25f
+#define SIMON_INJURE_X				0.35f
+#define SIMON_INJURE_Y				0.01f
 
 #define SIMON_HP_START				100
 
@@ -57,7 +57,7 @@
 #define SIMON_ATTACK_TIME			600
 #define SIMON_PICK_TIME				1600
 #define SIMON_THROW_TIME			1000
-#define SIMON_ENJURE_TIME			1000
+#define SIMON_ENJURE_TIME			800
 #define SIMON_UNTOUCHABLE_TIME		1500
 
 #define SIMON_DOWNSTAIR		-2
