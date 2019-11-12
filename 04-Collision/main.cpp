@@ -146,6 +146,24 @@ void CSampleKeyHander::KeyState(BYTE *states)
 		{
 			simon->startSit(true);
 		}
+		if (simon->get_onstair())
+		{
+			simon->SetState(SIMON_STATE_WALKING_LEFT);
+		}
+	}
+	else if (game->IsKeyDown(DIK_UP))
+	{
+		if (game->IsKeyDown(DIK_D))
+		{
+			if (!simon->get_isAttack() && !simon->get_isPick() && !simon->get_isThrow() && !simon->get_isSit())
+			{
+				simon->SetState(SIMON_STATE_THROW);
+			}
+		}
+		else if (simon->get_onstair())
+		{
+			simon->SetState(SIMON_STATE_WALKING_RIGHT);
+		}
 	}
 	else if (game->IsKeyDown(DIK_RIGHT) && !simon->get_isAttack() && !simon->get_isJump())
 	{
@@ -167,16 +185,6 @@ void CSampleKeyHander::KeyState(BYTE *states)
 		else
 		{
 			simon->SetState(SIMON_STATE_WALKING_LEFT);
-		}
-	}
-	else if (game->IsKeyDown(DIK_UP))
-	{
-		if (game->IsKeyDown(DIK_D))
-		{
-			if (!simon->get_isAttack() && !simon->get_isPick() && !simon->get_isThrow() && !simon->get_isSit())
-			{
-				simon->SetState(SIMON_STATE_THROW);
-			}
 		}
 	}
 	else

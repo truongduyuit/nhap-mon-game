@@ -73,6 +73,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				if (coObjectFlag[i]->state != nx && onStair)
 				{
+					onStair = false;
+					onTimeStair = false;
 					if (nx > 0)
 					{
 						coObjectFlag[i]->nextState == 2 ? x = coObjectFlag[i]->x + 17.0f : x = coObjectFlag[i]->x - 15.0f;
@@ -82,8 +84,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						x = coObjectFlag[i]->x;
 					}
 					y = coObjectFlag[i]->y - 27.0f;
-					onStair = false;
-					onTimeStair = false;
 				}
 			}
 		}
@@ -156,17 +156,12 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		action_time = 0;
 
 		
-		weapon->ResetAttack();
 		weapon->SetPosTemp(x, y);
-		weapon->set_isHidden(true);
+		resetAttack();
 	}
 	else if (isAttack)
 	{
-		
-		nx > 0 ? weapon->SetState(STATE_ATTACK_RIGHT) : weapon->SetState(STATE_ATTACK_LEFT);
-		dx = 0;
 		weapon->SetPosTemp(x, y);
-		weapon->set_isHidden(false);
 	}
 
 	// throw
@@ -544,6 +539,13 @@ void CSimon::startAttack()
 		action_time = GetTickCount();
 
 		vx = 0;
+
+		CWeapon* weapon = CWeapon::GetInstance();
+		nx > 0 ? weapon->SetState(STATE_ATTACK_RIGHT) : weapon->SetState(STATE_ATTACK_LEFT);
+		dx = 0;
+		weapon->ResetAttack();
+		weapon->SetPosTemp(x, y);
+		weapon->set_isHidden(false);
 	}
 }
 
@@ -611,6 +613,18 @@ void CSimon::startInjure(int nxx)
 		injure_time = GetTickCount();
 
 		be_nx = nxx;
+		resetAttack();
+	}
+}
+
+void CSimon::resetAttack()
+{
+
+	vector<int> a = { SIMON_ANI_ATTACK_RIGHT, SIMON_ANI_ATTACK_LEFT };
+	for (int i = 0; i < a.size(); i++)
+	{
+		int ani = a[i];
+		animations[ani]->ResetFrame();
 	}
 }
 

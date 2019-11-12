@@ -30,6 +30,7 @@ class CWeapon : public CGameObject
 
 	float xx, xy;
 	bool isCol;
+	DWORD action_time;
 public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> * colliable_objects = NULL);
 	virtual void Render();

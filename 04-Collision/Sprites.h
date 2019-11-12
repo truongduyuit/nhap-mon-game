@@ -62,13 +62,16 @@ class CAnimation
 	int defaultTime;
 	int currentFrame;
 	vector<LPANIMATION_FRAME> frames;
+	int countAni;
 public:
-	CAnimation(int defaultTime) { this->defaultTime = defaultTime; lastFrameTime = -1; currentFrame = -1; }
+	CAnimation(int defaultTime) { this->defaultTime = defaultTime; lastFrameTime = -1; currentFrame = -1; countAni = 0; }
 	void Add(int spriteId, DWORD time = 0);
 	void Render(float x, float y, int alpha=255);
 	int GetCurrentFrame() { return currentFrame; }
 	void SetCurrentFrame(int Frame) { currentFrame = Frame; }
 	void ResetFrame() { currentFrame = -1;  }
+	int get_countAni() { return countAni; }
+	void set_countAni(int count) { countAni = count; }
 };
 
 typedef CAnimation *LPANIMATION;

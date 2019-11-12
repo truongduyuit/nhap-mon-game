@@ -10,7 +10,7 @@ CWeapon::CWeapon()
 	level = 1;
 	x = -100;
 	y = -100;
-
+	isHidden = true;
 	CLoadResourcesHelper::LoadSprites("data\\weapon\\weapon_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\weapon\\weapon_anis.txt", this);
 }
@@ -21,6 +21,15 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	UpdatePositionWithSimon();
 
 	frame == 3 ? isCol = true : isCol = false;
+
+	int ani = GetCurrentAnimation();
+
+	if (animations[ani]->get_countAni() > 0)
+	{
+		animations[ani]->ResetFrame();
+		animations[ani]->set_countAni(0);
+		isHidden = true;
+	}
 
 	if (!isHidden && isCol)
 	{
@@ -198,77 +207,20 @@ void CWeapon::UpdatePositionWithSimon()
 		{
 			if (animations[ani]->GetCurrentFrame() == 0)
 			{
-				frame = 0;
-				x -= 9;
+				x -= 10;
 				y += 7;
+				frame = 1;
 			}
 			else if (animations[ani]->GetCurrentFrame() == 1)
 			{
 				x -= 9;
-				y += 7;
-				frame = 1;
-			}
-			else if (animations[ani]->GetCurrentFrame() == 2)
-			{
-				x -= 9;
-				y += 7;
-				frame = 2;
-			}
-			else if (animations[ani]->GetCurrentFrame() == 3)
-			{
-				x += 15;
 				y += 6;
-				frame = 3;
-			}
-		}
-		else
-		{
-			if (animations[ani]->GetCurrentFrame() < 8)
-			{
-				frame = 0;
-				x -= 10;
-				y += 8;
-			}
-			else if (animations[ani]->GetCurrentFrame() >= 8 && animations[ani]->GetCurrentFrame() < 11)
-			{
-				x -= 10;
-				y += 8;
 				frame = 2;
 			}
-			else if (animations[ani]->GetCurrentFrame() >= 11)
-			{
-				x += 13;
-				y += 8;
-				frame = 3;
-			}
-		}
-	}
-	else if (state == STATE_ATTACK_LEFT)
-	{
-		if (level != 3)
-		{
-			if (animations[ani]->GetCurrentFrame() == 0)
-			{
-				frame = 0;
-				x += 15;
-				y += 8;
-			}
-			else if (animations[ani]->GetCurrentFrame() == 1)
+			else if (animations[ani]->GetCurrentFrame() >= 2)
 			{
 				x += 15;
-				y += 8;
-				frame = 1;
-			}
-			else if (animations[ani]->GetCurrentFrame() == 2)
-			{
-				x += 15;
-				y += 8;
-				frame = 2;
-			}
-			else if (animations[ani]->GetCurrentFrame() == 3)
-			{
-				x -= 20;
-				y += 6;
+				y += 7;
 				frame = 3;
 			}
 		}
@@ -277,24 +229,69 @@ void CWeapon::UpdatePositionWithSimon()
 			if (animations[ani]->GetCurrentFrame() < 4)
 			{
 				frame = 0;
-				x += 15;
+				x -= 10;
 				y += 8;
 			}
-			if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 8)
+			else if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 7)
 			{
-				x += 15;
+				x -= 10;
+				y += 6;
+				frame = 2;
+			}
+			else if (animations[ani]->GetCurrentFrame() >= 7)
+			{
+				x += 13;
+				y += 8.5f;
+				frame = 3;
+			}
+		}
+	}
+	else if (state == STATE_ATTACK_LEFT)
+	{
+		if (level != 3)
+		{
+			 if (animations[ani]->GetCurrentFrame() == 0)
+			{
+				x += 17;
 				y += 8;
 				frame = 1;
 			}
-			else if (animations[ani]->GetCurrentFrame() >= 8 && animations[ani]->GetCurrentFrame() < 11)
+			else if (animations[ani]->GetCurrentFrame() == 1)
 			{
 				x += 15;
 				y += 8;
 				frame = 2;
 			}
-			else if (animations[ani]->GetCurrentFrame() >= 11 && animations[ani]->GetCurrentFrame() < 16)
+			else if (animations[ani]->GetCurrentFrame() >= 2)
 			{
-				x -= 38;
+				x -= 20;
+				y += 6;
+				frame = 3;
+			}
+			else
+			 {
+				 x = -100;
+				 y = -100;
+			 }
+		}
+		else
+		{
+			if (animations[ani]->GetCurrentFrame() < 4)
+			{
+				frame = 0;
+				x += 15;
+				y += 8;
+				frame = 1;
+			}
+			else if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 7)
+			{
+				x += 15;
+				y += 8;
+				frame = 2;
+			}
+			else if (animations[ani]->GetCurrentFrame() >= 7)
+			{
+				x -= 36;
 				y += 8;
 				frame = 3;
 			}

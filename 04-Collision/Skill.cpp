@@ -23,7 +23,7 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (state != STATE_KNIFE)
 	{
-		dy = 1.0f;
+		vy = 0.035f;
 		CalcPotentialCollisions(coObjects, coEvents);
 	}
 
