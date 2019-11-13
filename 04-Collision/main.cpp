@@ -88,8 +88,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		{
 			if (simon->state == SIMON_STATE_WALKING_RIGHT)simon->startJumpMove(true);
 			else if (simon->state == SIMON_STATE_WALKING_LEFT) simon->startJumpMove(false);
-			else simon->startJump();
-				
+			else simon->startJump();	
 		}
 		break;
 	case DIK_D:
@@ -160,7 +159,7 @@ void CSampleKeyHander::KeyState(BYTE *states)
 				simon->SetState(SIMON_STATE_THROW);
 			}
 		}
-		else if (simon->get_onstair())
+		else if (simon->get_onstair() && !simon->get_isAttack())
 		{
 			simon->SetState(SIMON_STATE_WALKING_RIGHT);
 		}

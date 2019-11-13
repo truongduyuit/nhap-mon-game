@@ -91,7 +91,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (isBeMoving)
 	{
-
 		if (x > be_x)
 		{
 			x -= 0.5f;
@@ -113,7 +112,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 
-	if (onStair)
+	if (onStair && !isAttack && !isthrow)
 	{
 		if (GetTickCount() - action_time <= 100)
 		{
@@ -162,6 +161,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	else if (isAttack)
 	{
 		weapon->SetPosTemp(x, y);
+		dx = 0;
 	}
 
 	// throw
@@ -364,26 +364,40 @@ void CSimon::Render()
 
 	if (onStair)
 	{
-		if (be_nx > 0)
+		if (isAttack || isthrow)
 		{
-			if (be_updown == 2)
+			if (nx > 0)
 			{
-				onTimeStair ? ani = SIMON_ANI_UPSTAIR_RIGHT : ani = SIMON_ANI_IDLE_UPSTAIR_RIGHT;
+				be_updown == 2 ? ani = SIMON_ANI_RIGHT_UP_ATTACK : ani = SIMON_ANI_RIGHT_DOWN_ATTACK;
 			}
 			else
 			{
-				onTimeStair ? ani = SIMON_ANI_DOWNSTAIR_RIGHT : ani = SIMON_ANI_IDLE_DOWNSTAIR_RIGHT;
+				be_updown == 2 ? ani = SIMON_ANI_LEFT_UP_ATTACK : ani = SIMON_ANI_LEFT_DOWN_ATTACK;
 			}
 		}
 		else
 		{
-			if (be_updown == 2)
+			if (be_nx > 0)
 			{
-				onTimeStair ? ani = SIMON_ANI_UPSTAIR_LEFT : ani = SIMON_ANI_IDLE_UPSTAIR_LEFT;
+				if (be_updown == 2)
+				{
+					onTimeStair ? ani = SIMON_ANI_UPSTAIR_RIGHT : ani = SIMON_ANI_IDLE_UPSTAIR_RIGHT;
+				}
+				else
+				{
+					onTimeStair ? ani = SIMON_ANI_DOWNSTAIR_RIGHT : ani = SIMON_ANI_IDLE_DOWNSTAIR_RIGHT;
+				}
 			}
 			else
 			{
-				onTimeStair ? ani = SIMON_ANI_DOWNSTAIR_LEFT : ani = SIMON_ANI_IDLE_DOWNSTAIR_LEFT;
+				if (be_updown == 2)
+				{
+					onTimeStair ? ani = SIMON_ANI_UPSTAIR_LEFT : ani = SIMON_ANI_IDLE_UPSTAIR_LEFT;
+				}
+				else
+				{
+					onTimeStair ? ani = SIMON_ANI_DOWNSTAIR_LEFT : ani = SIMON_ANI_IDLE_DOWNSTAIR_LEFT;
+				}
 			}
 		}
 	}
@@ -413,14 +427,14 @@ void CSimon::Render()
 					{
 						ani = SIMON_ANI_SIT_RIGHT;
 					}
-					else if (isAttack)
+					else if (isAttack || isthrow)
 					{
 						isSit ? ani = SIMON_ANI_SIT_ATTACK_RIGHT : ani = SIMON_ANI_ATTACK_RIGHT;
 					}
-					else if (isthrow)
+					/*else if (isthrow)
 					{
 						isSit ? ani = SIMON_ANI_SIT_ATTACK_RIGHT : ani = SIMON_ANI_ATTACK_RIGHT;
-					}
+					}*/
 					else if (state == SIMON_STATE_WALKING_RIGHT && !isJump && !isAttack)
 					{
 						ani = SIMON_ANI_WALKING_RIGHT;
@@ -440,14 +454,14 @@ void CSimon::Render()
 					{
 						ani = SIMON_ANI_SIT_LEFT;
 					}
-					else if (isAttack)
+					else if (isAttack || isthrow)
 					{
 						isSit ? ani = SIMON_ANI_SIT_ATTACK_LEFT : ani = SIMON_ANI_ATTACK_LEFT;
 					}
-					else if (isthrow)
+					/*else if (isthrow)
 					{
 						isSit ? ani = SIMON_ANI_SIT_ATTACK_LEFT : ani = SIMON_ANI_ATTACK_LEFT;
-					}
+					}*/
 					else if (state == SIMON_STATE_WALKING_LEFT && !isJump && !isAttack)
 					{
 						ani = SIMON_ANI_WALKING_LEFT;
@@ -536,9 +550,8 @@ void CSimon::startAttack()
 	if (!isPick && !isAttack)
 	{
 		isAttack = true;
+		resetAttack();
 		action_time = GetTickCount();
-
-		vx = 0;
 
 		CWeapon* weapon = CWeapon::GetInstance();
 		nx > 0 ? weapon->SetState(STATE_ATTACK_RIGHT) : weapon->SetState(STATE_ATTACK_LEFT);
