@@ -117,7 +117,10 @@ public:
 	bool get_isSit() { return isSit; }
 	bool get_isInjure() { return isInJure; }
 	bool get_onstair() { return onStair; }
+	int get_be_nx() { return be_nx; }
+	int get_be_updown() { return be_updown; }
 	bool get_candownstair();
+	bool get_isBeMoving() { return isBeMoving; }
 
 	void startAttack();
 	void startJump();

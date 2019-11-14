@@ -138,6 +138,7 @@ void CSampleKeyHander::KeyState(BYTE *states)
 	if (simon->GetState() == SIMON_STATE_DIE) return;
 	if (simon->get_isPick()) return;
 	if (simon->get_isInjure()) return;
+	if (simon->get_isBeMoving()) return;
 
 	if (game->IsKeyDown(DIK_DOWN))
 	{
@@ -147,7 +148,10 @@ void CSampleKeyHander::KeyState(BYTE *states)
 		}
 		if (simon->get_onstair())
 		{
-			simon->SetState(SIMON_STATE_WALKING_LEFT);
+			if (simon->get_be_nx() == 1 && simon->get_be_updown() == SIMON_DOWNSTAIR) simon->SetState(SIMON_STATE_WALKING_RIGHT);
+			else if (simon->get_be_nx() == -1 && simon->get_be_updown() == SIMON_UPSTAIR) simon->SetState(SIMON_STATE_WALKING_RIGHT);
+			else simon->SetState(SIMON_STATE_WALKING_LEFT);
+			
 		}
 	}
 	else if (game->IsKeyDown(DIK_UP))
@@ -159,9 +163,11 @@ void CSampleKeyHander::KeyState(BYTE *states)
 				simon->SetState(SIMON_STATE_THROW);
 			}
 		}
-		else if (simon->get_onstair() && !simon->get_isAttack())
+		else if (simon->get_onstair())
 		{
-			simon->SetState(SIMON_STATE_WALKING_RIGHT);
+			if (simon->get_be_nx() == -1 && simon->get_be_updown() == SIMON_UPSTAIR)  simon->SetState(SIMON_STATE_WALKING_LEFT);
+			else if (simon->get_be_nx() == 1 && simon->get_be_updown() == SIMON_DOWNSTAIR) simon->SetState(SIMON_STATE_WALKING_LEFT);
+			else simon->SetState(SIMON_STATE_WALKING_RIGHT);
 		}
 	}
 	else if (game->IsKeyDown(DIK_RIGHT) && !simon->get_isAttack() && !simon->get_isJump())

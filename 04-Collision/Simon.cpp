@@ -81,7 +81,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					}
 					else
 					{
-						x = coObjectFlag[i]->x;
+						coObjectFlag[i]->nextState == -2 ? x = coObjectFlag[i]->x + 17.0f : x = coObjectFlag[i]->x;
 					}
 					y = coObjectFlag[i]->y - 27.0f;
 				}
@@ -91,15 +91,15 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (isBeMoving)
 	{
-		if (x > be_x)
+		if (x - be_x > 0.5f)
 		{
-			x -= 0.5f;
+			x -= 0.05f;
 			nx = -1;
 			SetState(SIMON_STATE_WALKING_LEFT);
 		}
 		else if (x - be_x < -0.5f)
 		{
-			x += 0.5f;
+			x += 0.05f;
 			nx = 1;
 			SetState(SIMON_STATE_WALKING_RIGHT);
 		}
@@ -610,7 +610,7 @@ void CSimon::startSit(bool sit)
 
 void CSimon::resetSit()
 {
-	if (isSit)
+	if (isSit && !onStair)
 	{
 		upBBox();		
 		isSit = false;
@@ -668,15 +668,13 @@ void CSimon::beMoving(int bnx, float bx, int updown)
 		be_nx = bnx;
 		be_updown = updown;
 
-
-
 		if (be_updown == SIMON_DOWNSTAIR)
 		{
-			be_nx < 0 ? be_x = bx - SIMON_BBOX_WIDTH / 2 - 3 : be_x = bx + SIMON_BBOX_WIDTH / 2 + 1;
+			be_nx < 0 ? be_x = bx - SIMON_BBOX_WIDTH / 2 - 10.0f : be_x = bx + SIMON_BBOX_WIDTH / 2 + 5.0f;
 		}
 		else
 		{
-			be_nx == -1 ? be_x = bx + 15.0f : be_x = bx;
+			be_nx == -1 ? be_x = bx + 3.0f : be_x = bx;
 		}	
 	}
 }
@@ -713,7 +711,12 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	left = x;
 	top = y;
 
-	if ((isSit || isJump))
+	if ((isSit && !onStair))
+	{
+		right = left + SIMON_SIT_BBOX_WIDTH;
+		bottom = top + SIMON_SIT_BBOX_HEIGHT;
+	}
+	else if (isJump)
 	{
 		right = left + SIMON_SIT_BBOX_WIDTH;
 		bottom = top + SIMON_SIT_BBOX_HEIGHT;

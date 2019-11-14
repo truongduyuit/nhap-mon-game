@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
-#define ENEMY_WALKING_SPEED		0.05f
+#define ENEMY_WALKING_SPEED		0.052f
 #define WOLF_FLY_SPEED			0.09f
 #define WOLF_RUN_SPEED			0.11f
 #define ENEMY_GRAVITY			0.0001f
