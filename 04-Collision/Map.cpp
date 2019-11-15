@@ -37,22 +37,24 @@ void CMap::LoadTilesPosition()
 
 	while (!in.eof())
 	{
-		int lv;
-		in >> lv >> max_x >> max_y >> tile_size_x >> tile_size_y;
+		int lv,mx, my, tile_x, tile_y;
+		in >> lv >> mx >> my >> tile_x >> tile_y;
 
-		for (int i = 0; i < max_y; i++)
+		max_x.push_back(mx);
+		max_y.push_back(my);
+		tile_size_x.push_back(tile_x);
+		tile_size_y.push_back(tile_y);
+
+		for (int i = 0; i < my; i++)
 		{
-			for (int j = 0; j < max_x; j++)
+			for (int j = 0; j < mx; j++)
 			{
 				int id;
 				in >> id;
 
-				if (lv == this->round)
-				{
-					tile = new CTileMat(id, i, j);
-					tile->SetTileSize(tile_size_x, tile_size_y);
-					tiles.push_back(tile);
-				}
+				tile = new CTileMat(lv, id, i, j);
+				tile->SetTileSize(tile_x, tile_y);
+				tiles.push_back(tile);
 			}
 		}
 	}
@@ -63,7 +65,8 @@ void CMap::DrawMap()
 {
 	for (unsigned int i = 0; i < tiles.size(); i++)
 	{
-		tiles[i]->Render();
+		if (tiles[i]->GetMap() == this->round)
+			tiles[i]->Render();
 	}
 }
 

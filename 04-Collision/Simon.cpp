@@ -77,11 +77,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					onTimeStair = false;
 					if (nx > 0)
 					{
-						coObjectFlag[i]->nextState == 2 ? x = coObjectFlag[i]->x + 17.0f : x = coObjectFlag[i]->x - 15.0f;
+						coObjectFlag[i]->nextState == 2 ? x = coObjectFlag[i]->x + 10.0f : x = coObjectFlag[i]->x - 15.0f;
 					}
 					else
 					{
-						coObjectFlag[i]->nextState == -2 ? x = coObjectFlag[i]->x + 17.0f : x = coObjectFlag[i]->x;
+						coObjectFlag[i]->nextState == -2 ? x = coObjectFlag[i]->x + 10.0f : x = coObjectFlag[i]->x;
 					}
 					y = coObjectFlag[i]->y - 27.0f;
 				}

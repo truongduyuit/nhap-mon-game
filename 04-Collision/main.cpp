@@ -47,7 +47,7 @@ void LoadRoundGame(int round)
 	map->SetRound(round);
 
 	// Chỉ cần tạo mới khi chuyển map
-	map->LoadTilesPosition();
+
 	map->LoadObjects();
 	coObjectsFull = map->Get_coObjectsFull();
 	coObjectGround = map->Get_coObjectGround();
@@ -98,7 +98,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		}
 		break;
 	case DIK_UP:
-		if (!simon->get_onstair())
+		if (!simon->get_onstair() && !simon->get_isJump())
 			onFlag(SIMON_UPSTAIR);
 		break;
 	case DIK_DOWN:
@@ -122,6 +122,12 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_F2:
 		LoadRoundGame(2);
 		break;
+	case DIK_F3:
+		LoadRoundGame(3);
+		break;
+	case DIK_F4:
+		LoadRoundGame(4);
+		break;
 	case DIK_P:
 		toggleRenderBBox();
 		break;
@@ -142,16 +148,15 @@ void CSampleKeyHander::KeyState(BYTE *states)
 
 	if (game->IsKeyDown(DIK_DOWN))
 	{
-		if (!simon->get_candownstair())
-		{
-			simon->startSit(true);
-		}
 		if (simon->get_onstair())
 		{
 			if (simon->get_be_nx() == 1 && simon->get_be_updown() == SIMON_DOWNSTAIR) simon->SetState(SIMON_STATE_WALKING_RIGHT);
 			else if (simon->get_be_nx() == -1 && simon->get_be_updown() == SIMON_UPSTAIR) simon->SetState(SIMON_STATE_WALKING_RIGHT);
 			else simon->SetState(SIMON_STATE_WALKING_LEFT);
-			
+		}
+		else if (!simon->get_candownstair() && !simon->get_onstair())
+		{
+			simon->startSit(true);
 		}
 	}
 	else if (game->IsKeyDown(DIK_UP))
@@ -163,7 +168,7 @@ void CSampleKeyHander::KeyState(BYTE *states)
 				simon->SetState(SIMON_STATE_THROW);
 			}
 		}
-		else if (simon->get_onstair())
+		else if (simon->get_onstair() && !simon->get_isJump())
 		{
 			if (simon->get_be_nx() == -1 && simon->get_be_updown() == SIMON_UPSTAIR)  simon->SetState(SIMON_STATE_WALKING_LEFT);
 			else if (simon->get_be_nx() == 1 && simon->get_be_updown() == SIMON_DOWNSTAIR) simon->SetState(SIMON_STATE_WALKING_LEFT);
@@ -217,10 +222,11 @@ void LoadResources()
 
 	map = CMap::GetInstance();
 	map->LoadMapSprites(); 
+	map->LoadTilesPosition();
 
 	simon = CSimon::GetInstance();
 
-	LoadRoundGame(2);
+	LoadRoundGame(4);
 }
 
 
@@ -268,15 +274,15 @@ void Update(DWORD dt)
 	float cx, cy;
 	simon->GetPosition(cx, cy);
 
-	int sizeMap = map->GetRound() == 1 ? 32 * 24 : 64 * 34;
+	int size = map->GetMaxX() * map->GetTileSizeX();
 
 	if (cx - SCREEN_WIDTH / 2 < 0)
 	{
 		cx = 0;
 	}
-	else if (cx + SCREEN_WIDTH / 2 > sizeMap)
+	else if (cx + SCREEN_WIDTH / 2 > size)
 	{
-		cx = sizeMap - SCREEN_WIDTH;
+		cx = size - SCREEN_WIDTH;
 	}
 	else
 	{

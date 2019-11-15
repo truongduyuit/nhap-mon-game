@@ -13,8 +13,10 @@ class CMap
 
 	int round;
 
-	int max_x;
-	int max_y;
+	vector<int> max_x;
+	vector<int> max_y;
+	vector<int> tile_size_x;
+	vector<int> tile_size_y;
 
 	vector<CTileMat*> tiles;
 	vector<LPGAMEOBJECT> coObjectsFull;
@@ -23,8 +25,7 @@ class CMap
 	vector<LPGAMEOBJECT> coObjectsWithSimon;
 	vector<LPGAMEOBJECT> coObjectsWithSkill;
 
-	int tile_size_x;
-	int tile_size_y;
+
 public :
 
 	CMap();
@@ -35,6 +36,9 @@ public :
 	void DrawMap();
 	void SetRound(int r);
 	int GetRound() { return this->round; }
+	int GetMaxX() { return this->max_x[round - 1]; }
+	int GetMaxY() { return this->max_y[round-1]; }
+	int GetTileSizeX() { return tile_size_x[round -1]; }
 
 	vector<LPGAMEOBJECT> MergeListCoObject(vector<LPGAMEOBJECT> result, vector<LPGAMEOBJECT> objects);
 	vector<LPGAMEOBJECT> Get_coObjectsFull();

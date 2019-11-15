@@ -5,6 +5,7 @@
 
 class CTileMat
 {
+	int map;
 	int id;
 
 	int index_x;
@@ -16,9 +17,11 @@ class CTileMat
 public:
 	
 	void Render();
+	int GetId() { return id; }
+	int GetMap() { return map; }
 	void SetTileSize(int size_x, int size_y);
 
 	CTileMat() { ; }
-	CTileMat(int id, int x, int y);
+	CTileMat(int m, int id, int x, int y);
 	~CTileMat() { ; }
 };
