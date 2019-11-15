@@ -16,9 +16,8 @@ void CTileMat::SetTileSize(int size_x, int size_y)
 }
 
 
-CTileMat::CTileMat(int m, int id, int x, int y)
+CTileMat::CTileMat(int id, int x, int y)
 {
-	this->map = m;
 	this->id = id;
 	this->index_x = x;
 	this->index_y = y;

@@ -99,6 +99,9 @@
     <ClInclude Include="Flag.h">
       <Filter>src\GameObjects\ground</Filter>
     </ClInclude>
+    <ClInclude Include="MapManager.h">
+      <Filter>src\Maps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.cpp">
@@ -151,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="Flag.cpp">
       <Filter>src\GameObjects\ground</Filter>
+    </ClCompile>
+    <ClCompile Include="MapManager.cpp">
+      <Filter>src\Maps</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -9,6 +9,7 @@
 #include "GameObject.h"
 #include "Textures.h"
 #include "Map.h"
+#include "MapManager.h"
 
 #include "LoadResource.h"
 #include "Contands.h"
@@ -21,6 +22,7 @@
 #include "Enemy.h"
 
 CGame *game;
+CMapManager* map_manager;
 CMap* map;
 CSimon *simon;
 
@@ -42,17 +44,15 @@ CSampleKeyHander * keyHandler;
 
 void LoadRoundGame(int round)
 {
-	map = NULL;
+	map_manager = CMapManager::GetInstance();
+	map_manager->SetStage(round);
+	map_manager->LoadMapResources();
+	map_manager->DrawMap();
+
 	map = CMap::GetInstance();
-	map->SetRound(round);
-
-	// Chỉ cần tạo mới khi chuyển map
-
-	map->LoadObjects();
 	coObjectsFull = map->Get_coObjectsFull();
 	coObjectGround = map->Get_coObjectGround();
 	coObjectFlag = map->Get_coObjectFlag();
-
 }
 
 void toggleRenderBBox()
@@ -220,12 +220,7 @@ void LoadResources()
 	CTextures * textures = CTextures::GetInstance();
 	textures->LoadAllTextures();
 
-	map = CMap::GetInstance();
-	map->LoadMapSprites(); 
-	map->LoadTilesPosition();
-
 	simon = CSimon::GetInstance();
-
 	LoadRoundGame(4);
 }
 

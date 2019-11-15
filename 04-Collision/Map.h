@@ -11,12 +11,10 @@ class CMap
 {
 	static CMap* __instance;
 
-	int round;
-
-	vector<int> max_x;
-	vector<int> max_y;
-	vector<int> tile_size_x;
-	vector<int> tile_size_y;
+	int max_x;
+	int max_y;
+	int tile_size_x;
+	int tile_size_y;
 
 	vector<CTileMat*> tiles;
 	vector<LPGAMEOBJECT> coObjectsFull;
@@ -30,15 +28,15 @@ public :
 
 	CMap();
 
+	void LoadContent(string filePath);
+
 	void LoadMapSprites();
-	void LoadTilesPosition();
-	void LoadObjects();
 	void DrawMap();
-	void SetRound(int r);
-	int GetRound() { return this->round; }
-	int GetMaxX() { return this->max_x[round - 1]; }
-	int GetMaxY() { return this->max_y[round-1]; }
-	int GetTileSizeX() { return tile_size_x[round -1]; }
+	void ResetListObjects();
+
+	int GetMaxX() { return this->max_x; }
+	int GetMaxY() { return this->max_y; }
+	int GetTileSizeX() { return tile_size_x; }
 
 	vector<LPGAMEOBJECT> MergeListCoObject(vector<LPGAMEOBJECT> result, vector<LPGAMEOBJECT> objects);
 	vector<LPGAMEOBJECT> Get_coObjectsFull();

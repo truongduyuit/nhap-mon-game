@@ -136,6 +136,7 @@
     <ClInclude Include="Ground.h" />
     <ClInclude Include="LoadResource.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="MapManager.h" />
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="SObject.h" />
@@ -155,6 +156,7 @@
     <ClCompile Include="LoadResource.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="MapManager.cpp" />
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SObject.cpp" />

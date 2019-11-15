@@ -9,8 +9,8 @@ CSkill::CSkill()
 {
 	CLoadResourcesHelper::LoadSprites("data\\skills\\skill_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\skills\\skill_anis.txt", this);
-	state = STATE_HOLY_WATER;
-	nextState = STATE_HOLY_WATER;
+	state = STATE_KNIFE;
+	nextState = STATE_KNIFE;
 }
 
 void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -27,7 +27,7 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		CalcPotentialCollisions(coObjects, coEvents);
 	}
 
-	if (GetTickCount() - timethrow_start > TIME_THROW)
+	if (GetTickCount() - timethrow_start > timeshow)
 	{
 
 		set_isHidden(true);
@@ -70,41 +70,40 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 	}
+
+
+	if (coEvents.size() == 0)
+	{
+		x += dx;
+		y += dy;
+	}
 	else
 	{
-		if (coEvents.size() == 0)
-		{
-			x += dx;
-			y += dy;
-		}
-		else
-		{
-			float min_tx, min_ty, nx = 0, ny;
+		float min_tx, min_ty, nx = 0, ny;
 
-			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
-			for (UINT i = 0; i < coEventsResult.size(); i++)
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
+
+			if (dynamic_cast<CGround *>(e->obj))
 			{
-				LPCOLLISIONEVENT e = coEventsResult[i];
+				SetState(STATE_HOLY_FIRE);
 
-				if (dynamic_cast<CGround *>(e->obj))
-				{
-					SetState(STATE_HOLY_FIRE);
+				basicCollision(min_tx, min_ty, nx, ny);
+				if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
 
-					basicCollision(min_tx, min_ty, nx, ny);
-					if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
-
-				}
 			}
-
-			if (nx != 0) vx = 0;
-			if (ny != 0) vy = 0;
 		}
 
-		for (UINT i = 0; i < coEvents.size(); i++)
-		{
-			delete coEvents[i];
-		}
+		if (nx != 0) vx = 0;
+		if (ny != 0) vy = 0;
+	}
+
+	for (UINT i = 0; i < coEvents.size(); i++)
+	{
+		delete coEvents[i];
 	}
 }
 

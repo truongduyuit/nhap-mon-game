@@ -19,17 +19,16 @@ void CMap::LoadMapSprites()
 	CLoadResourcesHelper::LoadSprites("data\\background\\background_sprites.txt");
 }
 
-void CMap::LoadTilesPosition()
+void CMap::LoadContent(string filePath)
 {
-	if (tiles.size() > 0)
-		tiles.clear();
+	ResetListObjects();
 
 	ifstream in;
-	in.open("data\\background\\map_tile_position.txt", ios::in);
+	in.open(filePath, ios::in);
 
 	if (in.fail())
 	{
-		OutputDebugString(L"[ERROR] Load BackgroundSprites position failed ! \n");
+		OutputDebugString(L"[ERROR] Load map content failed ! \n");
 		return;
 	}
 
@@ -37,71 +36,34 @@ void CMap::LoadTilesPosition()
 
 	while (!in.eof())
 	{
-		int lv,mx, my, tile_x, tile_y;
-		in >> lv >> mx >> my >> tile_x >> tile_y;
+		in >> this->max_x >> this->max_y >> this->tile_size_x >> this->tile_size_y;
 
-		max_x.push_back(mx);
-		max_y.push_back(my);
-		tile_size_x.push_back(tile_x);
-		tile_size_y.push_back(tile_y);
-
-		for (int i = 0; i < my; i++)
+		for (int i = 0; i < max_y; i++)
 		{
-			for (int j = 0; j < mx; j++)
+			for (int j = 0; j < max_x; j++)
 			{
 				int id;
 				in >> id;
 
-				tile = new CTileMat(lv, id, i, j);
-				tile->SetTileSize(tile_x, tile_y);
+				tile = new CTileMat(id, i, j);
+				tile->SetTileSize(tile_size_x, tile_size_y);
 				tiles.push_back(tile);
 			}
 		}
-	}
-	in.close();
-}
 
-void CMap::DrawMap()
-{
-	for (unsigned int i = 0; i < tiles.size(); i++)
-	{
-		if (tiles[i]->GetMap() == this->round)
-			tiles[i]->Render();
-	}
-}
+		CSimon* simon = CSimon::GetInstance();
+		simon->nx = 1;
 
-void CMap::LoadObjects()
-{
-
-	if (coObjectsFull.size() > 0)
-		coObjectsFull.clear();
-
-	CWeapon* weapon = CWeapon::GetInstance();
-	coObjectsFull.push_back(weapon);
-
-	CSimon* simon = CSimon::GetInstance();
-	simon->nx = 1;
-
-	ifstream in;
-	in.open("data\\background\\map_objects.txt", ios::in);
-
-	if (in.fail())
-	{
-		OutputDebugString(L"[ERROR] Load map objects failed ! \n");
-		return;
-	}
-	while (!in.eof())
-	{
-		int lv, id_object;
-		in >> lv >> id_object;
-
-		if (id_object == 0)
+		while (!in.eof())
 		{
-			int size_x, size_y, x, y;
-			in >> size_x >> size_y >> x >> y;
+			int id_object;
+			in >> id_object;
 
-			if (lv == this->round)
+			if (id_object == 0)
 			{
+				int size_x, size_y, x, y;
+				in >> size_x >> size_y >> x >> y;
+
 				ground = new CGround();
 				ground->setSize(size_x, size_y);
 				ground->SetPosition(float(x), float(y));
@@ -109,26 +71,20 @@ void CMap::LoadObjects()
 				coObjectGround.push_back(ground);
 				coObjectsFull.push_back(ground);
 			}
-		}
-		else if (id_object == 1)
-		{
-			int x, y;
-			in >> x >> y;
-
-			if (lv == this->round)
+			else if (id_object == 1)
 			{
+				int x, y;
+				in >> x >> y;
+
 				simon = CSimon::GetInstance();
 				simon->SetPosition(float(x), float(y));
 				coObjectsFull.push_back(simon);
 			}
-		}
-		else if (id_object == 2)
-		{
-			int x, y, state, nextState;
-			in >> x >> y >> state >> nextState;
-
-			if (lv == this->round)
+			else if (id_object == 2)
 			{
+				int x, y, state, nextState;
+				in >> x >> y >> state >> nextState;
+
 				sobject = new CSObject();
 				sobject->SetPosition(float(x), float(y));
 				sobject->SetState(state);
@@ -144,14 +100,11 @@ void CMap::LoadObjects()
 
 				coObjectsFull.push_back(sobject);
 			}
-		}
-		else if (id_object == 3)
-		{
-			int size_x, size_y, x, y, state, nextState;
-			in >> size_x >> size_y >> x >> y >> state >> nextState;
-
-			if (lv == this->round)
+			else if (id_object == 3)
 			{
+				int size_x, size_y, x, y, state, nextState;
+				in >> size_x >> size_y >> x >> y >> state >> nextState;
+
 				CFlag* flag = new CFlag();
 				flag->setSize(size_x, size_y);
 				flag->SetPosition(float(x), float(y));
@@ -161,17 +114,14 @@ void CMap::LoadObjects()
 				coObjectFlag.push_back(flag);
 				coObjectsFull.push_back(flag);
 			}
-		}
-		else if (id_object == 4)
-		{
-			int x, y, state, nextState;
-			float x_min, x_max;
-
-			in >> x >> y >> state >> nextState;
-			in >> x_min >> x_max;
-
-			if (lv == this->round)
+			else if (id_object == 4)
 			{
+				int x, y, state, nextState;
+				float x_min, x_max;
+
+				in >> x >> y >> state >> nextState;
+				in >> x_min >> x_max;
+
 				enemy = new CEnemy();
 				enemy->SetPosition(float(x), float(y));
 				enemy->SetState(state);
@@ -181,8 +131,10 @@ void CMap::LoadObjects()
 			}
 		}
 	}
-
 	in.close();
+
+	CWeapon* weapon = CWeapon::GetInstance();
+	coObjectsFull.push_back(weapon);
 
 	CEffect* effect = CEffect::GetInstance();
 	effect->set_isHidden(true);
@@ -191,6 +143,25 @@ void CMap::LoadObjects()
 	CSkill* skill = CSkill::GetInstance();
 	coObjectsFull.push_back(skill);
 }
+
+void CMap::DrawMap()
+{
+	for (unsigned int i = 0; i < tiles.size(); i++)
+	{
+		tiles[i]->Render();
+	}
+}
+
+void CMap::ResetListObjects()
+{
+	tiles.clear();
+	coObjectsFull.clear();
+	coObjectGround.clear();
+	coObjectFlag.clear();
+	coObjectsWithSimon.clear();
+	coObjectsWithSkill.clear();
+}
+
 
 vector<LPGAMEOBJECT> CMap::MergeListCoObject(vector<LPGAMEOBJECT> result, vector<LPGAMEOBJECT> objects)
 {
@@ -263,18 +234,7 @@ vector<LPGAMEOBJECT> CMap::Get_coObjectsWithSkill()
 
 CMap::CMap()
 {
-	this->round = 1;
-}
-
-void CMap::SetRound(int r)
-{
-	this->round = r;
-
-	coObjectsFull.clear();
-	coObjectGround.clear();
-	coObjectFlag.clear();
-	coObjectsWithSimon.clear();
-	coObjectsWithSkill.clear();
+	LoadMapSprites();
 }
 
 CMap* CMap::__instance = NULL;
