@@ -7,7 +7,6 @@
 #include "Flag.h"
 #include "Weapon.h"
 #include "Skill.h"
-#include "Effect.h"
 #include "Enemy.h"
 
 CGround* ground;
@@ -136,9 +135,9 @@ void CMap::LoadContent(string filePath)
 	CWeapon* weapon = CWeapon::GetInstance();
 	coObjectsFull.push_back(weapon);
 
-	CEffect* effect = CEffect::GetInstance();
-	effect->set_isHidden(true);
-	coObjectsFull.push_back(effect);
+	//CEffect* effect = CEffect::GetInstance();
+	//effect->set_isHidden(true);
+	//coObjectsFull.push_back(effect);
 
 	CSkill* skill = CSkill::GetInstance();
 	coObjectsFull.push_back(skill);
@@ -160,6 +159,11 @@ void CMap::ResetListObjects()
 	coObjectFlag.clear();
 	coObjectsWithSimon.clear();
 	coObjectsWithSkill.clear();
+}
+
+void CMap::PushEffect(CEffect* effect)
+{
+	listEffect.push_back(effect);
 }
 
 
@@ -230,6 +234,22 @@ vector<LPGAMEOBJECT> CMap::Get_coObjectsWithSkill()
 	}
 
 	return MergeListCoObject(coObjectsWithSkill, Get_coObjectGround());
+}
+
+
+vector<LPGAMEOBJECT> CMap::Get_listEffect()
+{
+	vector<LPGAMEOBJECT> effects;
+
+	for (unsigned int i = 0; i < listEffect.size(); i++)
+	{
+		if (!listEffect[i]->isHidden)
+		{
+			effects.push_back(listEffect[i]);
+		}
+	}
+
+	return effects;
 }
 
 CMap::CMap()

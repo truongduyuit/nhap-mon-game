@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include "Sprites.h"
 #include "Effect.h"
+#include "Map.h"
 
 CGameObject::CGameObject()
 {
@@ -175,9 +176,13 @@ void CGameObject::basicCollision(float &min_tx, float &min_ty, float& nx,float& 
 void CGameObject::BeDestroy()
 {
 
-	CEffect * effect = CEffect::GetInstance();
+	/*CEffect * effect = CEffect::GetInstance();*/
+	CEffect * effect = new CEffect();
 	effect->SetPosition(x, y);
 	effect->StartShowEffect();
+
+	CMap* map = CMap::GetInstance();
+	map->PushEffect(effect);
 
 	isHidden = true;
 }

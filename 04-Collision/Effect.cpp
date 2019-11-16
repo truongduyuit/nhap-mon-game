@@ -4,6 +4,7 @@
 CEffect::CEffect()
 {
 	state = STATE_DESTROY;
+	isHidden = true;
 	CLoadResourcesHelper::LoadSprites("data\\effects\\effect_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\effects\\effect_anis.txt", this);
 }
@@ -12,9 +13,9 @@ void CEffect::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	CGameObject::Update(dt);
 
-	if (isShow)
+	if (this->isShow)
 	{
-		if (GetTickCount() - start_show >= DESTROY_EFFECT_TIME)
+		if (GetTickCount() - start_show > DESTROY_EFFECT_TIME)
 		{
 			isHidden = true;
 			isShow = false;
@@ -28,8 +29,6 @@ void CEffect::Render()
 	int ani = 0;
 	
 	if (state == STATE_DESTROY) ani = STATE_DESTROY;
-	//else if (state == STATE_FIRE) ani = STATE_FIRE;
-
 
 	if (!isHidden)
 	{
@@ -50,9 +49,9 @@ void CEffect::StartShowEffect()
 {
 	if (isHidden)
 	{
-		isHidden = false;
+		this->isHidden = false;
 
-		isShow = true;
+		this->isShow = true;
 		start_show = GetTickCount();
 	}
 }
@@ -68,9 +67,9 @@ void CEffect::GetBoundingBox(float &left, float &top, float &right, float &botto
 
 }
 
-CEffect* CEffect::__instance = NULL;
-CEffect * CEffect::GetInstance()
-{
-	if (__instance == NULL) __instance = new CEffect();
-	return __instance;
-}
+//CEffect* CEffect::__instance = NULL;
+//CEffect * CEffect::GetInstance()
+//{
+//	if (__instance == NULL) __instance = new CEffect();
+//	return __instance;
+//}

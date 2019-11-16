@@ -31,6 +31,8 @@ vector<LPGAMEOBJECT> coObjectGround;
 vector<LPGAMEOBJECT> coObjectFlag;
 vector<LPGAMEOBJECT> coObjectsWithSimon;
 vector<LPGAMEOBJECT> coObjectsWithSkill;
+vector<LPGAMEOBJECT> listEffect;
+
 
 
 class CSampleKeyHander: public CKeyEventHandler
@@ -232,6 +234,7 @@ void Update(DWORD dt)
 	// Cần Update liên tục vì có thể chuyển state
 	coObjectsWithSimon = map->Get_coObjectsWithSimon();
 	coObjectsWithSkill = map->Get_coObjectsWithSkill();
+	listEffect = map->Get_listEffect();
 
 	for (unsigned int i = 0; i < coObjectsFull.size(); i++)
 	{
@@ -257,13 +260,16 @@ void Update(DWORD dt)
 		{
 			coObjectsFull[i]->Update(dt, &coObjectGround);
 		}
-
 		else
 		{
 			coObjectsFull[i]->Update(dt, &coObjectsFull);
 		}
 	}
-
+	if (listEffect.size() > 0)
+	for (unsigned int i = 0; i < listEffect.size(); i++)
+	{
+		listEffect[i]->Update(dt);
+	}
 
 	// Update camera to follow simon
 	float cx, cy;
@@ -282,9 +288,7 @@ void Update(DWORD dt)
 	else
 	{
 		cx -= SCREEN_WIDTH / 2;
-	}
-
-	
+	}	
 
 	CGame::GetInstance()->SetCamPos(cx,0);
 }
@@ -305,7 +309,15 @@ void Render()
 		map->DrawMap();
 
 		for (unsigned int i = 0; i < coObjectsFull.size(); i++)
+		{
 			coObjectsFull[i]->Render();
+		}
+
+		for (unsigned int i = 0; i < listEffect.size(); i++)
+		{
+			listEffect[i]->Render();
+		}
+			
 
 		spriteHandler->End();
 		d3ddv->EndScene();

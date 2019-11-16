@@ -11,7 +11,7 @@
 
 class CEffect : public CGameObject
 {
-	static CEffect * __instance;
+	/*static CEffect * __instance;*/
 
 	bool isShow;
 	DWORD start_show;
@@ -26,5 +26,5 @@ public:
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 
-	static CEffect * GetInstance();
+	/*static CEffect * GetInstance();*/
 };

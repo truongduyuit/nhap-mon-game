@@ -3,6 +3,7 @@
 #include "Simon.h"
 #include "LoadResource.h"
 #include "Effect.h"
+#include "Map.h"
 
 CSObject::CSObject()
 {
@@ -177,10 +178,14 @@ void CSObject::ItemStart()
 
 void CSObject::BeDestroy()
 {
-	CEffect * effect = CEffect::GetInstance();
+	/*CEffect * effect = CEffect::GetInstance();*/
+	CEffect * effect = new CEffect();
 	effect->SetPosition(x, y);
 	effect->StartShowEffect();
 	effect->SetState(STATE_DESTROY);
+
+	CMap* map = CMap::GetInstance();
+	map->PushEffect(effect);
 
 	if (!isDestroy)
 	{
