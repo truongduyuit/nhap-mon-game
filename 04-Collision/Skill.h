@@ -22,6 +22,8 @@ class CSkill : public CGameObject
 {
 	static CSkill * __instance;
 
+	bool isFailing;
+
 	DWORD timethrow_start;
 	DWORD timeshow;
 public:

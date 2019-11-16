@@ -154,6 +154,7 @@ void CMap::DrawMap()
 void CMap::ResetListObjects()
 {
 	tiles.clear();
+	listEffect.clear();
 	coObjectsFull.clear();
 	coObjectGround.clear();
 	coObjectFlag.clear();

@@ -222,10 +222,27 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		{
 			if (isOverlapping(coObjects->at(i)))
 			{
-				if (coObjects->at(i)->state == 3)
+				// Lụm roi
+				if (coObjects->at(i)->state == CANE_ITEM)
 				{
 					startPick();
 					weapon->IncreaseLevel();					
+				}
+
+				// Lụm dao
+				else if (coObjects->at(i)->state == KNIFE_ITEM)
+				{
+					this->skill[0] += 5;
+					skill->SetState(STATE_KNIFE);
+					skill->SetNextState(STATE_KNIFE);
+				}
+
+				// lụm nước thánh
+				else if (coObjects->at(i)->state == HOLY_WATER_ITEM)
+				{
+					this->skill[0] += 5;
+					skill->SetState(STATE_HOLY_WATER);
+					skill->SetNextState(STATE_HOLY_WATER);
 				}
 
 				coObjects->at(i)->SetState(SOBJECT_HIDDEN);
@@ -317,6 +334,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					skill->SetNextState(STATE_KNIFE);
 				}
 
+				// lụm nước thánh
 				else if (e->obj->state == HOLY_WATER_ITEM)
 				{
 					this->skill[0] += 5;

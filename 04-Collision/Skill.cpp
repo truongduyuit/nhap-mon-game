@@ -9,22 +9,34 @@ CSkill::CSkill()
 {
 	CLoadResourcesHelper::LoadSprites("data\\skills\\skill_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\skills\\skill_anis.txt", this);
-	state = STATE_KNIFE;
-	nextState = STATE_KNIFE;
+	state = STATE_HOLY_WATER;
+	nextState = STATE_HOLY_WATER;
 }
 
 void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
 
+	if (state != STATE_KNIFE)
+		vy += 0.00015f * dt;
+	else
+		vy = 0;
+
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 	coEvents.clear();
 
+
+
 	if (state != STATE_KNIFE)
 	{
-		vy = 0.035f;
 		CalcPotentialCollisions(coObjects, coEvents);
+	}
+
+	if (state == STATE_HOLY_WATER && !isFailing)
+	{
+		vy = -0.03f;
+		isFailing = true;
 	}
 
 	if (GetTickCount() - timethrow_start > timeshow)
@@ -32,6 +44,7 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		set_isHidden(true);
 		timethrow_start = 0;
+		isFailing = false;
 	}
 	else
 	{
@@ -39,7 +52,7 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 
-	if (state != STATE_HOLY_WATER)
+	if (state != STATE_HOLY_WATER && !isHidden)
 	{
 		for (UINT i = 0; i < coObjects->size(); i++)
 		{
@@ -71,8 +84,7 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-
-	if (coEvents.size() == 0)
+	if (coEvents.size() == 0 )
 	{
 		x += dx;
 		y += dy;
@@ -89,11 +101,17 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			if (dynamic_cast<CGround *>(e->obj))
 			{
+				isFailing = false;
 				SetState(STATE_HOLY_FIRE);
 
 				basicCollision(min_tx, min_ty, nx, ny);
 				if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
 
+			}
+			else
+			{
+				x += dx;
+				y += dy;
 			}
 		}
 

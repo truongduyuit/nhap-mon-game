@@ -54,8 +54,15 @@ void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			if (dynamic_cast<CGround *>(e->obj))
 			{
-				//x += min_tx * dx + nx * 0.4f;
-				y += min_ty * dy + ny * 0.4f;
+				if (ny < 0)
+				{
+					y += min_ty * dy + ny * 0.4f;
+				}
+				else
+				{
+					x += dx;
+					y += dy;
+				}
 			}
 
 		}
@@ -158,7 +165,11 @@ void CEnemy::wolf_update()
 
 	if (isActive && !isFly)
 	{
-		if (onFlag()) isFly = true;
+		if (onFlag())
+		{
+			isFly = true;
+			vy = -0.03f;
+		}
 	}
 }
 
