@@ -115,16 +115,17 @@ void CMap::LoadContent(string filePath)
 			}
 			else if (id_object == 4)
 			{
-				int x, y, state, nextState;
+				int x, y, state, nextState, nxx;
 				float x_min, x_max;
 
-				in >> x >> y >> state >> nextState;
+				in >> x >> y >> state >> nextState >> nxx;
 				in >> x_min >> x_max;
 
 				enemy = new CEnemy();
 				enemy->SetPosition(float(x), float(y));
 				enemy->SetState(state);
 				enemy->SetNextState(nextState);
+				enemy->nx = nxx;
 				enemy->SetMaxMin(x_min, x_max);
 				coObjectsFull.push_back(enemy);
 			}

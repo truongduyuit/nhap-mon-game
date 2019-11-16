@@ -8,8 +8,6 @@ CEnemy::CEnemy()
 {
 	CLoadResourcesHelper::LoadSprites("data\\enemies\\enemy_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\enemies\\enemy_anis.txt", this);
-
-	nxx = -1;
 }
 
 void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -18,8 +16,10 @@ void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	vy += ENEMY_GRAVITY * dt;
 
+
 	if (state == STATE_GHOST) ghost_update();
 	else if (state == STATE_WOLF) wolf_update();
+	else if (state == STATE_BAT) bat_update();
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -59,16 +59,17 @@ void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					y += min_ty * dy + ny * 0.4f;
 				}
 				else
-				{
-					x += dx;
+				{					
 					y += dy;
 				}
+
+				x += dx;
 			}
 
 		}
 
-		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
+		/*if (nx != 0) vx = 0;
+		if (ny != 0) vy = 0;*/
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++)
@@ -96,6 +97,10 @@ void CEnemy::Render()
 			else
 				nxx > 0 ? ani = ANI_WOLF_RUN_RIGHT : ani = ANI_WOLF_RUN_LEFT;
 		}
+	}
+	else if (state == STATE_BAT)
+	{
+		nxx > 0 ? ani = ANI_BAT_FLY_RIGHT : ani = ANI_BAT_FLY_LEFT;
 	}
 
 	if (state != ENEMY_HIDDEN && !isHidden)
@@ -173,6 +178,31 @@ void CEnemy::wolf_update()
 	}
 }
 
+void CEnemy::bat_update()
+{
+	
+	if (!isActive)
+	{
+		isActive = true;
+		nxx = nx;
+		action_time = GetTickCount();
+		vyy = BAT_FLY_SPEED_Y;
+	}
+	else
+	{
+		nxx > 0 ? vx = BAT_FLY_SPEED : vx = -BAT_FLY_SPEED;
+		
+
+		if (GetTickCount() - action_time > 1000)
+		{
+			vyy = -vyy;
+			action_time = GetTickCount();
+		}
+
+		vy = vyy;
+	}
+}
+
 void CEnemy::SetState(int state)
 {
 	CGameObject::SetState(state);
@@ -192,5 +222,15 @@ void CEnemy::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	{
 		right = left + WOLF_WIDTH;
 		bottom = top + WOLF_HEIGHT;
+	}
+	else if (state == STATE_BAT)
+	{
+		right = left + BAT_WIDTH;
+		bottom = top + BAT_HEIGHT;
+	}
+	else if (state == STATE_FISH_MONSTER)
+	{
+		right = left + FISH_MONSTER_WIDTH;
+		bottom = top + FISH_MONSTER_HEIGHT;
 	}
 }

@@ -223,7 +223,7 @@ void LoadResources()
 	textures->LoadAllTextures();
 
 	simon = CSimon::GetInstance();
-	LoadRoundGame(4);
+	LoadRoundGame(3);
 }
 
 

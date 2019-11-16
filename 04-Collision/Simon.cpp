@@ -349,19 +349,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				if (dynamic_cast<CEnemy *>(e->obj))
 				{
-					if (isOverlapping(e->obj))
-					{
-						if (e->obj->x > x)
-						{
-							startInjure(-1);
-							weapon->ResetAttack();
-						}
-						else
-						{
-							startInjure(1);
-							weapon->ResetAttack();
-						}
-					}
+					startInjure(nx < 0 ? -1 : 1);
+					weapon->ResetAttack();
 				}
 			}
 		}
