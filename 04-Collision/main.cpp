@@ -34,7 +34,6 @@ vector<LPGAMEOBJECT> coObjectsWithSkill;
 vector<LPGAMEOBJECT> listEffect;
 
 
-
 class CSampleKeyHander: public CKeyEventHandler
 {
 	virtual void KeyState(BYTE *states);
@@ -223,7 +222,7 @@ void LoadResources()
 	textures->LoadAllTextures();
 
 	simon = CSimon::GetInstance();
-	LoadRoundGame(3);
+	LoadRoundGame(4);
 }
 
 
@@ -232,9 +231,11 @@ void Update(DWORD dt)
 	map = CMap::GetInstance();
 
 	// Cần Update liên tục vì có thể chuyển state
+	coObjectsFull = map->Get_coObjectsFull();
 	coObjectsWithSimon = map->Get_coObjectsWithSimon();
 	coObjectsWithSkill = map->Get_coObjectsWithSkill();
 	listEffect = map->Get_listEffect();
+
 
 	for (unsigned int i = 0; i < coObjectsFull.size(); i++)
 	{
@@ -317,7 +318,6 @@ void Render()
 		{
 			listEffect[i]->Render();
 		}
-			
 
 		spriteHandler->End();
 		d3ddv->EndScene();

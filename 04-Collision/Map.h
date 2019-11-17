@@ -4,7 +4,7 @@
 #include "LoadResource.h"
 #include "TileMat.h"
 #include "Effect.h"
-
+#include "Enemy.h"
 #include <d3d9.h>
 #include <d3dx9.h>
 
@@ -24,7 +24,6 @@ class CMap
 	vector<LPGAMEOBJECT> coObjectsWithSimon;
 	vector<LPGAMEOBJECT> coObjectsWithSkill;
 	vector<LPGAMEOBJECT> listEffect;
-
 public :
 
 	CMap();
@@ -35,6 +34,7 @@ public :
 	void DrawMap();
 	void ResetListObjects();
 	void PushEffect(CEffect* effect);
+	void PushObject(LPGAMEOBJECT shoot);
 
 	int GetMaxX() { return this->max_x; }
 	int GetMaxY() { return this->max_y; }

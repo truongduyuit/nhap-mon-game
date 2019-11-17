@@ -7,7 +7,6 @@
 #include "Flag.h"
 #include "Weapon.h"
 #include "Skill.h"
-#include "Enemy.h"
 
 CGround* ground;
 CSObject* sobject;
@@ -50,6 +49,8 @@ void CMap::LoadContent(string filePath)
 			}
 		}
 
+		CWeapon* weapon = CWeapon::GetInstance();
+		coObjectsFull.push_back(weapon);
 		CSimon* simon = CSimon::GetInstance();
 		simon->nx = 1;
 
@@ -133,13 +134,6 @@ void CMap::LoadContent(string filePath)
 	}
 	in.close();
 
-	CWeapon* weapon = CWeapon::GetInstance();
-	coObjectsFull.push_back(weapon);
-
-	//CEffect* effect = CEffect::GetInstance();
-	//effect->set_isHidden(true);
-	//coObjectsFull.push_back(effect);
-
 	CSkill* skill = CSkill::GetInstance();
 	coObjectsFull.push_back(skill);
 }
@@ -163,12 +157,6 @@ void CMap::ResetListObjects()
 	coObjectsWithSkill.clear();
 }
 
-void CMap::PushEffect(CEffect* effect)
-{
-	listEffect.push_back(effect);
-}
-
-
 vector<LPGAMEOBJECT> CMap::MergeListCoObject(vector<LPGAMEOBJECT> result, vector<LPGAMEOBJECT> objects)
 {
 	for (unsigned int i = 0; i < objects.size(); i++)
@@ -181,7 +169,17 @@ vector<LPGAMEOBJECT> CMap::MergeListCoObject(vector<LPGAMEOBJECT> result, vector
 
 vector<LPGAMEOBJECT> CMap::Get_coObjectsFull()
 {
-	return coObjectsFull;
+
+	vector<LPGAMEOBJECT> Full;
+
+	for (unsigned int i = 0; i < this->coObjectsFull.size(); i++)
+	{
+		if (!coObjectsFull[i]->isHidden)
+		{
+			Full.push_back(coObjectsFull[i]);
+		}
+	}
+	return Full;
 }
 
 vector<LPGAMEOBJECT> CMap::Get_coObjectGround()
@@ -251,7 +249,19 @@ vector<LPGAMEOBJECT> CMap::Get_listEffect()
 		}
 	}
 
+	if (effects.size() == 0) listEffect.clear();
+
 	return effects;
+}
+
+void CMap::PushEffect(CEffect* effect)
+{
+	listEffect.push_back(effect);
+}
+
+void CMap::PushObject(LPGAMEOBJECT shoot)
+{
+	coObjectsFull.push_back(shoot);
 }
 
 CMap::CMap()

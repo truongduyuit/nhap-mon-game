@@ -7,12 +7,16 @@
 #define BAT_FLY_SPEED			0.025f
 #define BAT_FLY_SPEED_Y			0.01f
 #define ENEMY_GRAVITY			0.0001f
+#define FISH_INATIVE			0.09f
+#define FISH_WALKING_SPEED		0.015f
+#define SHOOT_SPEED				0.05f
 
 #define ENEMY_HIDDEN			-1
 #define STATE_GHOST				0
 #define STATE_WOLF				1
 #define STATE_BAT				2
 #define STATE_FISH_MONSTER		3
+#define STATE_BULLET			4
 
 #define ANI_GHOST_LEFT			0
 #define ANI_GHOST_RIGHT			1
@@ -28,6 +32,10 @@
 #define ANI_FISH_WALKING_RIGHT	11
 #define ANI_FISH_SHOOT_LEFT		12
 #define ANI_FISH_SHOOT_RIGHT    13
+#define ANI_FISH_INACTIVE_LEFT	14
+#define ANI_FISH_INACTIVE_RIGHT 15
+#define ANI_BULLET_LEFT			16
+#define ANI_BULLET_RIGHT		17
 
 #define GHOST_WIDTH				16
 #define GHOST_HEIGHT			32
@@ -36,7 +44,9 @@
 #define BAT_WIDTH				17
 #define BAT_HEIGHT				15
 #define FISH_MONSTER_WIDTH		16
-#define FISH_MONSTER_HEIGHT		33
+#define FISH_MONSTER_HEIGHT		31
+#define BULLET_WIDTH			6
+#define BULLET_HEIGHT			7
 
 #define ACTION_LEFT				-1
 #define ACTION_RIGHT			1
@@ -44,12 +54,16 @@
 class CEnemy : public CGameObject
 {
 	int nxx;
+	int move_time;
+
 	float x_min;
 	float x_max;
 	float vyy;
 
 	bool isFly;
 	bool isActive;
+	bool isFishMove;
+	bool isShoot;
 	DWORD action_time;
 public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
@@ -60,6 +74,8 @@ public:
 	void wolf_update();
 	void ghost_update();
 	void bat_update();
+	void fish_update();
+	void bullet_update();
 	bool onFlag();
 
 	void SetMaxMin(float min, float max) { x_min = min; x_max = max; }

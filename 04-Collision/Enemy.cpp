@@ -1,8 +1,12 @@
+#include <ctime>
+
 #include "LoadResource.h"
 #include "Enemy.h"
 #include "Ground.h"
 #include "Map.h"
 #include "Simon.h"
+#include "Contands.h"
+
 
 CEnemy::CEnemy()
 {
@@ -12,14 +16,17 @@ CEnemy::CEnemy()
 
 void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (isHidden) return;
+
 	CGameObject::Update(dt);
 
 	vy += ENEMY_GRAVITY * dt;
 
-
 	if (state == STATE_GHOST) ghost_update();
 	else if (state == STATE_WOLF) wolf_update();
 	else if (state == STATE_BAT) bat_update();
+	else if (state == STATE_FISH_MONSTER) fish_update();
+	else if (state == STATE_BULLET) bullet_update();
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -56,7 +63,13 @@ void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				if (ny < 0)
 				{
-					y += min_ty * dy + ny * 0.4f;
+					y += min_ty * dy + ny * 0.2f;
+
+					if (state == STATE_FISH_MONSTER && !isFishMove && !isShoot)
+					{
+						isFishMove = true;
+						action_time = GetTickCount();
+					}
 				}
 				else
 				{					
@@ -101,6 +114,32 @@ void CEnemy::Render()
 	else if (state == STATE_BAT)
 	{
 		nxx > 0 ? ani = ANI_BAT_FLY_RIGHT : ani = ANI_BAT_FLY_LEFT;
+	}
+	else if (state == STATE_FISH_MONSTER)
+	{
+		if (!isActive)
+		{
+			nxx > 0 ? ani = ANI_FISH_INACTIVE_RIGHT : ani = ANI_FISH_INACTIVE_LEFT;
+		}
+		else
+		{
+			if (isShoot)
+			{
+				nxx > 0 ? ani = ANI_FISH_SHOOT_RIGHT : ani = ANI_FISH_SHOOT_LEFT;
+			}
+			else if (isFishMove)
+			{
+				nxx > 0 ? ani = ANI_FISH_WALKING_RIGHT : ani = ANI_FISH_WALKING_LEFT;
+			}
+			else
+			{
+				nxx > 0 ? ani = ANI_FISH_INACTIVE_RIGHT : ani = ANI_FISH_INACTIVE_LEFT;
+			}
+		}
+	}
+	else if (state == STATE_BULLET)
+	{
+		nxx > 0 ? ani = ANI_BULLET_RIGHT : ani = ANI_BULLET_LEFT;
 	}
 
 	if (state != ENEMY_HIDDEN && !isHidden)
@@ -184,7 +223,6 @@ void CEnemy::bat_update()
 	if (!isActive)
 	{
 		isActive = true;
-		nxx = nx;
 		action_time = GetTickCount();
 		vyy = BAT_FLY_SPEED_Y;
 	}
@@ -201,6 +239,85 @@ void CEnemy::bat_update()
 
 		vy = vyy;
 	}
+}
+
+void CEnemy::fish_update()
+{
+
+	if (!isActive)
+	{
+		vy = -FISH_INATIVE;
+
+		if (y < x_min)
+		{
+			isActive = true;	
+			nxx = nx;
+
+			srand(time(NULL));
+			move_time = (rand() % 20 + 15) * 100;
+		}
+	}
+	else
+	{
+		if (isFishMove)
+		{
+			nxx > 0 ? vx = FISH_WALKING_SPEED : vx = -FISH_WALKING_SPEED;
+
+			if (GetTickCount() - action_time > move_time)
+			{
+				isFishMove = false;
+				isShoot = true; 
+				action_time = GetTickCount();
+
+				CEnemy* ene = new CEnemy();
+				ene->SetState(STATE_BULLET);
+				ene->nx = nxx;
+				nxx > 0 ? ene->SetPosition(x + FISH_MONSTER_WIDTH + 2, y + 5) : ene->SetPosition(x - 2, y +5);
+				ene->set_isHidden(false);
+				CMap* map = CMap::GetInstance();
+				map->PushObject(ene);
+			}
+			else  if (x > x_max && nxx > 0)
+			{
+				isFishMove = false;
+				isShoot = true;
+				action_time = GetTickCount();
+			}
+			else if (x < x_max - 200 && nxx < 0)
+			{
+				isFishMove = false;
+				isShoot = true;
+				action_time = GetTickCount();
+			}
+		}
+		else if (isShoot)
+		{
+			vx = 0;
+			if (GetTickCount() - action_time > 800)
+			{
+				isFishMove = true;
+				isShoot = false;
+				action_time = GetTickCount();
+
+				nxx = -nxx;
+				srand(time(NULL));
+				move_time = (rand() % 20 + 15) * 100;
+
+
+			}
+		}
+	}
+}
+
+void CEnemy::bullet_update()
+{
+	nxx = nx;
+	nxx > 0 ? vx = SHOOT_SPEED : vx = -SHOOT_SPEED;
+	vy = 0;
+
+	CSimon * simon = CSimon::GetInstance();
+	if (x < simon->x - SCREEN_WIDTH || x > simon->x + SCREEN_WIDTH)
+		isHidden = true;
 }
 
 void CEnemy::SetState(int state)
@@ -232,5 +349,10 @@ void CEnemy::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	{
 		right = left + FISH_MONSTER_WIDTH;
 		bottom = top + FISH_MONSTER_HEIGHT;
+	}
+	else if (state == STATE_BULLET)
+	{
+		right = left + BULLET_WIDTH;
+		bottom = top + BULLET_HEIGHT;
 	}
 }
