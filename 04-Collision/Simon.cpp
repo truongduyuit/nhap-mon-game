@@ -235,6 +235,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					this->skill[0] += 5;
 					skill->SetState(STATE_KNIFE);
 					skill->SetNextState(STATE_KNIFE);
+					canStop = false;
 				}
 
 				// lụm nước thánh
@@ -243,12 +244,17 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					this->skill[0] += 5;
 					skill->SetState(STATE_HOLY_WATER);
 					skill->SetNextState(STATE_HOLY_WATER);
+					canStop = false;
 				}
 				else if (coObjects->at(i)->state == CROSS_ITEM)
 				{
 					map->Cross_Enemy();
 				}
-
+				else if (coObjects->at(i)->state == STOPWATCH_ITEM)
+				{
+					this->skill[0] += 5;
+					canStop = true;
+				}
 				coObjects->at(i)->SetState(SOBJECT_HIDDEN);
 				
 			}
@@ -339,6 +345,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					this->skill[0] += 5;
 					skill->SetState(STATE_KNIFE);
 					skill->SetNextState(STATE_KNIFE);
+					canStop = false;
 				}
 
 				// lụm nước thánh
@@ -347,6 +354,12 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					this->skill[0] += 5;
 					skill->SetState(STATE_HOLY_WATER);
 					skill->SetNextState(STATE_HOLY_WATER);
+					canStop = false;
+				}
+				else if (e->obj->state == STOPWATCH_ITEM)
+				{
+					this->skill[0] += 5;
+					canStop = true;
 				}
 				else if (e->obj->state == CROSS_ITEM)
 				{
@@ -388,45 +401,24 @@ void CSimon::Render()
 	{
 		if (isAttack || isthrow)
 		{
-			if (nx > 0)
-			{
-				be_updown == 2 ? ani = SIMON_ANI_RIGHT_UP_ATTACK : ani = SIMON_ANI_RIGHT_DOWN_ATTACK;
-			}
-			else
-			{
-				be_updown == 2 ? ani = SIMON_ANI_LEFT_UP_ATTACK : ani = SIMON_ANI_LEFT_DOWN_ATTACK;
-			}
+			if (nx > 0) be_updown == 2 ? ani = SIMON_ANI_RIGHT_UP_ATTACK : ani = SIMON_ANI_RIGHT_DOWN_ATTACK;
+			else be_updown == 2 ? ani = SIMON_ANI_LEFT_UP_ATTACK : ani = SIMON_ANI_LEFT_DOWN_ATTACK;
 		}
 		else
 		{
 			if (be_nx > 0)
 			{
-				if (be_updown == 2)
-				{
-					onTimeStair ? ani = SIMON_ANI_UPSTAIR_RIGHT : ani = SIMON_ANI_IDLE_UPSTAIR_RIGHT;
-				}
-				else
-				{
-					onTimeStair ? ani = SIMON_ANI_DOWNSTAIR_RIGHT : ani = SIMON_ANI_IDLE_DOWNSTAIR_RIGHT;
-				}
+				if (be_updown == 2) onTimeStair ? ani = SIMON_ANI_UPSTAIR_RIGHT : ani = SIMON_ANI_IDLE_UPSTAIR_RIGHT;
+				else onTimeStair ? ani = SIMON_ANI_DOWNSTAIR_RIGHT : ani = SIMON_ANI_IDLE_DOWNSTAIR_RIGHT;
 			}
 			else
 			{
-				if (be_updown == 2)
-				{
-					onTimeStair ? ani = SIMON_ANI_UPSTAIR_LEFT : ani = SIMON_ANI_IDLE_UPSTAIR_LEFT;
-				}
-				else
-				{
-					onTimeStair ? ani = SIMON_ANI_DOWNSTAIR_LEFT : ani = SIMON_ANI_IDLE_DOWNSTAIR_LEFT;
-				}
+				if (be_updown == 2) onTimeStair ? ani = SIMON_ANI_UPSTAIR_LEFT : ani = SIMON_ANI_IDLE_UPSTAIR_LEFT;
+				else onTimeStair ? ani = SIMON_ANI_DOWNSTAIR_LEFT : ani = SIMON_ANI_IDLE_DOWNSTAIR_LEFT;
 			}
 		}
 	}
-	else if (isInJure)
-	{
-		nx > 0 ? ani = SIMON_ANI_INJURE_RIGHT : ani = SIMON_ANI_INJURE_LEFT;
-	}
+	else if (isInJure) nx > 0 ? ani = SIMON_ANI_INJURE_RIGHT : ani = SIMON_ANI_INJURE_LEFT;
 	else
 	{
 		if (state == SIMON_STATE_DIE)
@@ -445,62 +437,25 @@ void CSimon::Render()
 			{
 				if (nx > 0)
 				{
-					if (isJump && !isAttack && !isthrow)
-					{
-						ani = SIMON_ANI_SIT_RIGHT;
-					}
-					else if (isAttack || isthrow)
-					{
-						isSit ? ani = SIMON_ANI_SIT_ATTACK_RIGHT : ani = SIMON_ANI_ATTACK_RIGHT;
-					}
-					/*else if (isthrow)
-					{
-						isSit ? ani = SIMON_ANI_SIT_ATTACK_RIGHT : ani = SIMON_ANI_ATTACK_RIGHT;
-					}*/
-					else if (state == SIMON_STATE_WALKING_RIGHT && !isJump && !isAttack)
-					{
-						ani = SIMON_ANI_WALKING_RIGHT;
-					}
-					else if (isSit)
-					{
-						ani = SIMON_ANI_SIT_RIGHT;
-					}
-					else
-					{
-						ani = SIMON_ANI_IDLE_RIGHT;
-					}
+					if (isJump && !isAttack && !isthrow) ani = SIMON_ANI_SIT_RIGHT;
+					else if (isAttack || isthrow) isSit ? ani = SIMON_ANI_SIT_ATTACK_RIGHT : ani = SIMON_ANI_ATTACK_RIGHT;
+					else if (state == SIMON_STATE_WALKING_RIGHT && !isJump && !isAttack) ani = SIMON_ANI_WALKING_RIGHT;
+					else if (isSit) ani = SIMON_ANI_SIT_RIGHT;
+					else ani = SIMON_ANI_IDLE_RIGHT;
 				}
 				else
 				{
-					if (isJump && !isAttack && !isthrow)
-					{
-						ani = SIMON_ANI_SIT_LEFT;
-					}
-					else if (isAttack || isthrow)
-					{
-						isSit ? ani = SIMON_ANI_SIT_ATTACK_LEFT : ani = SIMON_ANI_ATTACK_LEFT;
-					}
-					/*else if (isthrow)
-					{
-						isSit ? ani = SIMON_ANI_SIT_ATTACK_LEFT : ani = SIMON_ANI_ATTACK_LEFT;
-					}*/
-					else if (state == SIMON_STATE_WALKING_LEFT && !isJump && !isAttack)
-					{
-						ani = SIMON_ANI_WALKING_LEFT;
-					}
-					else if (isSit)
-					{
-						ani = SIMON_ANI_SIT_LEFT;
-					}
-					else
-					{
-						ani = SIMON_ANI_IDLE_LEFT;
-					}
+					if (isJump && !isAttack && !isthrow) ani = SIMON_ANI_SIT_LEFT;
+					else if (isAttack || isthrow) isSit ? ani = SIMON_ANI_SIT_ATTACK_LEFT : ani = SIMON_ANI_ATTACK_LEFT;
+					else if (state == SIMON_STATE_WALKING_LEFT && !isJump && !isAttack) ani = SIMON_ANI_WALKING_LEFT;
+					else if (isSit) ani = SIMON_ANI_SIT_LEFT;
+					else ani = SIMON_ANI_IDLE_LEFT;
 				}
 			}
 		}
-
 	}
+
+	if (isthrow && canStop) nx > 0 ? ani = SIMON_ANI_IDLE_RIGHT : ani = SIMON_ANI_IDLE_LEFT;
 
 	if (untouchable)
 	{
@@ -665,17 +620,26 @@ void CSimon::resetAttack()
 
 void CSimon::startThrow()
 {
-	CSkill* skill = CSkill::GetInstance();
-
-	if (!isPick && !isAttack && !isthrow && skill->get_isHidden())
+	if (canStop)
 	{
-		if (this->skill[0] > 0)
+		CMap* map = CMap::GetInstance();
+		map->Stop_Enemy();
+		isthrow = true;
+	}
+	else
+	{
+		CSkill* skill = CSkill::GetInstance();
+
+		if (!isPick && !isAttack && !isthrow && skill->get_isHidden())
 		{
-			isthrow = true;
+			if (this->skill[0] > 0)
+			{
+				isthrow = true;
 
-			action_time = GetTickCount();
+				action_time = GetTickCount();
 
-			vx = 0;
+				vx = 0;
+			}
 		}
 	}
 }

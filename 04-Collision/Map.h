@@ -36,6 +36,7 @@ public :
 	void PushEffect(CEffect* effect);
 	void PushObject(LPGAMEOBJECT shoot);
 	void Cross_Enemy();
+	void Stop_Enemy();
 
 	int GetMaxX() { return this->max_x; }
 	int GetMaxY() { return this->max_y; }

@@ -84,6 +84,7 @@ class CSimon : public CGameObject
 	bool isAttack;
 	bool isPick;
 	bool isthrow;
+	bool canStop;
 	bool isSit;
 	bool isInJure;
 

@@ -19,9 +19,21 @@ CGameObject::CGameObject()
 
 void CGameObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-	this->dt = dt;
-	dx = vx*dt;
-	dy = vy*dt;
+	if (!isStop)
+	{
+		this->dt = dt;
+		dx = vx * dt;
+		dy = vy * dt;
+
+		stop_time = GetTickCount();
+	}
+	else
+	{
+		dx = 0;
+		dy = 0;
+		if (GetTickCount() - stop_time >= 3000)
+			isStop = false;
+	}
 }
 
 /*

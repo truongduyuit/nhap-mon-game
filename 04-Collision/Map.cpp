@@ -290,6 +290,17 @@ void CMap::Cross_Enemy()
 	}
 }
 
+void CMap::Stop_Enemy()
+{
+	for (unsigned int i = 0; i < this->coObjectsFull.size(); i++)
+	{
+		if (dynamic_cast<CEnemy *>(coObjectsFull[i]) && !coObjectsFull[i]->get_isHidden())
+		{
+			coObjectsFull[i]->isStop = true;
+		}
+	}
+}
+
 CMap::CMap()
 {
 	LoadMapSprites();

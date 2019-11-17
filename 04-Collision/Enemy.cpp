@@ -16,6 +16,7 @@ CEnemy::CEnemy()
 
 void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+
 	if (isHidden) return;
 
 	CGameObject::Update(dt);
@@ -141,6 +142,8 @@ void CEnemy::Render()
 	{
 		nxx > 0 ? ani = ANI_BULLET_RIGHT : ani = ANI_BULLET_LEFT;
 	}
+
+	if (isStop) animations[ani]->ResetFrame();
 
 	if (state != ENEMY_HIDDEN && !isHidden)
 	{

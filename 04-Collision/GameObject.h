@@ -48,8 +48,10 @@ public:
 	int nextState;
 	bool isHidden;
 	bool renderBBox;
+	bool isStop;
 
-	DWORD dt; 
+	DWORD dt;
+	DWORD stop_time;
 
 	vector<LPANIMATION> animations;
 
