@@ -1,6 +1,6 @@
 #include "Map.h"
 #include <fstream>
-
+#include "Game.h"
 #include "Simon.h"
 #include "SObject.h"
 #include "Ground.h"
@@ -140,10 +140,25 @@ void CMap::LoadContent(string filePath)
 
 void CMap::DrawMap()
 {
-	for (unsigned int i = 0; i < tiles.size(); i++)
+	int tile_x_begin = CGame::GetInstance()->getCamPos_x() / tile_size_x;
+
+	int tile_x_end = tile_x_begin + SCREEN_WIDTH / tile_size_x + 1;
+
+	//int ncount = 0;
+
+	for (unsigned int i = tile_x_begin; i < tiles.size(); i++)
 	{
 		tiles[i]->Render();
+		//ncount++;
+
+		if (i >= tile_x_end)
+		{
+			i += max_x - SCREEN_WIDTH / tile_size_x - 2 ;
+			tile_x_end += max_x;
+		}
 	}
+
+	//OutputDebugString(L"a");
 }
 
 void CMap::ResetListObjects()
