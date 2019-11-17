@@ -13,6 +13,9 @@
 #define MONEY_ITEM_1k		5
 #define HEART_SMALL_ITEM	6
 #define HOLY_WATER_ITEM		7
+#define MONEY_ITEM_100		8
+#define STOPWATCH_ITEM		9
+#define CROSS_ITEM			10
 
 #define SOBJECT_APPEAR_TIME		5000
 #define SOBJECT_DESTROY_TIME	400
@@ -41,6 +44,12 @@
 
 #define HOLY_WATER_WIDTH	16
 #define HOLY_WATER_HEIGHT	16
+
+#define STOPWATCH_WIDTH		17
+#define STOPWATCH_HEIGHT	17
+
+#define CROSS_WIDTH			17
+#define CROSS_HEIGHT		17
 
 class CSObject : public CGameObject
 {

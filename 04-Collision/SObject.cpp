@@ -124,38 +124,17 @@ void CSObject::Render()
 {
 	int ani;
 
-	if (state == SMALL_CANDLE)
-	{
-		ani = SMALL_CANDLE;
-	}
-	else if (state == BIG_CANDLE)
-	{
-		ani = BIG_CANDLE;
-	}
-	else if (state == HEART_ITEM)
-	{
-		ani = HEART_ITEM;
-	}
-	else if (state == MONEY_ITEM_1k)
-	{
-		ani = MONEY_ITEM_1k;
-	}
-	else if (state == CANE_ITEM)
-	{
-		ani = CANE_ITEM;
-	}
-	else if (state == KNIFE_ITEM)
-	{
-		ani = KNIFE_ITEM;
-	}
-	else if (state == HEART_SMALL_ITEM)
-	{
-		ani = HEART_SMALL_ITEM;
-	}
-	else if (state == HOLY_WATER_ITEM)
-	{
-		ani = HOLY_WATER_ITEM;
-	}
+	if (state == SMALL_CANDLE) ani = SMALL_CANDLE;
+	else if (state == BIG_CANDLE) ani = BIG_CANDLE;
+	else if (state == HEART_ITEM) ani = HEART_ITEM;
+	else if (state == MONEY_ITEM_1k) ani = MONEY_ITEM_1k;
+	else if (state == CANE_ITEM) ani = CANE_ITEM;
+	else if (state == KNIFE_ITEM) ani = KNIFE_ITEM;
+	else if (state == HEART_SMALL_ITEM) ani = HEART_SMALL_ITEM;
+	else if (state == HOLY_WATER_ITEM) ani = HOLY_WATER_ITEM;
+	else if (state == MONEY_ITEM_100) ani = MONEY_ITEM_100;
+	else if (state == STOPWATCH_ITEM) ani = STOPWATCH_ITEM;
+	else if (state == CROSS_ITEM) ani = CROSS_ITEM;
 
 	if (state != SOBJECT_HIDDEN && !isHidden)
 	{
@@ -240,5 +219,20 @@ void CSObject::GetBoundingBox(float &left, float &top, float &right, float &bott
 	{
 		right = x + HOLY_WATER_WIDTH;
 		bottom = y + HOLY_WATER_HEIGHT;
+	}
+	else if (state == MONEY_ITEM_100)
+	{
+		right = x + BBOX_MONEY_1K_W;
+		bottom = y + BBOX_MONEY_1K_H;
+	}
+	else if (state == STOPWATCH_ITEM)
+	{
+		right = x + STOPWATCH_WIDTH;
+		bottom = y + STOPWATCH_HEIGHT;
+	}
+	else if (state == CROSS_ITEM)
+	{
+		right = x + CROSS_WIDTH;
+		bottom = y + CROSS_HEIGHT;
 	}
 }

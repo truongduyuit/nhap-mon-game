@@ -244,6 +244,10 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					skill->SetState(STATE_HOLY_WATER);
 					skill->SetNextState(STATE_HOLY_WATER);
 				}
+				else if (coObjects->at(i)->state == CROSS_ITEM)
+				{
+					map->Cross_Enemy();
+				}
 
 				coObjects->at(i)->SetState(SOBJECT_HIDDEN);
 				
@@ -344,7 +348,10 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					skill->SetState(STATE_HOLY_WATER);
 					skill->SetNextState(STATE_HOLY_WATER);
 				}
-
+				else if (e->obj->state == CROSS_ITEM)
+				{
+					map->Cross_Enemy();
+				}
 				e->obj->SetState(SOBJECT_HIDDEN);
 			}
 

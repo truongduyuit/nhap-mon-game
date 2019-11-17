@@ -279,6 +279,17 @@ void CMap::PushObject(LPGAMEOBJECT shoot)
 	coObjectsFull.push_back(shoot);
 }
 
+void CMap::Cross_Enemy()
+{
+	for (unsigned int i = 0; i < this->coObjectsFull.size(); i++)
+	{
+		if (dynamic_cast<CEnemy *>(coObjectsFull[i]) && !coObjectsFull[i]->get_isHidden())
+		{
+			coObjectsFull[i]->BeDestroy();
+		}
+	}
+}
+
 CMap::CMap()
 {
 	LoadMapSprites();
