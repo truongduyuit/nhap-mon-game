@@ -372,13 +372,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				if (dynamic_cast<CEnemy *>(e->obj))
 				{
-					/*startInjure(nx < 0 ? -1 : 1);
-					weapon->ResetAttack();
+					if (e->obj->state != STATE_BULLET)
+					{
+						startInjure(nx < 0 ? -1 : 1);
+						weapon->ResetAttack();
+					}
 
 					if (e->obj->state == STATE_BAT)
-						e->obj->BeDestroy();*/
-
-					x += dx;
+						e->obj->BeDestroy();
 				}
 			}
 		}

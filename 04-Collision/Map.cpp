@@ -31,9 +31,14 @@ void CMap::LoadContent(string filePath)
 	}
 
 	CTileMat* tile;
+	mapObjects.clear();
+	gridObject.clear();
+	mapObjectId = 2;
 
 	while (!in.eof())
 	{
+
+		// background
 		in >> this->max_x >> this->max_y >> this->tile_size_x >> this->tile_size_y;
 
 		for (int i = 0; i < max_y; i++)
@@ -49,13 +54,16 @@ void CMap::LoadContent(string filePath)
 			}
 		}
 
+		// objects
 		CWeapon* weapon = CWeapon::GetInstance();
-		coObjectsFull.push_back(weapon);
+
 		CSimon* simon = CSimon::GetInstance();
 		simon->nx = 1;
 
 		while (!in.eof())
 		{
+			mapObjectId++;
+
 			int id_object;
 			in >> id_object;
 
@@ -68,8 +76,12 @@ void CMap::LoadContent(string filePath)
 				ground->setSize(size_x, size_y);
 				ground->SetPosition(float(x), float(y));
 
-				coObjectGround.push_back(ground);
-				coObjectsFull.push_back(ground);
+				mapObjects[mapObjectId] = ground;
+				vector<int> goundGrid = GetGridNumber(float(x), size_x);
+				for (int i = 0; i < goundGrid.size(); i++)
+				{
+					AddGridObject(goundGrid[i], mapObjectId);
+				}
 			}
 			else if (id_object == 1)
 			{
@@ -78,7 +90,6 @@ void CMap::LoadContent(string filePath)
 
 				simon = CSimon::GetInstance();
 				simon->SetPosition(float(x), float(y));
-				coObjectsFull.push_back(simon);
 			}
 			else if (id_object == 2)
 			{
@@ -98,7 +109,8 @@ void CMap::LoadContent(string filePath)
 					sobject->set_isHidden(true);
 				}
 
-				coObjectsFull.push_back(sobject);
+				mapObjects[mapObjectId] = sobject;
+				AddGridObject(GetGridNumber(x), mapObjectId);
 			}
 			else if (id_object == 3)
 			{
@@ -111,8 +123,8 @@ void CMap::LoadContent(string filePath)
 				flag->SetState(state);
 				flag->SetNextState(nextState);
 
-				coObjectFlag.push_back(flag);
-				coObjectsFull.push_back(flag);
+				mapObjects[mapObjectId] = flag;
+				AddGridObject(GetGridNumber(x), mapObjectId);
 			}
 			else if (id_object == 4)
 			{
@@ -128,14 +140,26 @@ void CMap::LoadContent(string filePath)
 				enemy->SetNextState(nextState);
 				enemy->nx = nxx;
 				enemy->SetMaxMin(x_min, x_max);
-				coObjectsFull.push_back(enemy);
+
+				mapObjects[mapObjectId] = enemy;
+				AddGridObject(GetGridNumber(x), mapObjectId);
 			}
+		}
+	
+		mapObjects[0] = weapon;
+		mapObjects[1] = simon;
+		CSkill* skill = CSkill::GetInstance();
+		mapObjects[2] = skill;
+		for (int i = 0; i < gridObject.size(); i++)
+		{
+			AddGridObject(i, 0); // weapon
+			AddGridObject(i, 1); // simon
+			AddGridObject(i, 2); // skill
 		}
 	}
 	in.close();
 
-	CSkill* skill = CSkill::GetInstance();
-	coObjectsFull.push_back(skill);
+	//OutputDebugString(L"a");
 }
 
 void CMap::DrawMap()
@@ -165,92 +189,26 @@ void CMap::ResetListObjects()
 {
 	tiles.clear();
 	listEffect.clear();
-	coObjectsFull.clear();
-	coObjectGround.clear();
-	coObjectFlag.clear();
-	coObjectsWithSimon.clear();
-	coObjectsWithSkill.clear();
-}
-
-vector<LPGAMEOBJECT> CMap::MergeListCoObject(vector<LPGAMEOBJECT> result, vector<LPGAMEOBJECT> objects)
-{
-	for (unsigned int i = 0; i < objects.size(); i++)
-	{
-		result.push_back(objects[i]);
-	}
-
-	return result;
-}
-
-vector<LPGAMEOBJECT> CMap::Get_coObjectsFull()
-{
-
-	vector<LPGAMEOBJECT> Full;
-
-	for (unsigned int i = 0; i < this->coObjectsFull.size(); i++)
-	{
-		if (!coObjectsFull[i]->isHidden)
-		{
-			Full.push_back(coObjectsFull[i]);
-		}
-	}
-	return Full;
-}
-
-vector<LPGAMEOBJECT> CMap::Get_coObjectGround()
-{
-	return coObjectGround;
 }
 
 vector<LPGAMEOBJECT> CMap::Get_coObjectFlag()
 {
+	vector<LPGAMEOBJECT> coObjectFlag;
+	vector<int> currentGrid = GetGridNumber(CGame::GetInstance()->getCamPos_x(), SCREEN_WIDTH - 1);
+	for (int i = 0; i < currentGrid.size(); i++)
+	{
+		vector<int> idObjects = gridObject[currentGrid[i]].Get_Arr();
+
+		for (int j = 0; j < idObjects.size(); j++)
+		{
+			if (dynamic_cast<CFlag *>(mapObjects[idObjects[j]]) && !mapObjects[idObjects[j]]->get_isHidden())
+			{
+				coObjectFlag.push_back(mapObjects[idObjects[j]]);
+			}
+		}
+	}
 	return coObjectFlag;
 }
-
-vector<LPGAMEOBJECT> CMap::Get_coObjectsWithSimon()
-{
-	vector<LPGAMEOBJECT> coObjectsWithSimon;
-
-	for (unsigned int i = 0; i < coObjectsFull.size(); i++)
-	{
-		if (dynamic_cast<CSObject *>(coObjectsFull[i]) && !coObjectsFull[i]->get_isHidden())
-		{
-			if (coObjectsFull[i]->GetState() != 1 && coObjectsFull[i]->GetState() != 0)
-			{
-				coObjectsWithSimon.push_back(coObjectsFull[i]);
-			}
-		}
-		if (dynamic_cast<CEnemy *>(coObjectsFull[i]) && !coObjectsFull[i]->get_isHidden())
-		{
-			coObjectsWithSimon.push_back(coObjectsFull[i]);
-		}
-	}
-
-	return MergeListCoObject(coObjectsWithSimon, Get_coObjectGround());
-}
-
-vector<LPGAMEOBJECT> CMap::Get_coObjectsWithSkill()
-{
-	vector<LPGAMEOBJECT> coObjectsWithSkill;
-
-	for (unsigned int i = 0; i < coObjectsFull.size(); i++)
-	{
-		if (dynamic_cast<CSObject *>(coObjectsFull[i]) && !coObjectsFull[i]->get_isHidden())
-		{
-			if (coObjectsFull[i]->GetState() == 1 || coObjectsFull[i]->GetState() == 0)
-			{
-				coObjectsWithSkill.push_back(coObjectsFull[i]);
-			}
-		}
-		if (dynamic_cast<CEnemy *>(coObjectsFull[i]) && !coObjectsFull[i]->get_isHidden())
-		{
-			coObjectsWithSkill.push_back(coObjectsFull[i]);
-		}
-	}
-
-	return MergeListCoObject(coObjectsWithSkill, Get_coObjectGround());
-}
-
 
 vector<LPGAMEOBJECT> CMap::Get_listEffect()
 {
@@ -276,27 +234,42 @@ void CMap::PushEffect(CEffect* effect)
 
 void CMap::PushObject(LPGAMEOBJECT shoot)
 {
-	coObjectsFull.push_back(shoot);
+	int numGrid = GetGridNumber(shoot->x);
+	mapObjectId++;
+	mapObjects[mapObjectId] = shoot;
+	gridObject.at(numGrid).push(mapObjectId);
 }
 
 void CMap::Cross_Enemy()
 {
-	for (unsigned int i = 0; i < this->coObjectsFull.size(); i++)
+	vector<int> currentGrid = GetGridNumber(CGame::GetInstance()->getCamPos_x(), SCREEN_WIDTH - 1);
+	for (int i = 0; i < currentGrid.size(); i++)
 	{
-		if (dynamic_cast<CEnemy *>(coObjectsFull[i]) && !coObjectsFull[i]->get_isHidden())
+		vector<int> idObjects = gridObject[currentGrid[i]].Get_Arr();
+
+		for (int j = 0; j < idObjects.size(); j++)
 		{
-			coObjectsFull[i]->BeDestroy();
+			if (dynamic_cast<CEnemy *>(mapObjects[idObjects[j]]) && !mapObjects[idObjects[j]]->get_isHidden())
+			{
+				mapObjects[idObjects[j]]->BeDestroy();
+			}
 		}
 	}
 }
 
 void CMap::Stop_Enemy()
 {
-	for (unsigned int i = 0; i < this->coObjectsFull.size(); i++)
+	vector<int> currentGrid = GetGridNumber(CGame::GetInstance()->getCamPos_x(), SCREEN_WIDTH - 1);
+	for (int i = 0; i < currentGrid.size(); i++)
 	{
-		if (dynamic_cast<CEnemy *>(coObjectsFull[i]) && !coObjectsFull[i]->get_isHidden())
+		vector<int> idObjects = gridObject[currentGrid[i]].Get_Arr();
+
+		for (int j = 0; j < idObjects.size(); j++)
 		{
-			coObjectsFull[i]->isStop = true;
+			if (dynamic_cast<CEnemy *>(mapObjects[idObjects[j]]) && !mapObjects[idObjects[j]]->get_isHidden())
+			{
+				mapObjects[idObjects[j]]->isStop = true;
+			}
 		}
 	}
 }
@@ -311,4 +284,118 @@ CMap * CMap::GetInstance()
 {
 	if (__instance == NULL) __instance = new CMap();
 	return __instance;
+}
+
+LPGAMEOBJECT CMap::Get_mapObject(unsigned int id)
+{
+	return mapObjects[id];
+}
+
+void CMap::AddMapObject(int id, LPGAMEOBJECT obj)
+{
+	mapObjects[id] = obj;
+}
+
+void CMap::AddGridObject(int numGrid, int id)
+{
+	while (gridObject.size() <= numGrid)
+	{
+		int_c temp;
+		gridObject.push_back(temp);
+	}
+
+	gridObject.at(numGrid).push(id);
+}
+
+int CMap::GetGridNumber(int pos_x)
+{
+	return pos_x / SCREEN_WIDTH;
+}
+
+vector<int> CMap::GetGridNumber(float pos_x, int size_x)
+{
+	int min = pos_x / SCREEN_WIDTH;
+	int max = (pos_x + size_x) / SCREEN_WIDTH;
+	vector<int> result;
+
+	if (min < max)
+	{
+		for (int i = min; i <= max; i++)
+		{
+			result.push_back(i);
+		}
+	}
+	else
+		result.push_back(min);
+
+	return result;
+}
+
+void CMap::Get_gridObjects(
+	vector<LPGAMEOBJECT> &coObjectsFull,
+	vector<LPGAMEOBJECT> &coObjectGround,
+	vector<LPGAMEOBJECT> &coObjectFlag,
+	vector<LPGAMEOBJECT> &coObjectsWithSimon,
+	vector<LPGAMEOBJECT> &coObjectsWithSkill
+)
+{
+	coObjectsFull.clear();
+	coObjectGround.clear();
+	coObjectFlag.clear();
+	coObjectsWithSimon.clear();
+	coObjectsWithSkill.clear();
+
+	vector<int> currentGrid = GetGridNumber(CGame::GetInstance()->getCamPos_x(), SCREEN_WIDTH - 1);
+	unordered_map<int, int> checkUnique;
+	vector<int> idObjects;
+
+	for (int i = 0; i < currentGrid.size(); i++)
+	{
+		if (gridObject.size() < currentGrid[i] - 1)
+		{
+			int_c temp;
+			gridObject.push_back(temp);
+		}
+		idObjects = gridObject[currentGrid[i]].Get_Arr();
+
+		vector<int> b = gridObject[currentGrid[i]].Get_Arr();
+		int a = currentGrid[i];
+
+		for (int j = 0; j < idObjects.size(); j++)
+		{
+			if (checkUnique[idObjects[j]] == NULL)
+			{
+				coObjectsFull.push_back(mapObjects[idObjects[j]]);
+				checkUnique[idObjects[j]] = idObjects[j];
+
+				if (dynamic_cast<CSObject *>(mapObjects[idObjects[j]]))
+				{
+					if (mapObjects[idObjects[j]]->GetState() == SMALL_CANDLE || mapObjects[idObjects[j]]->GetState() == BIG_CANDLE)
+					{
+						coObjectsWithSkill.push_back(mapObjects[idObjects[j]]);
+					}
+					else
+					{
+						coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);
+					}
+				}
+				else if (dynamic_cast<CGround *>(mapObjects[idObjects[j]]))
+				{
+					coObjectGround.push_back(mapObjects[idObjects[j]]);
+					coObjectsWithSkill.push_back(mapObjects[idObjects[j]]);
+					coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);
+				}
+				else if (dynamic_cast<CEnemy *>(mapObjects[idObjects[j]]) && !mapObjects[idObjects[j]]->get_isHidden())
+				{
+					coObjectsWithSkill.push_back(mapObjects[idObjects[j]]);
+					coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);
+				}
+				else if (dynamic_cast<CFlag *>(mapObjects[idObjects[j]]))
+				{
+					coObjectFlag.push_back(mapObjects[idObjects[j]]);
+					//coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);
+				}
+			}
+		}
+	}
 }

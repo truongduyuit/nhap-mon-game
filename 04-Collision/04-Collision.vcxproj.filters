@@ -102,6 +102,9 @@
     <ClInclude Include="MapManager.h">
       <Filter>src\Maps</Filter>
     </ClInclude>
+    <ClInclude Include="Int1D_Customize.h">
+      <Filter>src\Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.cpp">
@@ -157,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="MapManager.cpp">
       <Filter>src\Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="Int1D_Customize.cpp">
+      <Filter>src\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

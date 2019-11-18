@@ -134,6 +134,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="Int1D_Customize.h" />
     <ClInclude Include="LoadResource.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapManager.h" />
@@ -153,6 +154,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="Int1D_Customize.cpp" />
     <ClCompile Include="LoadResource.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />

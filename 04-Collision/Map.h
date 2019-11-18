@@ -2,6 +2,7 @@
 #include <Windows.h>
 
 #include "LoadResource.h"
+#include "Int1D_Customize.h"
 #include "TileMat.h"
 #include "Effect.h"
 #include "Enemy.h"
@@ -18,12 +19,11 @@ class CMap
 	int tile_size_y;
 
 	vector<CTileMat*> tiles;
-	vector<LPGAMEOBJECT> coObjectsFull;
-	vector<LPGAMEOBJECT> coObjectGround;
-	vector<LPGAMEOBJECT> coObjectFlag;
-	vector<LPGAMEOBJECT> coObjectsWithSimon;
-	vector<LPGAMEOBJECT> coObjectsWithSkill;
 	vector<LPGAMEOBJECT> listEffect;
+
+	unordered_map<int, LPGAMEOBJECT> mapObjects;
+	vector<int_c> gridObject;
+	int mapObjectId;
 public :
 
 	CMap();
@@ -42,14 +42,24 @@ public :
 	int GetMaxY() { return this->max_y; }
 	int GetTileSizeX() { return tile_size_x; }
 
-	vector<LPGAMEOBJECT> MergeListCoObject(vector<LPGAMEOBJECT> result, vector<LPGAMEOBJECT> objects);
-	vector<LPGAMEOBJECT> Get_coObjectsFull();
-	vector<LPGAMEOBJECT> Get_coObjectGround();
 	vector<LPGAMEOBJECT> Get_coObjectFlag();
-	vector<LPGAMEOBJECT> Get_coObjectsWithSimon();
-	vector<LPGAMEOBJECT> Get_coObjectsWithSkill();
 	vector<LPGAMEOBJECT> Get_listEffect();
 
 	static CMap * GetInstance();
+
+	LPGAMEOBJECT Get_mapObject(unsigned int id);
+	void AddMapObject(int id, LPGAMEOBJECT obj);
+	void AddGridObject(int numGrid, int id);
+	int GetGridNumber(int pos_x);
+	vector<int> GetGridNumber(float pos_x, int size_x);
+	int Get_mapObjectId() { return mapObjectId; }
+	void Get_gridObjects(
+		vector<LPGAMEOBJECT> &coObjectsFull,
+		vector<LPGAMEOBJECT> &coObjectGround,
+		vector<LPGAMEOBJECT> &coObjectFlag,
+		vector<LPGAMEOBJECT> &coObjectsWithSimon,
+		vector<LPGAMEOBJECT> &coObjectsWithSkill
+	);
+
 	~CMap() { ; }
 };

@@ -51,9 +51,7 @@ void LoadRoundGame(int round)
 	map_manager->DrawMap();
 
 	map = CMap::GetInstance();
-	coObjectsFull = map->Get_coObjectsFull();
-	coObjectGround = map->Get_coObjectGround();
-	coObjectFlag = map->Get_coObjectFlag();
+	map->Get_gridObjects(coObjectsFull, coObjectGround, coObjectFlag, coObjectsWithSimon, coObjectsWithSkill);
 }
 
 void toggleRenderBBox()
@@ -222,18 +220,15 @@ void LoadResources()
 	textures->LoadAllTextures();
 
 	simon = CSimon::GetInstance();
-	LoadRoundGame(2);
+	LoadRoundGame(1);
 }
 
 
 void Update(DWORD dt)
 {
-	map = CMap::GetInstance();
 
-	// Cần Update liên tục vì có thể chuyển state
-	coObjectsFull = map->Get_coObjectsFull();
-	coObjectsWithSimon = map->Get_coObjectsWithSimon();
-	coObjectsWithSkill = map->Get_coObjectsWithSkill();
+	map = CMap::GetInstance();
+	map->Get_gridObjects(coObjectsFull, coObjectGround, coObjectFlag, coObjectsWithSimon, coObjectsWithSkill);
 	listEffect = map->Get_listEffect();
 
 
