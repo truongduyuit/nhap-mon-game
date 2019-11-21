@@ -253,6 +253,37 @@ void CEnemy::fish_update()
 	{
 		vy = -FISH_INATIVE;
 
+		if (y < 161 && vy < 0 && !splash)
+		{
+			splash = true;
+
+			CMap* map = CMap::GetInstance();
+			CEffect * effect = new CEffect();
+			effect->SetPosition(x, y);
+			effect->StartShowEffect(-0.0295f, -0.025f);
+			effect->SetState(STATE_SPLASH);
+			map->PushEffect(effect);
+
+
+			effect = new CEffect();
+			effect->SetPosition(x, y);
+			effect->StartShowEffect(0.0295f, -0.025f);
+			effect->SetState(STATE_SPLASH);
+			map->PushEffect(effect);
+
+			effect = new CEffect();
+			effect->SetPosition(x, y);
+			effect->StartShowEffect(-0.0095f, -0.055f);
+			effect->SetState(STATE_SPLASH);
+			map->PushEffect(effect);
+
+			effect = new CEffect();
+			effect->SetPosition(x, y);
+			effect->StartShowEffect(0.0095f, -0.055f);
+			effect->SetState(STATE_SPLASH);
+			map->PushEffect(effect);
+		}
+
 		if (y < x_min)
 		{
 			isActive = true;	
@@ -264,6 +295,38 @@ void CEnemy::fish_update()
 	}
 	else
 	{
+		if (y > 141 && dy > 0 && splash)
+		{
+			splash = false;
+
+			CMap* map = CMap::GetInstance();
+			CEffect * effect = new CEffect();
+			effect->SetPosition(x, y);
+			effect->StartShowEffect(-0.0295f, -0.025f);
+			effect->SetState(STATE_SPLASH);
+			map->PushEffect(effect);
+
+
+			effect = new CEffect();
+			effect->SetPosition(x, y);
+			effect->StartShowEffect(0.0295f, -0.025f);
+			effect->SetState(STATE_SPLASH);
+			map->PushEffect(effect);
+
+			effect = new CEffect();
+			effect->SetPosition(x, y);
+			effect->StartShowEffect(-0.0095f, -0.055f);
+			effect->SetState(STATE_SPLASH);
+			map->PushEffect(effect);
+
+			effect = new CEffect();
+			effect->SetPosition(x, y);
+			effect->StartShowEffect(0.0095f, -0.055f);
+			effect->SetState(STATE_SPLASH);
+			map->PushEffect(effect);
+
+			isHidden = true;
+		}
 		if (isFishMove)
 		{
 			nxx > 0 ? vx = FISH_WALKING_SPEED : vx = -FISH_WALKING_SPEED;

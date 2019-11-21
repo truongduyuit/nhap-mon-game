@@ -64,6 +64,7 @@ class CEnemy : public CGameObject
 	bool isActive;
 	bool isFishMove;
 	bool isShoot;
+	bool splash;
 	DWORD action_time;
 public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
