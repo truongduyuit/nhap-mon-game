@@ -65,25 +65,63 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vector<LPGAMEOBJECT> coObjectFlag;
 	coObjectFlag = map->Get_coObjectFlag();
 
+	if (create_enemy == true)
+	{
+		if (GetTickCount() - create_time > CREATE_ENEMY_TIME) create_enemy = false;
+	}
+
 	if (onStair)
 	{
 		for (unsigned int i = 0; i < coObjectFlag.size(); i++)
 		{
 			if (isOverlapping(coObjectFlag[i]))
 			{
-				if (coObjectFlag[i]->state != nx && onStair)
+				if (coObjectFlag[i]->state < 10)
 				{
-					onStair = false;
-					onTimeStair = false;
-					if (nx > 0)
+					if (coObjectFlag[i]->state != nx && onStair)
 					{
-						coObjectFlag[i]->nextState == 2 ? x = coObjectFlag[i]->x + 10.0f : x = coObjectFlag[i]->x - 15.0f;
+						onStair = false;
+						onTimeStair = false;
+						if (nx > 0)
+						{
+							coObjectFlag[i]->nextState == 2 ? x = coObjectFlag[i]->x + 10.0f : x = coObjectFlag[i]->x - 15.0f;
+						}
+						else
+						{
+							coObjectFlag[i]->nextState == -2 ? x = coObjectFlag[i]->x : x = coObjectFlag[i]->x;
+						}
+						y = coObjectFlag[i]->y - 27.0f;
 					}
-					else
+				}
+			}
+		}
+	}
+	else 
+	{
+		for (unsigned int i = 0; i < coObjectFlag.size(); i++)
+		{
+			if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state >= 10)
+			{
+				if (!create_enemy)
+				{
+					create_enemy = true;
+					create_time = GetTickCount();
+
+					srand(time(NULL));
+					int n = rand() % 1 + 2;
+					
+					for (int j = 0; j < n; j++)
 					{
-						coObjectFlag[i]->nextState == -2 ? x = coObjectFlag[i]->x + 10.0f : x = coObjectFlag[i]->x;
+						CEnemy* enemy = new CEnemy();
+						enemy->SetState(coObjectFlag[i]->state - 10);
+
+						coObjectFlag[i]->nextState == 1
+							? enemy->SetPosition(x + SCREEN_WIDTH / 2 - j * 40, coObjectFlag[i]->state == 10 ? 148 : y - 2)
+							: enemy->SetPosition(x - SCREEN_WIDTH / 2 + j * 40, coObjectFlag[i]->state == 10 ? 148 : y - 2);
+
+						CMap* map = CMap::GetInstance();
+						map->PushObject(enemy);
 					}
-					y = coObjectFlag[i]->y - 27.0f;
 				}
 			}
 		}
@@ -255,8 +293,9 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					this->skill[0] += 5;
 					canStop = true;
 				}
-				coObjects->at(i)->SetState(SOBJECT_HIDDEN);
-				
+
+				if (coObjects->at(i)->state != STATE_WALL_1 && coObjects->at(i)->state != STATE_BLACK)
+					coObjects->at(i)->SetState(SOBJECT_HIDDEN);
 			}
 		}
 
@@ -365,7 +404,13 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					map->Cross_Enemy();
 				}
-				e->obj->SetState(SOBJECT_HIDDEN);
+				else 
+				{
+					x += dx;
+				}
+				 
+				if (e->obj->state != STATE_WALL_1 && e->obj->state != STATE_BLACK)
+					e->obj->SetState(SOBJECT_HIDDEN);
 			}
 
 			if (untouchable == 0 && !isInJure)
@@ -612,7 +657,7 @@ void CSimon::resetAttack()
 {
 
 	vector<int> a = { SIMON_ANI_ATTACK_RIGHT, SIMON_ANI_ATTACK_LEFT };
-	for (int i = 0; i < a.size(); i++)
+	for (unsigned int i = 0; i < a.size(); i++)
 	{
 		int ani = a[i];
 		animations[ani]->ResetFrame();

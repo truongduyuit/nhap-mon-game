@@ -40,10 +40,12 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				if (isOverlapping(coObjects->at(i)))
 				{
-					if (coObjects->at(i)->GetState() == BIG_CANDLE || coObjects->at(i)->GetState() == SMALL_CANDLE)
+					/*if (coObjects->at(i)->GetState() == BIG_CANDLE || coObjects->at(i)->GetState() == SMALL_CANDLE || coObjects->at(i)->GetState() == STATE_WALL_1)
 					{
 						coObjects->at(i)->BeDestroy();
-					}
+					}*/
+
+					coObjects->at(i)->BeDestroy();
 				}
 			}
 

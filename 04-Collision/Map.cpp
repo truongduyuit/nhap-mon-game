@@ -124,7 +124,11 @@ void CMap::LoadContent(string filePath)
 				flag->SetNextState(nextState);
 
 				mapObjects[mapObjectId] = flag;
-				AddGridObject(GetGridNumber(x), mapObjectId);
+				vector<int> goundGrid = GetGridNumber(float(x), size_x);
+				for (int i = 0; i < goundGrid.size(); i++)
+				{
+					AddGridObject(goundGrid[i], mapObjectId);
+				}
 			}
 			else if (id_object == 4)
 			{
@@ -195,11 +199,11 @@ vector<LPGAMEOBJECT> CMap::Get_coObjectFlag()
 {
 	vector<LPGAMEOBJECT> coObjectFlag;
 	vector<int> currentGrid = GetGridNumber(CGame::GetInstance()->getCamPos_x(), SCREEN_WIDTH - 1);
-	for (int i = 0; i < currentGrid.size(); i++)
+	for (unsigned int i = 0; i < currentGrid.size(); i++)
 	{
 		vector<int> idObjects = gridObject[currentGrid[i]].Get_Arr();
 
-		for (int j = 0; j < idObjects.size(); j++)
+		for (unsigned int j = 0; j < idObjects.size(); j++)
 		{
 			if (dynamic_cast<CFlag *>(mapObjects[idObjects[j]]) && !mapObjects[idObjects[j]]->get_isHidden())
 			{
@@ -232,11 +236,11 @@ void CMap::PushEffect(CEffect* effect)
 	listEffect.push_back(effect);
 }
 
-void CMap::PushObject(LPGAMEOBJECT shoot)
+void CMap::PushObject(LPGAMEOBJECT object)
 {
-	int numGrid = GetGridNumber(shoot->x);
+	int numGrid = GetGridNumber(object->x);
 	mapObjectId++;
-	mapObjects[mapObjectId] = shoot;
+	mapObjects[mapObjectId] = object;
 	gridObject.at(numGrid).push(mapObjectId);
 }
 
@@ -351,15 +355,12 @@ void CMap::Get_gridObjects(
 
 	for (int i = 0; i < currentGrid.size(); i++)
 	{
-		if (gridObject.size() < currentGrid[i] - 1)
+		while (gridObject.size() -1 < currentGrid[currentGrid.size() -1])
 		{
 			int_c temp;
 			gridObject.push_back(temp);
 		}
 		idObjects = gridObject[currentGrid[i]].Get_Arr();
-
-		vector<int> b = gridObject[currentGrid[i]].Get_Arr();
-		int a = currentGrid[i];
 
 		for (int j = 0; j < idObjects.size(); j++)
 		{
@@ -374,10 +375,12 @@ void CMap::Get_gridObjects(
 					{
 						coObjectsWithSkill.push_back(mapObjects[idObjects[j]]);
 					}
-					else
+					else if (mapObjects[idObjects[j]]->GetState() != STATE_BLACK)
 					{
 						coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);
 					}
+
+					if (mapObjects[idObjects[j]]->GetState() == STATE_WALL_1 || mapObjects[idObjects[j]]->GetState() == STATE_WALL_2 || mapObjects[idObjects[j]]->GetState() == STATE_WALL_3) coObjectsWithSkill.push_back(mapObjects[idObjects[j]]);
 				}
 				else if (dynamic_cast<CGround *>(mapObjects[idObjects[j]]))
 				{

@@ -17,6 +17,8 @@ CEnemy::CEnemy()
 void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 
+	if (x < CSimon::GetInstance()->x - SCREEN_WIDTH / 2 - SIMON_BBOX_WIDTH || x > CSimon::GetInstance()->x + SCREEN_WIDTH / 2 + SIMON_BBOX_WIDTH) isHidden = true;
+
 	if (isHidden) return;
 
 	CGameObject::Update(dt);
@@ -182,14 +184,14 @@ void CEnemy::ghost_update()
 {
 	nxx > 0 ? vx = ENEMY_WALKING_SPEED : vx = -ENEMY_WALKING_SPEED;
 
-	if (x <= x_min)
-	{
-		nxx = ACTION_RIGHT;
-	}
-	else if (x >= x_max)
-	{
-		nxx = ACTION_LEFT;
-	}
+	//if (x <= x_min)
+	//{
+	//	nxx = ACTION_RIGHT;
+	//}
+	//else if (x >= x_max)
+	//{
+	//	nxx = ACTION_LEFT;
+	//}
 }
 
 void CEnemy::wolf_update()

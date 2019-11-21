@@ -13,9 +13,20 @@ void CEffect::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	CGameObject::Update(dt);
 
+	if (state != STATE_DESTROY)
+	{
+		vy += EFFECT_GRAVITY * dt;
+	}
+
 	if (this->isShow)
 	{
-		if (GetTickCount() - start_show > DESTROY_EFFECT_TIME)
+		x += dx;
+		y += dy;
+
+		DWORD timeE;
+		if (state == STATE_DESTROY) timeE = DESTROY_EFFECT_TIME;
+		else timeE = BREAKING_WALL_TIME;
+		if (GetTickCount() - start_show > timeE)
 		{
 			isHidden = true;
 			isShow = false;
@@ -29,6 +40,8 @@ void CEffect::Render()
 	int ani = 0;
 	
 	if (state == STATE_DESTROY) ani = STATE_DESTROY;
+	else if (state == STATE_BREAKING_WALL) ani = STATE_BREAKING_WALL;
+	else if (state == STATE_SPLASH) ani = STATE_SPLASH;
 
 	if (!isHidden)
 	{
@@ -56,20 +69,37 @@ void CEffect::StartShowEffect()
 	}
 }
 
+void CEffect::StartShowEffect(float vxx, float vyy)
+{
+	if (isHidden)
+	{
+		this->isHidden = false;
+		vx = vxx;
+		vy = vyy;
+
+		this->isShow = true;
+		start_show = GetTickCount();
+	}
+}
+
 void CEffect::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	left = x;
 	top = y;
 
-
-	right = left + DESTROY_EFFECT_WIDTH;
-	bottom = top + DESTROY_EFFECT_HEIGHT;
-
+	if (state == STATE_DESTROY)
+	{
+		right = left + DESTROY_EFFECT_WIDTH;
+		bottom = top + DESTROY_EFFECT_HEIGHT;
+	}
+	else if (state == STATE_BREAKING_WALL)
+	{
+		right = left + BREAKING_WALL_WIDTH;
+		bottom = top + BREAKING_WALL_HEIGHT;
+	}
+	else if (state == STATE_SPLASH)
+	{
+		right = left + SPLASH_WIDTH;
+		bottom = top + SPLASH_HEIGHT;
+	}
 }
-
-//CEffect* CEffect::__instance = NULL;
-//CEffect * CEffect::GetInstance()
-//{
-//	if (__instance == NULL) __instance = new CEffect();
-//	return __instance;
-//}

@@ -50,8 +50,8 @@ void LoadRoundGame(int round)
 	map_manager->LoadMapResources();
 	map_manager->DrawMap();
 
-	map = CMap::GetInstance();
-	map->Get_gridObjects(coObjectsFull, coObjectGround, coObjectFlag, coObjectsWithSimon, coObjectsWithSkill);
+	//map = CMap::GetInstance();
+	//map->Get_gridObjects(coObjectsFull, coObjectGround, coObjectFlag, coObjectsWithSimon, coObjectsWithSkill);
 }
 
 void toggleRenderBBox()
@@ -220,7 +220,7 @@ void LoadResources()
 	textures->LoadAllTextures();
 
 	simon = CSimon::GetInstance();
-	LoadRoundGame(1);
+	LoadRoundGame(2);
 }
 
 

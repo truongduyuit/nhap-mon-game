@@ -20,7 +20,7 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	{
 		vy += SMALL_HEART_GRAVITY * dt;
 	}
-	else if (state != SMALL_CANDLE && state != HEART_SMALL_ITEM)
+	else if (state != SMALL_CANDLE && state != HEART_SMALL_ITEM && state != STATE_WALL_1 && state != STATE_BLACK && state != STATE_WALL_2 && state != STATE_WALL_3)
 	{
 		vy += SOBJECT_GRAVITY * dt;
 	}
@@ -40,13 +40,17 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	{
 		if (GetTickCount() - destroy_start >= SOBJECT_DESTROY_TIME)
 		{
-			SetState(nextState);
-			nextState = SOBJECT_HIDDEN;
+			if (nextState == SOBJECT_HIDDEN) isHidden = true;
+			else
+			{
+				SetState(nextState);
+				nextState = SOBJECT_HIDDEN;
 
-			isDestroy = false;
-			destroy_start = 0;
+				isDestroy = false;
+				destroy_start = 0;
 
-			ItemStart();
+				ItemStart();
+			}
 		}
 	}
 
@@ -135,6 +139,11 @@ void CSObject::Render()
 	else if (state == MONEY_ITEM_100) ani = MONEY_ITEM_100;
 	else if (state == STOPWATCH_ITEM) ani = STOPWATCH_ITEM;
 	else if (state == CROSS_ITEM) ani = CROSS_ITEM;
+	else if (state == STATE_WALL_1) ani = STATE_WALL_1;
+	else if (state == STATE_BLACK) ani = STATE_BLACK;
+	else if (state == POT_ROAST_ITEM) ani = POT_ROAST_ITEM;
+	else if (state == STATE_WALL_2) ani = STATE_WALL_2;
+	else if (state == STATE_WALL_3) ani = STATE_WALL_3;
 
 	if (state != SOBJECT_HIDDEN && !isHidden)
 	{
@@ -157,15 +166,43 @@ void CSObject::ItemStart()
 
 void CSObject::BeDestroy()
 {
-	/*CEffect * effect = CEffect::GetInstance();*/
-	CEffect * effect = new CEffect();
-	effect->SetPosition(x, y);
-	effect->StartShowEffect();
-	effect->SetState(STATE_DESTROY);
-
 	CMap* map = CMap::GetInstance();
-	map->PushEffect(effect);
+	if (state == STATE_WALL_1 || state == STATE_WALL_2 || state == STATE_WALL_3)
+	{
+		CEffect * effect = new CEffect();
+		effect->SetPosition(x, y);
+		effect->StartShowEffect(-0.0295f, -0.025f);
+		effect->SetState(STATE_BREAKING_WALL);
+		map->PushEffect(effect);
 
+
+		effect = new CEffect();
+		effect->SetPosition(x, y);
+		effect->StartShowEffect(0.0295f, -0.025f);
+		effect->SetState(STATE_BREAKING_WALL);
+		map->PushEffect(effect);
+
+		effect = new CEffect();
+		effect->SetPosition(x, y);
+		effect->StartShowEffect(-0.0095f, -0.055f);
+		effect->SetState(STATE_BREAKING_WALL);
+		map->PushEffect(effect);
+
+		effect = new CEffect();
+		effect->SetPosition(x, y);
+		effect->StartShowEffect(0.0095f, -0.055f);
+		effect->SetState(STATE_BREAKING_WALL);
+		map->PushEffect(effect);
+	}
+	else
+	{
+		CEffect * effect = new CEffect();
+		effect->SetPosition(x, y);
+		effect->StartShowEffect();
+		
+		map->PushEffect(effect);
+	}
+	
 	if (!isDestroy)
 	{
 		isDestroy = true;
@@ -234,5 +271,15 @@ void CSObject::GetBoundingBox(float &left, float &top, float &right, float &bott
 	{
 		right = x + CROSS_WIDTH;
 		bottom = y + CROSS_HEIGHT;
+	}
+	else if (state == STATE_WALL_1 || state == STATE_BLACK)
+	{
+		right = x + WALL_1_WIDTH;
+		bottom = y + WALL_1_HEIGHT;
+	}
+	else if (state == POT_ROAST_ITEM || STATE_WALL_2 || STATE_WALL_3)
+	{
+		right = x + POT_ROAST_WIDTH;
+		bottom = y + POT_ROAST_HEIGHT;
 	}
 }
