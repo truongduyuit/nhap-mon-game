@@ -129,15 +129,16 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (isBeMoving)
 	{
+
 		if (x - be_x > 0.5f)
 		{
-			x -= 0.05f;
+			x -= 0.35f;
 			nx = -1;
 			SetState(SIMON_STATE_WALKING_LEFT);
 		}
 		else if (x - be_x < -0.5f)
 		{
-			x += 0.05f;
+			x += 0.35f;
 			nx = 1;
 			SetState(SIMON_STATE_WALKING_RIGHT);
 		}
@@ -325,6 +326,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 
+	canSit = false;
+
 	if (coEvents.size() == 0)
 	{
 		
@@ -363,6 +366,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					if (isJump) isSit = true;
 					basicCollision(min_tx, min_ty, nx, ny);
 					if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
+
+					canSit = true;
 				}
 				else
 				{
@@ -521,7 +526,10 @@ void CSimon::Render()
 
 void CSimon::SetState(int state)
 {
+
 	CGameObject::SetState(state);
+
+	if (isBeMoving) return;
 
 	switch (state)
 	{

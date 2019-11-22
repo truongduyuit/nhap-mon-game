@@ -66,7 +66,7 @@ void onFlag(int st)
 {
 	for (unsigned int i = 0; i < coObjectFlag.size(); i++)
 	{
-		if (simon->isOverlapping(coObjectFlag[i]))
+		if (simon->isOverlapping(coObjectFlag[i]) && !simon->get_isBeMoving())
 		{
 			if (!simon->get_onstair() && coObjectFlag[i]->nextState == st)
 				simon->beMoving(coObjectFlag[i]->state, coObjectFlag[i]->x, coObjectFlag[i]->nextState);
@@ -79,6 +79,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	if (simon->get_isPick()) return;
 	if (simon->get_isInjure()) return;
+	if (simon->get_isBeMoving()) return;
 
 	switch (KeyCode)
 	{
@@ -108,7 +109,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		}
 		else
 		{
-			if (!simon->get_isAttack() && !simon->get_isPick())
+			if (!simon->get_isAttack() && !simon->get_isPick() && !simon->get_canSit())
 			{
 				simon->SetState(SIMON_STATE_SIT);
 			}

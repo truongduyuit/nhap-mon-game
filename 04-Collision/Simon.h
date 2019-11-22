@@ -87,6 +87,7 @@ class CSimon : public CGameObject
 	bool isthrow;
 	bool canStop;
 	bool isSit;
+	bool canSit;
 	bool isInJure;
 	bool create_enemy;
 
@@ -125,6 +126,7 @@ public:
 	int get_be_updown() { return be_updown; }
 	bool get_candownstair();
 	bool get_isBeMoving() { return isBeMoving; }
+	bool get_canSit() { return canSit; }
 
 	void startAttack();
 	void startJump();
