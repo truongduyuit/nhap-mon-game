@@ -107,8 +107,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					create_enemy = true;
 					create_time = GetTickCount();
 
-					srand(time(NULL));
-					int n = rand() % 1 + 2;
+					srand(time(0));
+					int n = rand() % 1 + 3;
 					
 					for (int j = 0; j < n; j++)
 					{
@@ -176,7 +176,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		isPick = false;
 		action_time = 0;
 	}
-	else
+	else if (isPick)
 	{
 		dx = 0;
 	}
@@ -199,7 +199,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	else if (isAttack)
 	{
 		weapon->SetPosTemp(x, y);
-		dx = 0;
+		if (!isJump) dx = 0;
 	}
 
 	// throw
@@ -294,8 +294,10 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					canStop = true;
 				}
 
-				if (coObjects->at(i)->state != STATE_WALL_1 && coObjects->at(i)->state != STATE_BLACK)
-					coObjects->at(i)->SetState(SOBJECT_HIDDEN);
+				if (coObjects->at(i)->state != STATE_WALL_1 && coObjects->at(i)->state != STATE_BLACK && coObjects->at(i)->state != STATE_WALL_2 && coObjects->at(i)->state != STATE_WALL_3)
+				{
+					coObjects->at(i)->isHidden = true;
+				}
 			}
 		}
 
@@ -325,6 +327,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (coEvents.size() == 0)
 	{
+		
 		x += dx;
 		y += dy;
 	}
@@ -404,13 +407,16 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					map->Cross_Enemy();
 				}
-				else 
+				else if (e->obj->state != STATE_WALL_2 && e->obj->state != STATE_WALL_3)
 				{
 					x += dx;
 				}
 				 
-				if (e->obj->state != STATE_WALL_1 && e->obj->state != STATE_BLACK)
+				if (e->obj->state != STATE_WALL_1 && e->obj->state != STATE_BLACK && e->obj->state != STATE_WALL_2 && e->obj->state != STATE_WALL_3)
+				{
 					e->obj->SetState(SOBJECT_HIDDEN);
+					e->obj->isHidden = true;
+				}
 			}
 
 			if (untouchable == 0 && !isInJure)
@@ -578,10 +584,12 @@ void CSimon::startAttack()
 
 		CWeapon* weapon = CWeapon::GetInstance();
 		nx > 0 ? weapon->SetState(STATE_ATTACK_RIGHT) : weapon->SetState(STATE_ATTACK_LEFT);
-		dx = 0;
+
 		weapon->ResetAttack();
 		weapon->SetPosTemp(x, y);
 		weapon->set_isHidden(false);
+
+		onStair ? weapon->SetNextState(1) : weapon->SetNextState(-1);
 	}
 }
 
@@ -656,7 +664,7 @@ void CSimon::startInjure(int nxx)
 void CSimon::resetAttack()
 {
 
-	vector<int> a = { SIMON_ANI_ATTACK_RIGHT, SIMON_ANI_ATTACK_LEFT };
+	vector<int> a = { SIMON_ANI_ATTACK_RIGHT, SIMON_ANI_ATTACK_LEFT, SIMON_ANI_SIT_ATTACK_LEFT, SIMON_ANI_SIT_ATTACK_RIGHT, SIMON_ANI_RIGHT_UP_ATTACK, SIMON_ANI_RIGHT_DOWN_ATTACK, SIMON_ANI_LEFT_DOWN_ATTACK, SIMON_ANI_LEFT_UP_ATTACK };
 	for (unsigned int i = 0; i < a.size(); i++)
 	{
 		int ani = a[i];

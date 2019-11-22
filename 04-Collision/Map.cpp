@@ -369,13 +369,13 @@ void CMap::Get_gridObjects(
 				coObjectsFull.push_back(mapObjects[idObjects[j]]);
 				checkUnique[idObjects[j]] = idObjects[j];
 
-				if (dynamic_cast<CSObject *>(mapObjects[idObjects[j]]))
+				if (dynamic_cast<CSObject *>(mapObjects[idObjects[j]]) && !mapObjects[idObjects[j]]->get_isHidden())
 				{
 					if (mapObjects[idObjects[j]]->GetState() == SMALL_CANDLE || mapObjects[idObjects[j]]->GetState() == BIG_CANDLE)
 					{
 						coObjectsWithSkill.push_back(mapObjects[idObjects[j]]);
 					}
-					else if (mapObjects[idObjects[j]]->GetState() != STATE_BLACK)
+					else if (mapObjects[idObjects[j]]->GetState() != STATE_BLACK || mapObjects[idObjects[j]]->GetState() == STATE_WALL_2 || mapObjects[idObjects[j]]->GetState() == STATE_WALL_3)
 					{
 						coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);
 					}

@@ -321,7 +321,7 @@ void CEnemy::fish_update()
 
 			effect = new CEffect();
 			effect->SetPosition(x, y);
-			effect->StartShowEffect(0.0095f, -0.055f);
+			effect->StartShowEffect(0.0295f, -0.055f);
 			effect->SetState(STATE_SPLASH);
 			map->PushEffect(effect);
 

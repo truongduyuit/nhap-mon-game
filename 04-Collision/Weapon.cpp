@@ -155,7 +155,7 @@ void CWeapon::GetBoundingBox(float &left, float &top, float &right, float &botto
 			right = left + WEAPON_BBOX_FRAME_3_WIDTH;
 			bottom = top + WEAPON_BBOX_FRAME_3_HEIGHT;
 		}
-		else if (frame == 0)
+		else
 		{
 			right = left;
 			bottom = top;
@@ -179,13 +179,12 @@ void CWeapon::GetBoundingBox(float &left, float &top, float &right, float &botto
 			right = left + WEAPON_BBOX_FRAME_3_3_WIDTH;
 			bottom = top + WEAPON_BBOX_FRAME_3_3_HEIGHT;
 		}
-		else if (frame == 0)
+		else
 		{
 			right = left;
 			bottom = top;
 		}
 	}
-
 }
 
 CWeapon* CWeapon::__instance = NULL;
@@ -203,6 +202,12 @@ void CWeapon::UpdatePositionWithSimon()
 	x = xx;
 	y = xy;
 
+	if (animations[ani]->GetCurrentFrame() == -1)
+	{
+		x = -100;
+		y = -70;
+	}
+
 	if (state == STATE_ATTACK_RIGHT)
 	{
 		if (level != 3)
@@ -216,10 +221,10 @@ void CWeapon::UpdatePositionWithSimon()
 			else if (animations[ani]->GetCurrentFrame() == 1)
 			{
 				x -= 9;
-				y += 6;
+				y += 7;
 				frame = 2;
 			}
-			else if (animations[ani]->GetCurrentFrame() >= 2)
+			else if (animations[ani]->GetCurrentFrame() == 2)
 			{
 				x += 15;
 				y += 7;
@@ -236,13 +241,13 @@ void CWeapon::UpdatePositionWithSimon()
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 4 && animations[ani]->GetCurrentFrame() < 7)
 			{
-				x -= 10;
-				y += 6;
+				x -= 15;
+				y += 7;
 				frame = 2;
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 7)
 			{
-				x += 13;
+				x += 15;
 				y += 8.5f;
 				frame = 3;
 			}
@@ -264,17 +269,12 @@ void CWeapon::UpdatePositionWithSimon()
 				y += 8;
 				frame = 2;
 			}
-			else if (animations[ani]->GetCurrentFrame() >= 2)
+			else if (animations[ani]->GetCurrentFrame() == 2)
 			{
 				x -= 20;
 				y += 6;
 				frame = 3;
 			}
-			else
-			 {
-				 x = -100;
-				 y = -100;
-			 }
 		}
 		else
 		{
@@ -293,7 +293,7 @@ void CWeapon::UpdatePositionWithSimon()
 			}
 			else if (animations[ani]->GetCurrentFrame() >= 7)
 			{
-				x -= 36;
+				x -= 38;
 				y += 8;
 				frame = 3;
 			}

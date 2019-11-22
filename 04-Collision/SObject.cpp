@@ -190,9 +190,11 @@ void CSObject::BeDestroy()
 
 		effect = new CEffect();
 		effect->SetPosition(x, y);
-		effect->StartShowEffect(0.0095f, -0.055f);
+		effect->StartShowEffect(0.0295f, -0.055f);
 		effect->SetState(STATE_BREAKING_WALL);
 		map->PushEffect(effect);
+
+		if (state == STATE_WALL_2) SetPosition(-100, -100);
 	}
 	else
 	{

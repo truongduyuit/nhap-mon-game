@@ -9,8 +9,8 @@ CSkill::CSkill()
 {
 	CLoadResourcesHelper::LoadSprites("data\\skills\\skill_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\skills\\skill_anis.txt", this);
-	state = STATE_HOLY_WATER;
-	nextState = STATE_HOLY_WATER;
+	state = STATE_KNIFE;
+	nextState = STATE_KNIFE;
 }
 
 void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
