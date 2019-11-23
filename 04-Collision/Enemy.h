@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
-#define ENEMY_WALKING_SPEED		0.052f
+#define ENEMY_WALKING_SPEED		0.062f
 #define WOLF_FLY_SPEED			0.09f
 #define WOLF_RUN_SPEED			0.11f
 #define BAT_FLY_SPEED			0.025f
@@ -9,7 +9,7 @@
 #define ENEMY_GRAVITY			0.0001f
 #define FISH_INATIVE			0.09f
 #define FISH_WALKING_SPEED		0.015f
-#define SHOOT_SPEED				0.05f
+#define SHOOT_SPEED				0.075f
 
 #define ENEMY_HIDDEN			-1
 #define STATE_GHOST				0
@@ -78,6 +78,7 @@ public:
 	void fish_update();
 	void bullet_update();
 	bool onFlag();
+	void setNxx(int xx) { nxx = xx; }
 
 	void SetMaxMin(float min, float max) { x_min = min; x_max = max; }
 	CEnemy();

@@ -65,9 +65,21 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vector<LPGAMEOBJECT> coObjectFlag;
 	coObjectFlag = map->Get_coObjectFlag();
 
-	if (create_enemy == true)
+	if (create_enemy_right)
 	{
-		if (GetTickCount() - create_time > CREATE_ENEMY_TIME) create_enemy = false;
+		if (GetTickCount() - create_time_right > CREATE_ENEMY_TIME)
+		{
+			create_enemy_right = false;
+			create_enemy = !create_enemy;
+		}
+	}
+	if (create_enemy_left)
+	{
+		if (GetTickCount() - create_time_left > CREATE_ENEMY_TIME)
+		{
+			create_enemy_left = false;
+			create_enemy = !create_enemy;
+		}
 	}
 
 	if (onStair)
@@ -102,26 +114,87 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		{
 			if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state >= 10)
 			{
-				if (!create_enemy)
+				if (coObjectFlag[i]->state == 10)
 				{
-					create_enemy = true;
-					create_time = GetTickCount();
-
-					srand(time(0));
-					int n = rand() % 1 + 3;
-					
-					for (int j = 0; j < n; j++)
+					if (coObjectFlag[i]->nextState == 1)
 					{
-						CEnemy* enemy = new CEnemy();
-						enemy->SetState(coObjectFlag[i]->state - 10);
+						if (!create_enemy_right)
+						{
+							create_enemy_right = true;
+							create_time_right = GetTickCount();
 
-						coObjectFlag[i]->nextState == 1
-							? enemy->SetPosition(x + SCREEN_WIDTH / 2 - j * 40, coObjectFlag[i]->state == 10 ? 148 : y - 2)
-							: enemy->SetPosition(x - SCREEN_WIDTH / 2 + j * 40, coObjectFlag[i]->state == 10 ? 148 : y - 2);
+							srand(time(NULL));
+							int n = rand() % 2 + 1;
+
+							for (int j = 0; j <= n; j++)
+							{
+								CEnemy* enemy = new CEnemy();
+								enemy->SetPosition(x + SCREEN_WIDTH / 2 - j * 40, coObjectFlag[i]->state == 10 ? 148 : y - 2);
+
+								enemy->SetState(coObjectFlag[i]->state - 10);
+								enemy->setNxx(-coObjectFlag[i]->nextState);
+
+								CMap* map = CMap::GetInstance();
+								map->PushObject(enemy);
+							}
+						}
+					}
+					else
+					{
+						if (!create_enemy_left)
+						{
+							create_enemy_left = true;
+							create_time_left = GetTickCount();
+
+							srand(time(NULL));
+							int n = rand() % 2 + 1;
+							for (int j = 0; j <= n; j++)
+							{
+								CEnemy* enemy = new CEnemy();
+								enemy->SetPosition(x - SCREEN_WIDTH / 2 + 40, coObjectFlag[i]->state == 10 ? 148 : y - 2);
+
+								enemy->SetState(coObjectFlag[i]->state - 10);
+								enemy->setNxx(-coObjectFlag[i]->nextState);
+
+								CMap* map = CMap::GetInstance();
+								map->PushObject(enemy);
+							}
+						}
+					}
+				}
+				else if (coObjectFlag[i]->state == 13 && CMap::GetInstance()->Get_numFishMonster() < 2)
+				{
+					if (coObjectFlag[i]->nextState == -1 && !create_enemy_left && create_enemy)
+					{
+						create_enemy_left = true;
+						create_time_left = GetTickCount();
+
+						CEnemy* enemy = new CEnemy();
+						enemy->SetPosition(x - 60, 148);
+						enemy->SetMaxMin(80, x + 120);
+
+						enemy->SetState(coObjectFlag[i]->state - 10);
+						enemy->setNxx(coObjectFlag[i]->nextState);
 
 						CMap* map = CMap::GetInstance();
 						map->PushObject(enemy);
 					}
+					else if (coObjectFlag[i]->nextState == 1 && !create_enemy_right && !create_enemy)
+					{
+						create_enemy_right = true;
+						create_time_right = GetTickCount();
+
+						CEnemy* enemy = new CEnemy();
+						enemy->SetPosition(x + 60, 148);
+						enemy->SetMaxMin(80, x + 60);
+
+						enemy->SetState(coObjectFlag[i]->state - 10);
+						enemy->setNxx(coObjectFlag[i]->nextState);
+
+						CMap* map = CMap::GetInstance();
+						map->PushObject(enemy);
+					}
+					
 				}
 			}
 		}
@@ -186,7 +259,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	{
 		weapon->set_isHidden(true);
 	}
-
+	if (isSit) { dx = 0; }
 	// attack
 	if (GetTickCount() - action_time > SIMON_ATTACK_TIME)
 	{
@@ -240,12 +313,17 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	{
 		weapon->set_isHidden(true);
 		weapon->ResetAttack();
-		onStair = false;
-		onTimeStair = false;
 
-		vy = -SIMON_INJURE_Y;
-		nx = -be_nx;
-		x += be_nx * SIMON_INJURE_X;
+		if (!onStair && !isBeMoving && vy != 0)
+		{
+			vy = -SIMON_INJURE_Y;
+			nx = be_nx;
+			dx = -be_nx * SIMON_INJURE_X;
+		}
+		else
+		{
+			injure_time = 0;
+		}
 	}
 
 	if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
@@ -294,6 +372,10 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					this->skill[0] += 5;
 					canStop = true;
 				}
+				else if (coObjects->at(i)->state == STATE_WALL_1)
+				{
+					vy = 0;
+				}
 
 				if (coObjects->at(i)->state != STATE_WALL_1 && coObjects->at(i)->state != STATE_BLACK && coObjects->at(i)->state != STATE_WALL_2 && coObjects->at(i)->state != STATE_WALL_3)
 				{
@@ -310,12 +392,12 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					if (coObjects->at(i)->x > x)
 					{
-						startInjure(-1);
+						startInjure(1);
 						weapon->ResetAttack();
 					}
 					else
 					{
-						startInjure(1);
+						startInjure(-1);
 						weapon->ResetAttack();
 					}
 
@@ -325,8 +407,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 	}
-
-	canSit = false;
 
 	if (coEvents.size() == 0)
 	{
@@ -366,8 +446,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					if (isJump) isSit = true;
 					basicCollision(min_tx, min_ty, nx, ny);
 					if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
-
-					canSit = true;
 				}
 				else
 				{
@@ -415,6 +493,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				else if (e->obj->state != STATE_WALL_2 && e->obj->state != STATE_WALL_3)
 				{
 					x += dx;
+					vy = 0;
 				}
 				 
 				if (e->obj->state != STATE_WALL_1 && e->obj->state != STATE_BLACK && e->obj->state != STATE_WALL_2 && e->obj->state != STATE_WALL_3)
@@ -428,9 +507,9 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				if (dynamic_cast<CEnemy *>(e->obj))
 				{
-					if (e->obj->state != STATE_BULLET)
+					if (e->obj->state != STATE_BULLET )
 					{
-						startInjure(nx < 0 ? -1 : 1);
+						startInjure(e->obj->x > 0 ? 1 : -1);
 						weapon->ResetAttack();
 					}
 
@@ -440,8 +519,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 
-		/*if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;	*/
+		if (nx != 0) vx = 0;
+		if (ny != 0) vy = 0;	
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++)
@@ -526,10 +605,9 @@ void CSimon::Render()
 
 void CSimon::SetState(int state)
 {
-
 	CGameObject::SetState(state);
 
-	if (isBeMoving) return;
+	if (isBeMoving || isInJure) return;
 
 	switch (state)
 	{
@@ -664,7 +742,7 @@ void CSimon::startInjure(int nxx)
 
 		injure_time = GetTickCount();
 
-		be_nx = nxx;
+		if (!isBeMoving && !onStair) be_nx = nxx;
 		resetAttack();
 	}
 }

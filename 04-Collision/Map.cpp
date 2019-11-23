@@ -55,7 +55,7 @@ void CMap::LoadContent(string filePath)
 		}
 
 		// objects
-		CWeapon* weapon = CWeapon::GetInstance();
+		/*CWeapon* weapon = CWeapon::GetInstance();*/
 
 		CSimon* simon = CSimon::GetInstance();
 		simon->nx = 1;
@@ -133,37 +133,29 @@ void CMap::LoadContent(string filePath)
 			else if (id_object == 4)
 			{
 				int x, y, state, nextState, nxx;
-				float x_min, x_max;
+				
 
 				in >> x >> y >> state >> nextState >> nxx;
-				in >> x_min >> x_max;
 
 				enemy = new CEnemy();
 				enemy->SetPosition(float(x), float(y));
 				enemy->SetState(state);
 				enemy->SetNextState(nextState);
 				enemy->nx = nxx;
-				enemy->SetMaxMin(x_min, x_max);
+
+				if (state == 3)
+				{
+					float x_min, x_max;
+					in >> x_min >> x_max;
+					enemy->SetMaxMin(x_min, x_max);
+				}
 
 				mapObjects[mapObjectId] = enemy;
 				AddGridObject(GetGridNumber(x), mapObjectId);
 			}
 		}
-	
-		mapObjects[0] = weapon;
-		mapObjects[1] = simon;
-		CSkill* skill = CSkill::GetInstance();
-		mapObjects[2] = skill;
-		for (int i = 0; i < gridObject.size(); i++)
-		{
-			AddGridObject(i, 0); // weapon
-			AddGridObject(i, 1); // simon
-			AddGridObject(i, 2); // skill
-		}
 	}
 	in.close();
-
-	//OutputDebugString(L"a");
 }
 
 void CMap::DrawMap()
@@ -238,7 +230,7 @@ void CMap::PushEffect(CEffect* effect)
 
 void CMap::PushObject(LPGAMEOBJECT object)
 {
-	int numGrid = GetGridNumber(object->x);
+	int numGrid = GetGridNumber(CSimon::GetInstance()->x);
 	mapObjectId++;
 	mapObjects[mapObjectId] = object;
 	gridObject.at(numGrid).push(mapObjectId);
@@ -348,6 +340,7 @@ void CMap::Get_gridObjects(
 	coObjectFlag.clear();
 	coObjectsWithSimon.clear();
 	coObjectsWithSkill.clear();
+	numFishmonster = 0;
 
 	vector<int> currentGrid = GetGridNumber(CGame::GetInstance()->getCamPos_x(), SCREEN_WIDTH - 1);
 	unordered_map<int, int> checkUnique;
@@ -375,7 +368,8 @@ void CMap::Get_gridObjects(
 					{
 						coObjectsWithSkill.push_back(mapObjects[idObjects[j]]);
 					}
-					else if (mapObjects[idObjects[j]]->GetState() != STATE_BLACK || mapObjects[idObjects[j]]->GetState() == STATE_WALL_2 || mapObjects[idObjects[j]]->GetState() == STATE_WALL_3)
+					else
+						// if (mapObjects[mapObjects[idObjects[j]]->GetState() == STATE_WALL_2 || mapObjects[idObjects[j]]->GetState() == STATE_WALL_3)
 					{
 						coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);
 					}
@@ -389,16 +383,31 @@ void CMap::Get_gridObjects(
 					coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);
 				}
 				else if (dynamic_cast<CEnemy *>(mapObjects[idObjects[j]]) && !mapObjects[idObjects[j]]->get_isHidden())
-				{
+				{					
 					coObjectsWithSkill.push_back(mapObjects[idObjects[j]]);
 					coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);
 				}
 				else if (dynamic_cast<CFlag *>(mapObjects[idObjects[j]]))
 				{
 					coObjectFlag.push_back(mapObjects[idObjects[j]]);
-					//coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);
 				}
 			}
 		}
 	}
+
+	CWeapon* weapon = CWeapon::GetInstance();
+	CSimon* simon = CSimon::GetInstance();
+	CSkill* skill = CSkill::GetInstance();
+	coObjectsFull.push_back(weapon);
+	coObjectsFull.push_back(simon);
+	coObjectsFull.push_back(skill);
+
+	for (int i = 0; i < coObjectsWithSimon.size(); i++)
+	{
+		if (dynamic_cast<CEnemy *>(coObjectsWithSimon[i]) && coObjectsWithSimon[i]->state == STATE_FISH_MONSTER)
+		{
+			numFishmonster++;
+		}
+	}
+
 }

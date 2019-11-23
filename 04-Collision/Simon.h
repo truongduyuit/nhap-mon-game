@@ -64,7 +64,7 @@
 #define SIMON_THROW_TIME			1000
 #define SIMON_ENJURE_TIME			800
 #define SIMON_UNTOUCHABLE_TIME		2500
-#define CREATE_ENEMY_TIME			10000
+#define CREATE_ENEMY_TIME			8000
 
 #define SIMON_DOWNSTAIR		-2
 #define SIMON_UPSTAIR		2
@@ -90,6 +90,8 @@ class CSimon : public CGameObject
 	bool canSit;
 	bool isInJure;
 	bool create_enemy;
+	bool create_enemy_right;
+	bool create_enemy_left;
 
 	bool onStair;
 	bool onTimeStair;
@@ -102,7 +104,8 @@ class CSimon : public CGameObject
 
 	DWORD action_time;
 	DWORD injure_time;
-	DWORD create_time;
+	DWORD create_time_right;
+	DWORD create_time_left;
 public:
 
 	CSimon();
