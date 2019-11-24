@@ -105,6 +105,9 @@
     <ClInclude Include="Int1D_Customize.h">
       <Filter>src\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>src\Maps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.cpp">
@@ -163,6 +166,9 @@
     </ClCompile>
     <ClCompile Include="Int1D_Customize.cpp">
       <Filter>src\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>src\Maps</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

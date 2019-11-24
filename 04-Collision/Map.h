@@ -18,6 +18,7 @@ class CMap
 	int tile_size_x;
 	int tile_size_y;
 	int numFishmonster;
+	float pos_max;
 
 	vector<CTileMat*> tiles;
 	vector<LPGAMEOBJECT> listEffect;
@@ -43,6 +44,7 @@ public :
 	int GetMaxY() { return this->max_y; }
 	int GetTileSizeX() { return tile_size_x; }
 	int Get_numFishMonster() { return numFishmonster; }
+	float GetPos_max() { return pos_max; }
 
 	vector<LPGAMEOBJECT> Get_coObjectFlag();
 	vector<LPGAMEOBJECT> Get_listEffect();

@@ -81,6 +81,7 @@ class CSimon : public CGameObject
 	int untouchable;
 	DWORD untouchable_start;
 
+	bool isBlock;
 	bool isJump;
 	bool isAttack;
 	bool isPick;
@@ -116,8 +117,11 @@ public:
 	void SetState(int state);
 	void SetOnStair(bool stair);
 	void SetHP(int h) { hp = h; }
+	void SetIsBlock(bool block) { isBlock = block; }
+	void SetBeMoving(bool moving) { isBeMoving = moving; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 
+	bool get_isBlock() { return isBlock; }
 	bool get_isAttack() { return isAttack; }
 	bool get_isJump() { return isJump; }
 	bool get_isPick() { return isPick; }

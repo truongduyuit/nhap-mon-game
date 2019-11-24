@@ -10,6 +10,7 @@
 #include "Textures.h"
 #include "Map.h"
 #include "MapManager.h"
+#include "Camera.h"
 
 #include "LoadResource.h"
 #include "Contands.h"
@@ -23,6 +24,7 @@
 
 CGame *game;
 CMapManager* map_manager;
+Camera* camera;
 CMap* map;
 CSimon *simon;
 
@@ -77,6 +79,7 @@ void onFlag(int st)
 void CSampleKeyHander::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+	if (simon->get_isBlock()) return;
 	if (simon->get_isPick()) return;
 	if (simon->get_isInjure()) return;
 	if (simon->get_isBeMoving()) return;
@@ -142,6 +145,7 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 void CSampleKeyHander::KeyState(BYTE *states)
 {
 	if (simon->GetState() == SIMON_STATE_DIE) return;
+	if (simon->get_isBlock()) return;
 	if (simon->get_isPick()) return;
 	if (simon->get_isInjure()) return;
 	if (simon->get_isBeMoving()) return;
@@ -269,25 +273,28 @@ void Update(DWORD dt)
 	}
 
 	// Update camera to follow simon
-	float cx, cy;
-	simon->GetPosition(cx, cy);
+	camera = Camera::GetInstance();
+	camera->Update(dt, simon);
 
-	int size = map->GetMaxX() * map->GetTileSizeX();
+	//float cx, cy;
+	//simon->GetPosition(cx, cy);
 
-	if (cx - SCREEN_WIDTH / 2 < 0)
-	{
-		cx = 0;
-	}
-	else if (cx + SCREEN_WIDTH / 2 > size)
-	{
-		cx = size - SCREEN_WIDTH;
-	}
-	else
-	{
-		cx -= SCREEN_WIDTH / 2;
-	}	
+	//int size = map->GetMaxX() * map->GetTileSizeX();
 
-	CGame::GetInstance()->SetCamPos(cx,0);
+	//if (cx - SCREEN_WIDTH / 2 < 0)
+	//{
+	//	cx = 0;
+	//}
+	//else if (cx + SCREEN_WIDTH / 2 > size)
+	//{
+	//	cx = size - SCREEN_WIDTH;
+	//}
+	//else
+	//{
+	//	cx -= SCREEN_WIDTH / 2;
+	//}	
+
+	//CGame::GetInstance()->SetCamPos(cx,0);
 }
 
 void Render()

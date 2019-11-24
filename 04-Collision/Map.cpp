@@ -39,8 +39,7 @@ void CMap::LoadContent(string filePath)
 	{
 
 		// background
-		in >> this->max_x >> this->max_y >> this->tile_size_x >> this->tile_size_y;
-
+		in >> this->max_x >> this->max_y >> this->tile_size_x >> this->tile_size_y >> this->pos_max;
 		for (int i = 0; i < max_y; i++)
 		{
 			for (int j = 0; j < max_x; j++)

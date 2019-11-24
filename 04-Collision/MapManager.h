@@ -11,6 +11,7 @@ public:
 	CMapManager();
 
 	void SetStage(int stage) { this->map_stage = stage; }
+	int GetMapStage() { return map_stage; }
 	void LoadMapResources();
 	void DrawMap();
 

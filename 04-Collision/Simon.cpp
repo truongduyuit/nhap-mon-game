@@ -12,6 +12,7 @@
 #include "Skill.h"
 #include "LoadResource.h"
 #include "Enemy.h"
+#include "Camera.h"
 
 
 
@@ -36,7 +37,19 @@ CSimon::CSimon()
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+
 	CGameObject::Update(dt);
+
+	if (isBlock && !isBeMoving)
+	{
+		SetState(SIMON_STATE_IDLE);
+		return;
+	}
+	else if (isBlock && isBeMoving)
+	{
+		SetState(SIMON_STATE_WALKING_RIGHT);
+		vx = 0.018f;
+	}
 
 	if (!onStair)
 	{
@@ -197,10 +210,27 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					
 				}
 			}
+			
+			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 0)
+			{
+				if (Camera::GetInstance()->GetFollowSimon())
+				{
+					Camera::GetInstance()->SetDoor(coObjectFlag[i]);
+					Camera::GetInstance()->SetAuto();
+					state = SIMON_STATE_IDLE;
+					isBlock = true;
+				}
+			}
+
+			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 9)
+			{
+				isBeMoving = false;
+				Camera::GetInstance()->CloseDoor();
+			}
 		}
 	}
 
-	if (isBeMoving)
+	if (isBeMoving && !isBlock)
 	{
 
 		if (x - be_x > 0.5f)
@@ -605,6 +635,8 @@ void CSimon::Render()
 
 void CSimon::SetState(int state)
 {
+	//if (isBlock) return;
+
 	CGameObject::SetState(state);
 
 	if (isBeMoving || isInJure) return;
@@ -642,6 +674,7 @@ void CSimon::SetState(int state)
 		{
 			isSit ? resetSit() : vx = SIMON_WALKING_SPEED;
 		}
+
 		nx = 1;
 		break;
 	case SIMON_STATE_ATTACK:
