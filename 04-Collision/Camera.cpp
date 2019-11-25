@@ -2,7 +2,8 @@
 
 void Camera::Update(DWORD dt, CGameObject* simon)
 {
-	if (isFollowSimon)
+	
+	if (isFollowSimon && !isAuto)
 	{
 		FollowSimon(simon);
 	}
@@ -15,12 +16,11 @@ void Camera::Update(DWORD dt, CGameObject* simon)
 		if (GetTickCount() - delay_change_time > 1000)
 		{
 			CMapManager* map_manager = CMapManager::GetInstance();
-			map_manager->SetStage(map_manager->GetMapStage() + 1);
-			map_manager->LoadMapResources();
-			map_manager->DrawMap();
+			map_manager->LoadRoundGame(id_nextMap);
 
 			changing = false;
 			isFollowSimon = true;
+
 			CSimon::GetInstance()->SetIsBlock(false);
 		}
 	}
@@ -32,6 +32,7 @@ void Camera::FollowSimon(CGameObject* simon)
 	float cx, cy;
 	simon->GetPosition(cx, cy);
 
+	cam_x = CGame::GetInstance()->getCamPos_x();
 	pos_max = CMap::GetInstance()->GetPos_max();
 
 	if (cx - SCREEN_WIDTH / 2 < 0)
@@ -56,10 +57,11 @@ void Camera::StartAuto()
 	if (isFollowSimon)
 	{
 		isFollowSimon = false;
-		pos_max += SCREEN_WIDTH / 4;
+		pos_door = CMap::GetInstance()->GetPos_door();
+
 	}
 
-	if (cam_x < pos_max - SCREEN_WIDTH/2 - 40)
+	if (cam_x < pos_max - SCREEN_WIDTH/2 - pos_door)
 	{
 		cam_x = CGame::GetInstance()->getCamPos_x() + 1.0f;
 		CGame::GetInstance()->SetCamPos(cam_x, 0);

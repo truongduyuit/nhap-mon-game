@@ -18,14 +18,6 @@
 
 CSimon::CSimon()
 {
-	hp = SIMON_HP_START;
-	state = SIMON_STATE_WALKING_RIGHT;
-	nx = 1;
-
-	isJump = false;
-	isAttack = false;
-	isthrow = false;
-
 	skill.push_back(10);
 
 	untouchable = 0;
@@ -101,22 +93,27 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		{
 			if (isOverlapping(coObjectFlag[i]))
 			{
-				if (coObjectFlag[i]->state < 10)
+				if (coObjectFlag[i]->state < 5)
 				{
-					if (coObjectFlag[i]->state != nx && onStair)
+					if (coObjectFlag[i]->state == -nx && onStair)
 					{
 						onStair = false;
 						onTimeStair = false;
 						if (nx > 0)
 						{
-							coObjectFlag[i]->nextState == 2 ? x = coObjectFlag[i]->x + 10.0f : x = coObjectFlag[i]->x - 15.0f;
+							coObjectFlag[i]->nextState == 2 ? x = coObjectFlag[i]->x + 7.0f : x = coObjectFlag[i]->x - 15.0f;
 						}
 						else
 						{
-							coObjectFlag[i]->nextState == -2 ? x = coObjectFlag[i]->x : x = coObjectFlag[i]->x;
+							coObjectFlag[i]->nextState == -2 ? x = coObjectFlag[i]->x + 13.0f : x = coObjectFlag[i]->x + 2.0f;
 						}
 						y = coObjectFlag[i]->y - 27.0f;
 					}
+				}
+
+				else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 8)
+				{
+					CMapManager::GetInstance()->ChangeMap(coObjectFlag[i]->nextState);
 				}
 			}
 		}
@@ -211,13 +208,13 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				}
 			}
 			
-			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 0)
+			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 0 )
 			{
 				if (Camera::GetInstance()->GetFollowSimon())
 				{
 					Camera::GetInstance()->SetDoor(coObjectFlag[i]);
 					Camera::GetInstance()->SetAuto();
-					state = SIMON_STATE_IDLE;
+					SetState(SIMON_STATE_IDLE);
 					isBlock = true;
 				}
 			}
@@ -226,6 +223,12 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				isBeMoving = false;
 				Camera::GetInstance()->CloseDoor();
+				Camera::GetInstance()->Set_idnextMap(coObjectFlag[i]->nextState);
+			}
+
+			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 8 && !isJump)
+			{
+				CMapManager::GetInstance()->ChangeMap(coObjectFlag[i]->nextState);
 			}
 		}
 	}
@@ -235,13 +238,13 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 		if (x - be_x > 0.5f)
 		{
-			x -= 0.35f;
+			x -= 0.45f;
 			nx = -1;
 			SetState(SIMON_STATE_WALKING_LEFT);
 		}
 		else if (x - be_x < -0.5f)
 		{
-			x += 0.35f;
+			x += 0.45f;
 			nx = 1;
 			SetState(SIMON_STATE_WALKING_RIGHT);
 		}
@@ -256,17 +259,17 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (onStair && !isAttack && !isthrow)
 	{
-		if (GetTickCount() - action_time <= 100)
+		if (GetTickCount() - action_time <= 300)
 		{
 			if (be_nx == 1)
-				x += 0.45f;	
+				x += 0.42f;	
 			else
-				x -= 0.45f;
+				x -= 0.42f;
 
 			if (be_updown == SIMON_UPSTAIR)
-				dy = -0.45f;
+				dy = -0.41f;
 			else
-				dy = 0.45f;
+				dy = 0.41f;
 		}
 		else
 		{
@@ -549,8 +552,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 
-		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;	
+/*		if (nx != 0) vx = 0;
+		if (ny != 0) vy = 0;*/	
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++)
@@ -635,8 +638,6 @@ void CSimon::Render()
 
 void CSimon::SetState(int state)
 {
-	//if (isBlock) return;
-
 	CGameObject::SetState(state);
 
 	if (isBeMoving || isInJure) return;
@@ -829,11 +830,11 @@ void CSimon::beMoving(int bnx, float bx, int updown)
 
 		if (be_updown == SIMON_DOWNSTAIR)
 		{
-			be_nx < 0 ? be_x = bx - SIMON_BBOX_WIDTH / 2 - 10.0f : be_x = bx + SIMON_BBOX_WIDTH / 2 + 5.0f;
+			be_nx < 0 ? be_x = bx - SIMON_BBOX_WIDTH / 2 - 7.0f : be_x = bx + SIMON_BBOX_WIDTH / 2 + 2.0f;
 		}
 		else
 		{
-			be_nx == -1 ? be_x = bx + 3.0f : be_x = bx;
+			be_nx == -1 ? be_x = bx + 3.0f : be_x = bx -5.0f;
 		}	
 	}
 }
@@ -885,6 +886,11 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		right = left + SIMON_BBOX_WIDTH;
 		bottom = top + SIMON_BBOX_HEIGHT;
 	}
+}
+
+void CSimon::SetIsBlock(bool block)
+{
+	isBlock = block;
 }
 
 CSimon* CSimon::__instance = NULL;

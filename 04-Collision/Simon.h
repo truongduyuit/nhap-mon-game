@@ -117,7 +117,7 @@ public:
 	void SetState(int state);
 	void SetOnStair(bool stair);
 	void SetHP(int h) { hp = h; }
-	void SetIsBlock(bool block) { isBlock = block; }
+	void SetIsBlock(bool block);
 	void SetBeMoving(bool moving) { isBeMoving = moving; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 

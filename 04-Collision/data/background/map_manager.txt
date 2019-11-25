@@ -6,3 +6,11 @@ data\\background\\map2.txt
 data\\background\\map3.txt
 4
 data\\background\\map4.txt
+5
+data\\background\\map5.txt
+6
+data\\background\\map6.txt
+7
+data\\background\\map7.txt
+8
+data\\background\\map8.txt

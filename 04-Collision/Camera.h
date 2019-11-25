@@ -16,6 +16,8 @@ class Camera
 
 	float cam_x;
 	float pos_max;
+	int pos_door;
+	int id_nextMap;
 
 	bool isFollowSimon;
 	bool isAuto;
@@ -31,12 +33,13 @@ public:
 	void Update(DWORD dt, CGameObject* simon);
 	void FollowSimon(CGameObject* simon);
 	void StartAuto();
-	void SetDoor(LPGAMEOBJECT f) { door = (CFlag*)f; }
+	void SetDoor(LPGAMEOBJECT f) {door = (CFlag*)f; }
 	void CloseDoor();
 
 	void SetFollowSimon() { isFollowSimon = true; isAuto = false; }
-	void SetAuto() { isAuto = true; isFollowSimon = false; }
+	void SetAuto() { isAuto = true;}
 	void SetNextMap() { nextMap = true; }
+	void Set_idnextMap(int map) { id_nextMap = map; }
 	bool GetCameraAuto() { return isAuto; }
 	bool GetFollowSimon() { return isFollowSimon; }
 	bool GetCamX() { return cam_x; }

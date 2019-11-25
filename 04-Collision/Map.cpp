@@ -39,7 +39,7 @@ void CMap::LoadContent(string filePath)
 	{
 
 		// background
-		in >> this->max_x >> this->max_y >> this->tile_size_x >> this->tile_size_y >> this->pos_max;
+		in >> this->max_x >> this->max_y >> this->tile_size_x >> this->tile_size_y >> this->pos_max >> this->pos_door;
 		for (int i = 0; i < max_y; i++)
 		{
 			for (int j = 0; j < max_x; j++)
@@ -53,11 +53,7 @@ void CMap::LoadContent(string filePath)
 			}
 		}
 
-		// objects
-		/*CWeapon* weapon = CWeapon::GetInstance();*/
-
 		CSimon* simon = CSimon::GetInstance();
-		simon->nx = 1;
 
 		while (!in.eof())
 		{
@@ -184,6 +180,8 @@ void CMap::ResetListObjects()
 {
 	tiles.clear();
 	listEffect.clear();
+	gridObject.clear();
+	mapObjects.clear();
 }
 
 vector<LPGAMEOBJECT> CMap::Get_coObjectFlag()
@@ -368,7 +366,6 @@ void CMap::Get_gridObjects(
 						coObjectsWithSkill.push_back(mapObjects[idObjects[j]]);
 					}
 					else
-						// if (mapObjects[mapObjects[idObjects[j]]->GetState() == STATE_WALL_2 || mapObjects[idObjects[j]]->GetState() == STATE_WALL_3)
 					{
 						coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);
 					}
@@ -396,6 +393,7 @@ void CMap::Get_gridObjects(
 
 	CWeapon* weapon = CWeapon::GetInstance();
 	CSimon* simon = CSimon::GetInstance();
+
 	CSkill* skill = CSkill::GetInstance();
 	coObjectsFull.push_back(weapon);
 	coObjectsFull.push_back(simon);

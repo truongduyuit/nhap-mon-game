@@ -14,6 +14,8 @@ public:
 	int GetMapStage() { return map_stage; }
 	void LoadMapResources();
 	void DrawMap();
+	void ChangeMap(int map);
+	void LoadRoundGame(int round);
 
 	static CMapManager * GetInstance();
 

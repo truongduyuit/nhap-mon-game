@@ -48,12 +48,7 @@ CSampleKeyHander * keyHandler;
 void LoadRoundGame(int round)
 {
 	map_manager = CMapManager::GetInstance();
-	map_manager->SetStage(round);
-	map_manager->LoadMapResources();
-	map_manager->DrawMap();
-
-	//map = CMap::GetInstance();
-	//map->Get_gridObjects(coObjectsFull, coObjectGround, coObjectFlag, coObjectsWithSimon, coObjectsWithSkill);
+	map_manager->LoadRoundGame(round);
 }
 
 void toggleRenderBBox()
@@ -130,6 +125,9 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		break;
 	case DIK_F4:
 		LoadRoundGame(4);
+		break;
+	case DIK_F8:
+		LoadRoundGame(8);
 		break;
 	case DIK_P:
 		toggleRenderBBox();
@@ -275,26 +273,6 @@ void Update(DWORD dt)
 	// Update camera to follow simon
 	camera = Camera::GetInstance();
 	camera->Update(dt, simon);
-
-	//float cx, cy;
-	//simon->GetPosition(cx, cy);
-
-	//int size = map->GetMaxX() * map->GetTileSizeX();
-
-	//if (cx - SCREEN_WIDTH / 2 < 0)
-	//{
-	//	cx = 0;
-	//}
-	//else if (cx + SCREEN_WIDTH / 2 > size)
-	//{
-	//	cx = size - SCREEN_WIDTH;
-	//}
-	//else
-	//{
-	//	cx -= SCREEN_WIDTH / 2;
-	//}	
-
-	//CGame::GetInstance()->SetCamPos(cx,0);
 }
 
 void Render()

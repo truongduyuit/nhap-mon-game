@@ -39,6 +39,19 @@ void CMapManager::DrawMap()
 	map->DrawMap();
 }
 
+void CMapManager::ChangeMap(int map)
+{
+	map_stage = map;
+	LoadMapResources();
+}
+
+void CMapManager::LoadRoundGame(int round)
+{
+	map_stage = round;
+	LoadMapResources();
+	DrawMap();
+}
+
 CMapManager* CMapManager::__instance = NULL;
 CMapManager * CMapManager::GetInstance()
 {
