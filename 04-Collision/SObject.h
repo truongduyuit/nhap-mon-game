@@ -21,6 +21,7 @@
 #define POT_ROAST_ITEM		13
 #define STATE_WALL_2		14
 #define STATE_WALL_3		15
+#define ACE_ITEM			16
 
 #define SOBJECT_APPEAR_TIME		5000
 #define SOBJECT_DESTROY_TIME	500
@@ -61,6 +62,9 @@
 
 #define POT_ROAST_WIDTH		16
 #define POT_ROAST_HEIGHT	16
+
+#define ACE_WIDTH	16
+#define ACE_HEIGHT	15
 
 class CSObject : public CGameObject
 {

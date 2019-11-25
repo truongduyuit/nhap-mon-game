@@ -144,6 +144,7 @@ void CSObject::Render()
 	else if (state == POT_ROAST_ITEM) ani = POT_ROAST_ITEM;
 	else if (state == STATE_WALL_2) ani = STATE_WALL_2;
 	else if (state == STATE_WALL_3) ani = STATE_WALL_3;
+	else if (state == ACE_ITEM) ani = ACE_ITEM;
 
 	if (state != SOBJECT_HIDDEN && !isHidden)
 	{
@@ -283,5 +284,10 @@ void CSObject::GetBoundingBox(float &left, float &top, float &right, float &bott
 	{
 		right = x + POT_ROAST_WIDTH;
 		bottom = y + POT_ROAST_HEIGHT;
+	}
+	else if (state == ACE_ITEM)
+	{
+		right = x + ACE_WIDTH;
+		bottom = y + ACE_HEIGHT;
 	}
 }

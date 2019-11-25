@@ -396,6 +396,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					skill->SetNextState(STATE_HOLY_WATER);
 					canStop = false;
 				}
+				// lụm rìu
+				else if (coObjects->at(i)->state == ACE_ITEM)
+				{
+					this->skill[0] += 5;
+					skill->SetState(STATE_ACE);
+					skill->SetNextState(STATE_ACE);
+					canStop = false;
+				}
 				else if (coObjects->at(i)->state == CROSS_ITEM)
 				{
 					map->Cross_Enemy();
@@ -512,6 +520,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					this->skill[0] += 5;
 					skill->SetState(STATE_HOLY_WATER);
 					skill->SetNextState(STATE_HOLY_WATER);
+					canStop = false;
+				}
+				// lụm rìu
+				else if (e->obj->state == ACE_ITEM)
+				{
+					this->skill[0] += 5;
+					skill->SetState(STATE_ACE);
+					skill->SetNextState(STATE_ACE);
 					canStop = false;
 				}
 				else if (e->obj->state == STOPWATCH_ITEM)

@@ -17,18 +17,19 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
 
-	if (state != STATE_KNIFE)
+	if (state != STATE_KNIFE && state != STATE_ACE)
 		vy += 0.00015f * dt;
-	else
-		vy = 0;
-
+	else if (state == STATE_ACE)
+		vy += 0.0002f * dt;
+	else vy = 0;
+		
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 	coEvents.clear();
 
 
 
-	if (state != STATE_KNIFE)
+	if (state != STATE_KNIFE && state != STATE_ACE)
 	{
 		CalcPotentialCollisions(coObjects, coEvents);
 	}
@@ -99,7 +100,7 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (dynamic_cast<CGround *>(e->obj))
+			if (dynamic_cast<CGround *>(e->obj) && state == STATE_HOLY_WATER)
 			{
 				isFailing = false;
 				SetState(STATE_HOLY_FIRE);
@@ -108,7 +109,7 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
 
 			}
-			else
+			else if (state != STATE_HOLY_FIRE)
 			{
 				x += dx;
 				y += dy;
@@ -142,7 +143,10 @@ void CSkill::Render()
 	{
 		ani = ANI_HOLY_FIRE;
 	}
-
+	else if (state == STATE_ACE)
+	{
+		nx < 0 ? ani = ANI_ACE_LEFT : ani = ANI_ACE_RIGHT;
+	}
 	if (!isHidden)
 	{
 		animations[ani]->Render(x, y);
@@ -169,6 +173,11 @@ void CSkill::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	{
 		right = x + HOLY_WATER_SKILL_WIDTH;
 		bottom = y + HOLY_WATER_SKILL_HEIGHT;
+	}
+	else if (state == STATE_ACE)
+	{
+		right = x + ACE_WIDTH;
+		bottom = y + ACE_HEIGHT;
 	}
 }
 
@@ -198,6 +207,10 @@ void CSkill::updateThrow()
 	{
 		vx = 0;
 	}
+	else if (state == STATE_ACE)
+	{
+		nx > 0 ? vx = 0.095f : vx = -0.095f;
+	}
 }
 
 void CSkill::SetState(int state)
@@ -208,6 +221,11 @@ void CSkill::SetState(int state)
 	{
 	case STATE_HOLY_WATER:
 		timeshow = 10000;
+		break;
+	case STATE_ACE:
+		timeshow = 2000;
+		vy = -0.18f;
+		break;
 	default:
 		timeshow = TIME_THROW;
 		break;
