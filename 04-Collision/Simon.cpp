@@ -262,9 +262,9 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (GetTickCount() - action_time <= 300)
 		{
 			if (be_nx == 1)
-				x += 0.42f;	
+				x += 0.41f;	
 			else
-				x -= 0.42f;
+				x -= 0.41f;
 
 			if (be_updown == SIMON_UPSTAIR)
 				dy = -0.41f;
@@ -368,7 +368,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	for (unsigned int i = 0; i < coObjects->size(); i++)
 	{
-		if (dynamic_cast<CSObject *>(coObjects->at(i)))
+		if (dynamic_cast<CSObject *>(coObjects->at(i)) && coObjects->at(i)->state != SOBJECT_HIDDEN)
 		{
 			if (isOverlapping(coObjects->at(i)))
 			{
@@ -420,6 +420,38 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (coObjects->at(i)->state != STATE_WALL_1 && coObjects->at(i)->state != STATE_BLACK && coObjects->at(i)->state != STATE_WALL_2 && coObjects->at(i)->state != STATE_WALL_3)
 				{
+					if (coObjects->at(i)->state == MONEY_ITEM_100)
+					{
+						CEffect * effect = new CEffect();
+						effect->SetPosition(x-5.0f, y-10.0f);
+						effect->StartShowEffect();
+						effect->SetState(STATE_MONEY_100);
+						CMap::GetInstance()->PushEffect(effect);
+					}
+					else if (coObjects->at(i)->state == MONEY_ITEM_400)
+					{
+						CEffect * effect = new CEffect();
+						effect->SetPosition(x - 5.0f, y - 10.0f);
+						effect->StartShowEffect();
+						effect->SetState(STATE_MONEY_400);
+						CMap::GetInstance()->PushEffect(effect);
+					}
+					else if (coObjects->at(i)->state == MONEY_ITEM_700)
+					{
+						CEffect * effect = new CEffect();
+						effect->SetPosition(x - 5.0f, y - 10.0f);
+						effect->StartShowEffect();
+						effect->SetState(STATE_MONEY_700);
+						CMap::GetInstance()->PushEffect(effect);
+					}
+					else if (coObjects->at(i)->state == MONEY_ITEM_1k)
+					{
+						CEffect * effect = new CEffect();
+						effect->SetPosition(x - 5.0f, y - 10.0f);
+						effect->StartShowEffect();
+						effect->SetState(STATE_MONEY_1K);
+						CMap::GetInstance()->PushEffect(effect);
+					}
 					coObjects->at(i)->isHidden = true;
 				}
 			}
@@ -486,7 +518,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					if (isJump) isSit = true;
 					basicCollision(min_tx, min_ty, nx, ny);
-					if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
+					//if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
 				}
 				else
 				{
@@ -547,6 +579,38 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				 
 				if (e->obj->state != STATE_WALL_1 && e->obj->state != STATE_BLACK && e->obj->state != STATE_WALL_2 && e->obj->state != STATE_WALL_3)
 				{
+					if (e->obj->state == MONEY_ITEM_100)
+					{
+						CEffect * effect = new CEffect();
+						effect->SetPosition(x - 5.0f, y - 10.0f);
+						effect->StartShowEffect();
+						effect->SetState(STATE_MONEY_100);
+						CMap::GetInstance()->PushEffect(effect);
+					}
+					else if (e->obj->state == MONEY_ITEM_400)
+					{
+						CEffect * effect = new CEffect();
+						effect->SetPosition(x - 5.0f, y - 10.0f);
+						effect->StartShowEffect();
+						effect->SetState(STATE_MONEY_400);
+						CMap::GetInstance()->PushEffect(effect);
+					}
+					else if (e->obj->state == MONEY_ITEM_700)
+					{
+						CEffect * effect = new CEffect();
+						effect->SetPosition(x - 5.0f, y - 10.0f);
+						effect->StartShowEffect();
+						effect->SetState(STATE_MONEY_700);
+						CMap::GetInstance()->PushEffect(effect);
+					}
+					else if (e->obj->state == MONEY_ITEM_1k)
+					{
+						CEffect * effect = new CEffect();
+						effect->SetPosition(x - 5.0f, y - 10.0f);
+						effect->StartShowEffect();
+						effect->SetState(STATE_MONEY_1K);
+						CMap::GetInstance()->PushEffect(effect);
+					}
 					e->obj->SetState(SOBJECT_HIDDEN);
 					e->obj->isHidden = true;
 				}

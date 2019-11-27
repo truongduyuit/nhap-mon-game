@@ -16,3 +16,4 @@
 1	textures\\simon_2.png 		255 0 255
 2	textures\\enemies.png			96 68 106
 3	textures\\sprite\\weapon\\effects.png	255 0 255
+4	textures\\money_effects.png		255 0 255

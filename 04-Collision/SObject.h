@@ -22,6 +22,8 @@
 #define STATE_WALL_2		14
 #define STATE_WALL_3		15
 #define ACE_ITEM			16
+#define MONEY_ITEM_400		17
+#define MONEY_ITEM_700		18
 
 #define SOBJECT_APPEAR_TIME		5000
 #define SOBJECT_DESTROY_TIME	500

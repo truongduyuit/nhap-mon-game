@@ -13,7 +13,7 @@ void CEffect::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	CGameObject::Update(dt);
 
-	if (state != STATE_DESTROY)
+	if (state == STATE_BREAKING_WALL || state == STATE_SPLASH)
 	{
 		vy += EFFECT_GRAVITY * dt;
 	}
@@ -42,6 +42,10 @@ void CEffect::Render()
 	if (state == STATE_DESTROY) ani = STATE_DESTROY;
 	else if (state == STATE_BREAKING_WALL) ani = STATE_BREAKING_WALL;
 	else if (state == STATE_SPLASH) ani = STATE_SPLASH;
+	else if (state == STATE_MONEY_100) ani = STATE_MONEY_100;
+	else if (state == STATE_MONEY_400) ani = STATE_MONEY_400;
+	else if (state == STATE_MONEY_700) ani = STATE_MONEY_700;
+	else if (state == STATE_MONEY_1K) ani = STATE_MONEY_1K;
 
 	if (!isHidden)
 	{
@@ -101,5 +105,11 @@ void CEffect::GetBoundingBox(float &left, float &top, float &right, float &botto
 	{
 		right = left + SPLASH_WIDTH;
 		bottom = top + SPLASH_HEIGHT;
+	}
+	// money
+	else
+	{
+		right = left + MONEY_WIDTH;
+		bottom = top + MONEY_HEIGHT;
 	}
 }

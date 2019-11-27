@@ -48,7 +48,7 @@ CSampleKeyHander * keyHandler;
 void LoadRoundGame(int round)
 {
 	map_manager = CMapManager::GetInstance();
-	map_manager->LoadRoundGame(round);
+	map_manager->ChangeMap(round);
 }
 
 void toggleRenderBBox()
@@ -237,7 +237,10 @@ void Update(DWORD dt)
 
 	for (unsigned int i = 0; i < coObjectsFull.size(); i++)
 	{
-		if (dynamic_cast<CSimon *>(coObjectsFull[i]))
+		if (dynamic_cast<CGround *>(coObjectsFull[i]))
+			coObjectsFull[i]->Update(dt, &coObjectsFull);
+
+		else if (dynamic_cast<CSimon *>(coObjectsFull[i]))
 			coObjectsFull[i]->Update(dt, &coObjectsWithSimon);
 
 		else if (dynamic_cast<CWeapon *>(coObjectsFull[i]))

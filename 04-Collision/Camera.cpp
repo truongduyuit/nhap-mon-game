@@ -1,8 +1,11 @@
 #include "Camera.h"
 
+
+
 void Camera::Update(DWORD dt, CGameObject* simon)
 {
-	
+	CMapManager* map_manager = CMapManager::GetInstance();
+	CSimon* simmon = CSimon::GetInstance();
 	if (isFollowSimon && !isAuto)
 	{
 		FollowSimon(simon);
@@ -15,12 +18,13 @@ void Camera::Update(DWORD dt, CGameObject* simon)
 	{
 		if (GetTickCount() - delay_change_time > 1000)
 		{
-			CMapManager* map_manager = CMapManager::GetInstance();
-			map_manager->LoadRoundGame(id_nextMap);
-
+			simmon->SetIsBlock(false);
+			simon->vy = 0;
+			map_manager = CMapManager::GetInstance();
+			map_manager->ChangeMap(id_nextMap);
+			
 			changing = false;
 			isFollowSimon = true;
-
 			CSimon::GetInstance()->SetIsBlock(false);
 		}
 	}
@@ -61,7 +65,7 @@ void Camera::StartAuto()
 
 	}
 
-	if (cam_x < pos_max - SCREEN_WIDTH/2 - pos_door)
+	if (cam_x < pos_max - SCREEN_WIDTH/2) //- pos_door)
 	{
 		cam_x = CGame::GetInstance()->getCamPos_x() + 1.0f;
 		CGame::GetInstance()->SetCamPos(cam_x, 0);
@@ -70,7 +74,7 @@ void Camera::StartAuto()
 	{
 		if (isAuto)
 		{
-			pos_max += SCREEN_WIDTH / 2 - 6;
+			pos_max += SCREEN_WIDTH / 2 - SIMON_BBOX_WIDTH;
 			isAuto = false;
 			door->setOpening(true);
 		}

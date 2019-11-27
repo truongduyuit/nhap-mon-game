@@ -25,16 +25,6 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		vy += SOBJECT_GRAVITY * dt;
 	}
 
-	if (state == MONEY_ITEM_1k && isHidden)
-	{
-		CSimon * simon = CSimon::GetInstance();
-		float x, y;
-		simon->GetPosition(x, y);
-		if (x > xAppear)
-		{
-			set_isHidden(false);
-		}
-	}
 
 	if (isDestroy)
 	{
@@ -145,6 +135,8 @@ void CSObject::Render()
 	else if (state == STATE_WALL_2) ani = STATE_WALL_2;
 	else if (state == STATE_WALL_3) ani = STATE_WALL_3;
 	else if (state == ACE_ITEM) ani = ACE_ITEM;
+	else if (state == MONEY_ITEM_400) ani = MONEY_ITEM_400;
+	else if (state == MONEY_ITEM_700) ani = MONEY_ITEM_700;
 
 	if (state != SOBJECT_HIDDEN && !isHidden)
 	{
@@ -260,7 +252,7 @@ void CSObject::GetBoundingBox(float &left, float &top, float &right, float &bott
 		right = x + HOLY_WATER_WIDTH;
 		bottom = y + HOLY_WATER_HEIGHT;
 	}
-	else if (state == MONEY_ITEM_100)
+	else if (state == MONEY_ITEM_100 || state == MONEY_ITEM_400 || state == MONEY_ITEM_700)
 	{
 		right = x + BBOX_MONEY_1K_W;
 		bottom = y + BBOX_MONEY_1K_H;
