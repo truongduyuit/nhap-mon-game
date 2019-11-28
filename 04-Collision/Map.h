@@ -8,6 +8,7 @@
 #include "Enemy.h"
 #include <d3d9.h>
 #include <d3dx9.h>
+#include "SObject.h"
 
 class CMap
 {
@@ -23,6 +24,7 @@ class CMap
 
 	vector<CTileMat*> tiles;
 	vector<LPGAMEOBJECT> listEffect;
+	vector<LPGAMEOBJECT> listItem;
 
 	unordered_map<int, LPGAMEOBJECT> mapObjects;
 	vector<int_c> gridObject;
@@ -36,7 +38,8 @@ public :
 	void LoadMapSprites();
 	void DrawMap();
 	void ResetListObjects();
-	void PushEffect(CEffect* effect);
+	void PushEffect(LPGAMEOBJECT effect);
+	void PushItem(CSObject* item);
 	void PushObject(LPGAMEOBJECT shoot);
 	void Cross_Enemy();
 	void Stop_Enemy();
@@ -50,6 +53,7 @@ public :
 
 	vector<LPGAMEOBJECT> Get_coObjectFlag();
 	vector<LPGAMEOBJECT> Get_listEffect();
+	vector<LPGAMEOBJECT> Get_listItem();
 
 	static CMap * GetInstance();
 

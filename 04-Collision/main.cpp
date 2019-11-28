@@ -22,6 +22,8 @@
 #include "Skill.h"
 #include "Enemy.h"
 
+using namespace std;
+
 CGame *game;
 CMapManager* map_manager;
 Camera* camera;
@@ -34,6 +36,7 @@ vector<LPGAMEOBJECT> coObjectFlag;
 vector<LPGAMEOBJECT> coObjectsWithSimon;
 vector<LPGAMEOBJECT> coObjectsWithSkill;
 vector<LPGAMEOBJECT> listEffect;
+vector<LPGAMEOBJECT> listItem;
 
 
 class CSampleKeyHander: public CKeyEventHandler
@@ -233,7 +236,10 @@ void Update(DWORD dt)
 	map = CMap::GetInstance();
 	map->Get_gridObjects(coObjectsFull, coObjectGround, coObjectFlag, coObjectsWithSimon, coObjectsWithSkill);
 	listEffect = map->Get_listEffect();
+	listItem = map->Get_listItem();
 
+	vector<LPGAMEOBJECT>  coSimon(listItem);
+	copy(coObjectsWithSimon.begin(), coObjectsWithSimon.end(), back_inserter(coSimon));
 
 	for (unsigned int i = 0; i < coObjectsFull.size(); i++)
 	{
@@ -241,7 +247,7 @@ void Update(DWORD dt)
 			coObjectsFull[i]->Update(dt, &coObjectsFull);
 
 		else if (dynamic_cast<CSimon *>(coObjectsFull[i]))
-			coObjectsFull[i]->Update(dt, &coObjectsWithSimon);
+			coObjectsFull[i]->Update(dt, &coSimon);
 
 		else if (dynamic_cast<CWeapon *>(coObjectsFull[i]))
 		{
@@ -267,11 +273,18 @@ void Update(DWORD dt)
 			coObjectsFull[i]->Update(dt, &coObjectsFull);
 		}
 	}
+
 	if (listEffect.size() > 0)
-	for (unsigned int i = 0; i < listEffect.size(); i++)
-	{
-		listEffect[i]->Update(dt);
-	}
+		for (unsigned int i = 0; i < listEffect.size(); i++)
+		{
+			listEffect[i]->Update(dt);
+		}
+
+	if (listItem.size() > 0)
+		for (unsigned int i = 0; i < listItem.size(); i++)
+		{
+			listItem[i]->Update(dt, &coObjectGround);
+		}
 
 	// Update camera to follow simon
 	camera = Camera::GetInstance();
@@ -301,6 +314,11 @@ void Render()
 		for (unsigned int i = 0; i < listEffect.size(); i++)
 		{
 			listEffect[i]->Render();
+		}
+
+		for (unsigned int i = 0; i < listItem.size(); i++)
+		{
+			listItem[i]->Render();
 		}
 
 		spriteHandler->End();

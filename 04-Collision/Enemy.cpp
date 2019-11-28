@@ -1,4 +1,4 @@
-#include <ctime>
+#include <random>
 
 #include "LoadResource.h"
 #include "Enemy.h"
@@ -6,6 +6,7 @@
 #include "Map.h"
 #include "Simon.h"
 #include "Contands.h"
+#include "SObject.h"
 
 
 CEnemy::CEnemy()
@@ -155,6 +156,55 @@ void CEnemy::Render()
 	}
 }
 
+void CEnemy::BeDestroy()
+{
+	CEffect * effect = new CEffect();
+	effect->SetPosition(x, y);
+	effect->StartShowEffect();
+
+	CMap* map = CMap::GetInstance();
+	map->PushEffect(effect);
+
+	int item = RandomItem();
+
+	if (item != SOBJECT_HIDDEN && isHidden == false)
+	{
+		effect = new CEffect();
+		effect->SetPosition(x, y);
+		effect->SetState(-1);
+		effect->StartShowEffect(item);
+		map->PushEffect(effect);
+	}
+
+	isHidden = true;
+}
+
+int CEnemy::RandomItem()
+{
+	vector<int> items = {
+		SOBJECT_HIDDEN,
+		HEART_ITEM,
+		//CANE_ITEM,
+		SOBJECT_HIDDEN,
+		//HEART_SMALL_ITEM,
+		SOBJECT_HIDDEN,
+		MONEY_ITEM_100,
+		SOBJECT_HIDDEN,
+		STOPWATCH_ITEM,
+		SOBJECT_HIDDEN,
+		//MONEY_ITEM_400,
+		SOBJECT_HIDDEN
+	};
+
+	random_device rd;
+	mt19937 rng(rd());
+	uniform_int_distribution<int> uni(1, items.size());
+	auto n = uni(rng);
+
+	
+	return items[n-1];
+}
+
 bool CEnemy::onFlag()
 {
 	CMap* map = CMap::GetInstance();
@@ -280,8 +330,11 @@ void CEnemy::fish_update()
 			isActive = true;	
 			nxx = nx;
 
-			srand(time(NULL));
-			move_time = (rand() % 20 + 15) * 100;
+			random_device rd;
+			mt19937 rng(rd());
+			uniform_int_distribution<int> uni(15, 20);
+			auto time = uni(rng);
+			move_time = time * 100;
 		}
 	}
 	else
@@ -359,10 +412,12 @@ void CEnemy::fish_update()
 				action_time = GetTickCount();
 
 				nxx = -nxx;
-				srand(time(NULL));
-				move_time = (rand() % 20 + 15) * 100;
 
-
+				random_device rd;
+				mt19937 rng(rd());
+				uniform_int_distribution<int> uni(15, 20);
+				auto time = uni(rng);
+				move_time = time * 100;
 			}
 		}
 	}

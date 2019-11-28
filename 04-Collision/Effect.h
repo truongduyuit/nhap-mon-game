@@ -29,11 +29,13 @@ class CEffect : public CGameObject
 	bool isShow;
 	DWORD start_show;
 
+	int item;
 public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> * colliable_objects = NULL);
 	virtual void Render();
 	void SetState(int state);
 	void StartShowEffect();
+	void StartShowEffect(int item);
 	void StartShowEffect(float vxx, float vyy);
 
 	CEffect();

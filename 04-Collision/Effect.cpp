@@ -1,16 +1,35 @@
 #include "Effect.h"
 #include "LoadResource.h"
+#include "SObject.h"
+#include "Map.h"
 
 CEffect::CEffect()
 {
 	state = STATE_DESTROY;
 	isHidden = true;
+	item = -1;
 	CLoadResourcesHelper::LoadSprites("data\\effects\\effect_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\effects\\effect_anis.txt", this);
 }
 
 void CEffect::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	if (item != -1 && isHidden == false)
+	{
+		CSObject* obj = new CSObject();
+		obj->SetState(item);
+		obj->SetNextState(item);
+		obj->SetPosition(x, y);
+		obj->set_isHidden(false);
+		obj->BeDestroy();
+		CMap::GetInstance()->PushItem(obj);
+
+		isHidden = true;
+		isShow = false;
+		return;
+	}
+
+
 	CGameObject::Update(dt);
 
 	if (state == STATE_BREAKING_WALL || state == STATE_SPLASH)
@@ -26,11 +45,12 @@ void CEffect::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		DWORD timeE;
 		if (state == STATE_DESTROY) timeE = DESTROY_EFFECT_TIME;
 		else timeE = BREAKING_WALL_TIME;
+
 		if (GetTickCount() - start_show > timeE)
 		{
 			isHidden = true;
 			isShow = false;
-		}
+		}		
 	}
 }
 
@@ -47,7 +67,7 @@ void CEffect::Render()
 	else if (state == STATE_MONEY_700) ani = STATE_MONEY_700;
 	else if (state == STATE_MONEY_1K) ani = STATE_MONEY_1K;
 
-	if (!isHidden)
+	if (!isHidden && state != STATE_HIDDEN)
 	{
 		animations[ani]->Render(x, y);
 		
@@ -70,6 +90,19 @@ void CEffect::StartShowEffect()
 
 		this->isShow = true;
 		start_show = GetTickCount();
+	}
+}
+
+void CEffect::StartShowEffect(int itemN)
+{
+	if (isHidden)
+	{
+		this->isHidden = false;
+
+		this->isShow = true;
+		start_show = GetTickCount();
+
+		this->item = itemN;
 	}
 }
 

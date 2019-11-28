@@ -4,6 +4,7 @@
 #include "LoadResource.h"
 #include "Effect.h"
 #include "Enemy.h"
+#include <time.h>
 
 CWeapon::CWeapon()
 {

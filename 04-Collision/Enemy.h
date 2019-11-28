@@ -71,6 +71,9 @@ public:
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Render();
 	virtual void SetState(int state);
+	virtual void BeDestroy();
+
+	int RandomItem();
 
 	void wolf_update();
 	void ghost_update();

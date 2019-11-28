@@ -2,7 +2,6 @@
 #include <fstream>
 #include "Game.h"
 #include "Simon.h"
-#include "SObject.h"
 #include "Ground.h"
 #include "Flag.h"
 #include "Weapon.h"
@@ -182,6 +181,7 @@ void CMap::ResetListObjects()
 	listEffect.clear();
 	gridObject.clear();
 	mapObjects.clear();
+	listItem.clear();
 }
 
 vector<LPGAMEOBJECT> CMap::Get_coObjectFlag()
@@ -220,9 +220,31 @@ vector<LPGAMEOBJECT> CMap::Get_listEffect()
 	return effects;
 }
 
-void CMap::PushEffect(CEffect* effect)
+vector<LPGAMEOBJECT> CMap::Get_listItem()
+{
+	vector<LPGAMEOBJECT> items;
+
+	for (unsigned int i = 0; i < listItem.size(); i++)
+	{
+		if (!listItem[i]->get_isHidden())
+		{
+			items.push_back(listItem[i]);
+		}
+	}
+
+	if (items.size() == 0) listItem.clear();
+
+	return items;
+}
+
+void CMap::PushEffect(LPGAMEOBJECT effect)
 {
 	listEffect.push_back(effect);
+}
+
+void CMap::PushItem(CSObject* item)
+{
+	listItem.push_back(item);
 }
 
 void CMap::PushObject(LPGAMEOBJECT object)
@@ -354,12 +376,12 @@ void CMap::Get_gridObjects(
 
 		for (int j = 0; j < idObjects.size(); j++)
 		{
-			if (checkUnique[idObjects[j]] == NULL)
+			if (checkUnique[idObjects[j]] == NULL && !mapObjects[idObjects[j]]->get_isHidden())
 			{
 				coObjectsFull.push_back(mapObjects[idObjects[j]]);
 				checkUnique[idObjects[j]] = idObjects[j];
 
-				if (dynamic_cast<CSObject *>(mapObjects[idObjects[j]]) && !mapObjects[idObjects[j]]->get_isHidden())
+				if (dynamic_cast<CSObject *>(mapObjects[idObjects[j]]) ) //&& !mapObjects[idObjects[j]]->get_isHidden()
 				{
 					if (mapObjects[idObjects[j]]->GetState() == SMALL_CANDLE || mapObjects[idObjects[j]]->GetState() == BIG_CANDLE)
 					{
@@ -378,7 +400,7 @@ void CMap::Get_gridObjects(
 					coObjectsWithSkill.push_back(mapObjects[idObjects[j]]);
 					coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);
 				}
-				else if (dynamic_cast<CEnemy *>(mapObjects[idObjects[j]]) && !mapObjects[idObjects[j]]->get_isHidden())
+				else if (dynamic_cast<CEnemy *>(mapObjects[idObjects[j]])) // && !mapObjects[idObjects[j]]->get_isHidden()
 				{					
 					coObjectsWithSkill.push_back(mapObjects[idObjects[j]]);
 					coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);

@@ -61,6 +61,7 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (GetTickCount() - appear_start >= SOBJECT_APPEAR_TIME)
 		{
 			SetState(SOBJECT_HIDDEN);
+			isHidden = true;
 			isAppear = false;
 		}
 
@@ -70,6 +71,7 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (nextState == SOBJECT_HIDDEN)
 		{
 			isAppear = true;
+			isHidden = true;
 			appear_start = GetTickCount();
 		}
 	}
