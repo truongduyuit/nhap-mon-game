@@ -145,7 +145,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 								enemy->setNxx(-coObjectFlag[i]->nextState);
 
 								CMap* map = CMap::GetInstance();
-								map->PushObject(enemy);
+								map->PushEnemy(enemy);
 							}
 						}
 					}
@@ -167,7 +167,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 								enemy->setNxx(-coObjectFlag[i]->nextState);
 
 								CMap* map = CMap::GetInstance();
-								map->PushObject(enemy);
+								map->PushEnemy(enemy);
 							}
 						}
 					}
@@ -187,7 +187,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						enemy->setNxx(coObjectFlag[i]->nextState);
 
 						CMap* map = CMap::GetInstance();
-						map->PushObject(enemy);
+						map->PushEnemy(enemy);
 					}
 					else if (coObjectFlag[i]->nextState == 1 && !create_enemy_right && !create_enemy)
 					{
@@ -202,7 +202,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						enemy->setNxx(coObjectFlag[i]->nextState);
 
 						CMap* map = CMap::GetInstance();
-						map->PushObject(enemy);
+						map->PushEnemy(enemy);
 					}
 					
 				}
@@ -368,6 +368,12 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	for (unsigned int i = 0; i < coObjects->size(); i++)
 	{
+		if (dynamic_cast<CGround *>(coObjects->at(i)))
+		{
+			x += dx;
+			y += dy;
+		}
+
 		if (dynamic_cast<CSObject *>(coObjects->at(i)) && coObjects->at(i)->state != SOBJECT_HIDDEN)
 		{
 			if (isOverlapping(coObjects->at(i)))
@@ -482,8 +488,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 	if (coEvents.size() == 0)
-	{
-		
+	{		
 		x += dx;
 		y += dy;
 	}

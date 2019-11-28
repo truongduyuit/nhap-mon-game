@@ -237,6 +237,23 @@ vector<LPGAMEOBJECT> CMap::Get_listItem()
 	return items;
 }
 
+vector<LPGAMEOBJECT> CMap::Get_listEnemy()
+{
+	vector<LPGAMEOBJECT> enemies;
+
+	for (unsigned int i = 0; i < listEnemy.size(); i++)
+	{
+		if (!listEnemy[i]->get_isHidden())
+		{
+			enemies.push_back(listEnemy[i]);
+		}
+	}
+
+	if (enemies.size() == 0) listEnemy.clear();
+
+	return enemies;
+}
+
 void CMap::PushEffect(LPGAMEOBJECT effect)
 {
 	listEffect.push_back(effect);
@@ -245,6 +262,11 @@ void CMap::PushEffect(LPGAMEOBJECT effect)
 void CMap::PushItem(CSObject* item)
 {
 	listItem.push_back(item);
+}
+
+void CMap::PushEnemy(CEnemy* enemy)
+{
+	listEnemy.push_back(enemy);
 }
 
 void CMap::PushObject(LPGAMEOBJECT object)
@@ -257,24 +279,29 @@ void CMap::PushObject(LPGAMEOBJECT object)
 
 void CMap::Cross_Enemy()
 {
-	vector<int> currentGrid = GetGridNumber(CGame::GetInstance()->getCamPos_x(), SCREEN_WIDTH - 1);
-	for (int i = 0; i < currentGrid.size(); i++)
-	{
-		vector<int> idObjects = gridObject[currentGrid[i]].Get_Arr();
+	//vector<int> currentGrid = GetGridNumber(CGame::GetInstance()->getCamPos_x(), SCREEN_WIDTH - 1);
+	//for (int i = 0; i < currentGrid.size(); i++)
+	//{
+	//	vector<int> idObjects = gridObject[currentGrid[i]].Get_Arr();
 
-		for (int j = 0; j < idObjects.size(); j++)
-		{
-			if (dynamic_cast<CEnemy *>(mapObjects[idObjects[j]]) && !mapObjects[idObjects[j]]->get_isHidden())
-			{
-				mapObjects[idObjects[j]]->BeDestroy();
-			}
-		}
+	//	for (int j = 0; j < idObjects.size(); j++)
+	//	{
+	//		if (dynamic_cast<CEnemy *>(mapObjects[idObjects[j]]) && !mapObjects[idObjects[j]]->get_isHidden())
+	//		{
+	//			mapObjects[idObjects[j]]->BeDestroy();
+	//		}
+	//	}
+	//}
+
+	for (int i = 0; i < listEnemy.size(); i++)
+	{
+		listEnemy[i]->BeDestroy();
 	}
 }
 
 void CMap::Stop_Enemy()
 {
-	vector<int> currentGrid = GetGridNumber(CGame::GetInstance()->getCamPos_x(), SCREEN_WIDTH - 1);
+	/*vector<int> currentGrid = GetGridNumber(CGame::GetInstance()->getCamPos_x(), SCREEN_WIDTH - 1);
 	for (int i = 0; i < currentGrid.size(); i++)
 	{
 		vector<int> idObjects = gridObject[currentGrid[i]].Get_Arr();
@@ -286,6 +313,11 @@ void CMap::Stop_Enemy()
 				mapObjects[idObjects[j]]->isStop = true;
 			}
 		}
+	}*/
+
+	for (int i = 0; i < listEnemy.size(); i++)
+	{
+		listEnemy[i]->isStop = true;
 	}
 }
 

@@ -25,6 +25,7 @@ class CMap
 	vector<CTileMat*> tiles;
 	vector<LPGAMEOBJECT> listEffect;
 	vector<LPGAMEOBJECT> listItem;
+	vector<LPGAMEOBJECT> listEnemy;
 
 	unordered_map<int, LPGAMEOBJECT> mapObjects;
 	vector<int_c> gridObject;
@@ -40,6 +41,7 @@ public :
 	void ResetListObjects();
 	void PushEffect(LPGAMEOBJECT effect);
 	void PushItem(CSObject* item);
+	void PushEnemy(CEnemy* enemy);
 	void PushObject(LPGAMEOBJECT shoot);
 	void Cross_Enemy();
 	void Stop_Enemy();
@@ -54,6 +56,7 @@ public :
 	vector<LPGAMEOBJECT> Get_coObjectFlag();
 	vector<LPGAMEOBJECT> Get_listEffect();
 	vector<LPGAMEOBJECT> Get_listItem();
+	vector<LPGAMEOBJECT> Get_listEnemy();
 
 	static CMap * GetInstance();
 

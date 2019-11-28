@@ -37,6 +37,7 @@ vector<LPGAMEOBJECT> coObjectsWithSimon;
 vector<LPGAMEOBJECT> coObjectsWithSkill;
 vector<LPGAMEOBJECT> listEffect;
 vector<LPGAMEOBJECT> listItem;
+vector<LPGAMEOBJECT> listEnemy;
 
 
 class CSampleKeyHander: public CKeyEventHandler
@@ -237,9 +238,14 @@ void Update(DWORD dt)
 	map->Get_gridObjects(coObjectsFull, coObjectGround, coObjectFlag, coObjectsWithSimon, coObjectsWithSkill);
 	listEffect = map->Get_listEffect();
 	listItem = map->Get_listItem();
+	listEnemy = map->Get_listEnemy();
 
 	vector<LPGAMEOBJECT>  coSimon(listItem);
 	copy(coObjectsWithSimon.begin(), coObjectsWithSimon.end(), back_inserter(coSimon));
+	copy(listEnemy.begin(), listEnemy.end(), back_inserter(coSimon));
+
+	vector<LPGAMEOBJECT>  coSkill(coObjectsWithSkill);
+	copy(listEnemy.begin(), listEnemy.end(), back_inserter(coSkill));
 
 	for (unsigned int i = 0; i < coObjectsFull.size(); i++)
 	{
@@ -251,7 +257,7 @@ void Update(DWORD dt)
 
 		else if (dynamic_cast<CWeapon *>(coObjectsFull[i]))
 		{
-			coObjectsFull[i]->Update(dt, &coObjectsWithSkill);
+			coObjectsFull[i]->Update(dt, &coSkill);
 		}
 
 		else if (dynamic_cast<CSObject *>(coObjectsFull[i]))
@@ -261,7 +267,7 @@ void Update(DWORD dt)
 
 		else if (dynamic_cast<CSkill *>(coObjectsFull[i]))
 		{
-			coObjectsFull[i]->Update(dt, &coObjectsWithSkill);
+			coObjectsFull[i]->Update(dt, &coSkill);
 		}
 
 		else if (dynamic_cast<CEnemy *>(coObjectsFull[i]))
@@ -284,6 +290,12 @@ void Update(DWORD dt)
 		for (unsigned int i = 0; i < listItem.size(); i++)
 		{
 			listItem[i]->Update(dt, &coObjectGround);
+		}
+
+	if (listEnemy.size() > 0)
+		for (unsigned int i = 0; i < listEnemy.size(); i++)
+		{
+			listEnemy[i]->Update(dt, &coObjectGround);
 		}
 
 	// Update camera to follow simon
@@ -319,6 +331,11 @@ void Render()
 		for (unsigned int i = 0; i < listItem.size(); i++)
 		{
 			listItem[i]->Render();
+		}
+		
+		for (unsigned int i = 0; i < listEnemy.size(); i++)
+		{
+			listEnemy[i]->Render();
 		}
 
 		spriteHandler->End();

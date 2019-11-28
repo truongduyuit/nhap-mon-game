@@ -105,46 +105,25 @@ void CEnemy::Render()
 	}
 	else if (state == STATE_WOLF)
 	{
-		if (!isActive)
-			nxx > 0 ? ani = ANI_WOLF_LIE_RIGHT : ani = ANI_WOLF_LIE_LEFT;
+		if (!isActive) nxx > 0 ? ani = ANI_WOLF_LIE_RIGHT : ani = ANI_WOLF_LIE_LEFT;
 		else
 		{
-			if (isFly)
-				nxx > 0 ? ani = ANI_WOLF_FLY_RIGHT : ani = ANI_WOLF_FLY_LEFT;
-			else
-				nxx > 0 ? ani = ANI_WOLF_RUN_RIGHT : ani = ANI_WOLF_RUN_LEFT;
+			if (isFly) nxx > 0 ? ani = ANI_WOLF_FLY_RIGHT : ani = ANI_WOLF_FLY_LEFT;
+			else nxx > 0 ? ani = ANI_WOLF_RUN_RIGHT : ani = ANI_WOLF_RUN_LEFT;
 		}
 	}
-	else if (state == STATE_BAT)
-	{
-		nxx > 0 ? ani = ANI_BAT_FLY_RIGHT : ani = ANI_BAT_FLY_LEFT;
-	}
+	else if (state == STATE_BAT) nxx > 0 ? ani = ANI_BAT_FLY_RIGHT : ani = ANI_BAT_FLY_LEFT;
 	else if (state == STATE_FISH_MONSTER)
 	{
-		if (!isActive)
-		{
-			nxx > 0 ? ani = ANI_FISH_INACTIVE_RIGHT : ani = ANI_FISH_INACTIVE_LEFT;
-		}
+		if (!isActive) nxx > 0 ? ani = ANI_FISH_INACTIVE_RIGHT : ani = ANI_FISH_INACTIVE_LEFT;
 		else
 		{
-			if (isShoot)
-			{
-				nxx > 0 ? ani = ANI_FISH_SHOOT_RIGHT : ani = ANI_FISH_SHOOT_LEFT;
-			}
-			else if (isFishMove)
-			{
-				nxx > 0 ? ani = ANI_FISH_WALKING_RIGHT : ani = ANI_FISH_WALKING_LEFT;
-			}
-			else
-			{
-				nxx > 0 ? ani = ANI_FISH_INACTIVE_RIGHT : ani = ANI_FISH_INACTIVE_LEFT;
-			}
+			if (isShoot) nxx > 0 ? ani = ANI_FISH_SHOOT_RIGHT : ani = ANI_FISH_SHOOT_LEFT;
+			else if (isFishMove) nxx > 0 ? ani = ANI_FISH_WALKING_RIGHT : ani = ANI_FISH_WALKING_LEFT;
+			else nxx > 0 ? ani = ANI_FISH_INACTIVE_RIGHT : ani = ANI_FISH_INACTIVE_LEFT;
 		}
 	}
-	else if (state == STATE_BULLET)
-	{
-		nxx > 0 ? ani = ANI_BULLET_RIGHT : ani = ANI_BULLET_LEFT;
-	}
+	else if (state == STATE_BULLET) nxx > 0 ? ani = ANI_BULLET_RIGHT : ani = ANI_BULLET_LEFT;
 
 	if (isStop) animations[ani]->ResetFrame();
 
@@ -216,14 +195,8 @@ bool CEnemy::onFlag()
 	{
 		if (isOverlapping(coObjectFlag[i]))
 		{
-			if (coObjectFlag[i]->nextState == -2 && coObjectFlag[i]->state == nxx)
-			{
-				return true;
-			}
-			if (coObjectFlag[i]->nextState == 2 && coObjectFlag[i]->state == -1)
-			{
-				return true;
-			}
+			if (coObjectFlag[i]->nextState == -2 && coObjectFlag[i]->state == nxx) return true;
+			if (coObjectFlag[i]->nextState == 2 && coObjectFlag[i]->state == -1) return true;
 		}
 	}
 
@@ -430,8 +403,7 @@ void CEnemy::bullet_update()
 	vy = 0;
 
 	CSimon * simon = CSimon::GetInstance();
-	if (x < simon->x - SCREEN_WIDTH || x > simon->x + SCREEN_WIDTH)
-		isHidden = true;
+	if (x < simon->x - SCREEN_WIDTH || x > simon->x + SCREEN_WIDTH) isHidden = true;
 }
 
 void CEnemy::SetState(int state)
