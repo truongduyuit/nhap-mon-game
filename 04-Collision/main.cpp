@@ -240,8 +240,8 @@ void Update(DWORD dt)
 	listItem = map->Get_listItem();
 	listEnemy = map->Get_listEnemy();
 
-	vector<LPGAMEOBJECT>  coSimon(listItem);
-	copy(coObjectsWithSimon.begin(), coObjectsWithSimon.end(), back_inserter(coSimon));
+	vector<LPGAMEOBJECT>  coSimon(coObjectsWithSimon);
+	copy(listItem.begin(), listItem.end(), back_inserter(coSimon));
 	copy(listEnemy.begin(), listEnemy.end(), back_inserter(coSimon));
 
 	vector<LPGAMEOBJECT>  coSkill(coObjectsWithSkill);

@@ -368,11 +368,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	for (unsigned int i = 0; i < coObjects->size(); i++)
 	{
-		if (dynamic_cast<CGround *>(coObjects->at(i)))
-		{
-			x += dx;
-			y += dy;
-		}
 
 		if (dynamic_cast<CSObject *>(coObjects->at(i)) && coObjects->at(i)->state != SOBJECT_HIDDEN)
 		{
