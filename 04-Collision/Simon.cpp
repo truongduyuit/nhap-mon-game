@@ -1,6 +1,6 @@
 ﻿#include <algorithm>
 #include "debug.h"
-
+#include <random>
 
 #include "Simon.h"
 #include "Ground.h"
@@ -43,15 +43,33 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		vx = 0.018f;
 	}
 
-	if (!onStair)
+	if (isBeMoving && !isBlock)
 	{
-		vy += SIMON_GRAVITY * dt;
-	}
-	else
-	{
-		vy = 0;
+
+		if (x - be_x > 0.5f)
+		{
+			vx = -0.05f;
+			nx = -1;
+			state = SIMON_STATE_WALKING_LEFT;
+		}
+		else if (x - be_x < -0.5f)
+		{
+			vx = 0.05f;
+			nx = 1;
+			state = SIMON_STATE_WALKING_RIGHT;
+		}
+		else
+		{
+			nx = be_nx;
+
+			moveOnStair();
+			isBeMoving = false;
+		}
 	}
 
+
+	if (!onStair) vy += SIMON_GRAVITY * dt;
+	else vy = 0;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -118,7 +136,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 	}
-	else 
+	else
 	{
 		for (unsigned int i = 0; i < coObjectFlag.size(); i++)
 		{
@@ -133,19 +151,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 							create_enemy_right = true;
 							create_time_right = GetTickCount();
 
-							srand(time(NULL));
-							int n = rand() % 2 + 1;
+							random_device rd;
+							mt19937 rng(rd());
+							uniform_int_distribution<int> uni(1, 2);
+							auto n = uni(rng);
 
 							for (int j = 0; j <= n; j++)
 							{
-								CEnemy* enemy = new CEnemy();
-								enemy->SetPosition(x + SCREEN_WIDTH / 2 - j * 40, coObjectFlag[i]->state == 10 ? 148 : y - 2);
-
-								enemy->SetState(coObjectFlag[i]->state - 10);
-								enemy->setNxx(-coObjectFlag[i]->nextState);
-
-								CMap* map = CMap::GetInstance();
-								map->PushEnemy(enemy);
+								createEnemy(coObjectFlag[i]->state - 10, -coObjectFlag[i]->nextState, x + SCREEN_WIDTH / 2 - j * 40, coObjectFlag[i]->state == 10 ? 148 : y - 2);
 							}
 						}
 					}
@@ -156,22 +169,35 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 							create_enemy_left = true;
 							create_time_left = GetTickCount();
 
-							srand(time(NULL));
-							int n = rand() % 2 + 1;
-							for (int j = 0; j <= n; j++)
-							{
-								CEnemy* enemy = new CEnemy();
-								enemy->SetPosition(x - SCREEN_WIDTH / 2 + 40, coObjectFlag[i]->state == 10 ? 148 : y - 2);
-
-								enemy->SetState(coObjectFlag[i]->state - 10);
-								enemy->setNxx(-coObjectFlag[i]->nextState);
-
-								CMap* map = CMap::GetInstance();
-								map->PushEnemy(enemy);
-							}
+							createEnemy(coObjectFlag[i]->state - 10, -coObjectFlag[i]->nextState, x - SCREEN_WIDTH / 2 - 40, coObjectFlag[i]->state == 10 ? 148 : y - 2);
 						}
 					}
 				}
+				else if (coObjectFlag[i]->state == 12)
+				{
+					if (coObjectFlag[i]->nextState == 1)
+					{
+						if (!create_enemy_right)
+						{
+							create_enemy_right = true;
+							create_time_right = GetTickCount();
+
+
+							createEnemy(coObjectFlag[i]->state - 10, -coObjectFlag[i]->nextState, x + SCREEN_WIDTH / 2, y + 10.0f);
+						}
+					}
+					else
+					{
+						if (!create_enemy_left)
+						{
+							create_enemy_left = true;
+							create_time_left = GetTickCount();
+
+							createEnemy(coObjectFlag[i]->state - 10, -coObjectFlag[i]->nextState, x - SCREEN_WIDTH / 2, y + 10.0f);
+						}
+					}
+				}
+
 				else if (coObjectFlag[i]->state == 13 && CMap::GetInstance()->Get_numFishMonster() < 2)
 				{
 					if (coObjectFlag[i]->nextState == -1 && !create_enemy_left && create_enemy)
@@ -181,7 +207,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 						CEnemy* enemy = new CEnemy();
 						enemy->SetPosition(x - 60, 148);
-						enemy->SetMaxMin(80, x + 120);
+						enemy->SetMaxMin(50, x + 120);
 
 						enemy->SetState(coObjectFlag[i]->state - 10);
 						enemy->setNxx(coObjectFlag[i]->nextState);
@@ -196,7 +222,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 						CEnemy* enemy = new CEnemy();
 						enemy->SetPosition(x + 60, 148);
-						enemy->SetMaxMin(80, x + 60);
+						enemy->SetMaxMin(50, x + 120);
 
 						enemy->SetState(coObjectFlag[i]->state - 10);
 						enemy->setNxx(coObjectFlag[i]->nextState);
@@ -204,11 +230,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						CMap* map = CMap::GetInstance();
 						map->PushEnemy(enemy);
 					}
-					
+
 				}
 			}
-			
-			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 0 )
+
+			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 0)
 			{
 				if (Camera::GetInstance()->GetFollowSimon())
 				{
@@ -233,36 +259,13 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 
-	if (isBeMoving && !isBlock)
-	{
-
-		if (x - be_x > 0.5f)
-		{
-			x -= 0.45f;
-			nx = -1;
-			SetState(SIMON_STATE_WALKING_LEFT);
-		}
-		else if (x - be_x < -0.5f)
-		{
-			x += 0.45f;
-			nx = 1;
-			SetState(SIMON_STATE_WALKING_RIGHT);
-		}
-		else
-		{
-			isBeMoving = false;
-			nx = be_nx;
-
-			moveOnStair();
-		}
-	}
 
 	if (onStair && !isAttack && !isthrow)
 	{
 		if (GetTickCount() - action_time <= 300)
 		{
 			if (be_nx == 1)
-				x += 0.41f;	
+				x += 0.41f;
 			else
 				x -= 0.41f;
 
@@ -274,6 +277,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		else
 		{
 			onTimeStair = false;
+			action_time = 0;
 		}
 	}
 
@@ -299,7 +303,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		isAttack = false;
 		action_time = 0;
 
-		
+
 		weapon->SetPosTemp(x, y);
 		resetAttack();
 	}
@@ -320,7 +324,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		// kết thúc sprite đánh dao mới xuất hiện
 		if (animations[SIMON_ANI_ATTACK_RIGHT]->GetCurrentFrame() == 2 || animations[SIMON_ANI_ATTACK_LEFT]->GetCurrentFrame() == 2)
 		{
-			
+
 			if (skill->get_isHidden())
 			{
 				this->skill[0]--;
@@ -377,7 +381,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (coObjects->at(i)->state == CANE_ITEM)
 				{
 					startPick();
-					weapon->IncreaseLevel();					
+					weapon->IncreaseLevel();
 				}
 
 				// Lụm dao
@@ -424,7 +428,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					if (coObjects->at(i)->state == MONEY_ITEM_100)
 					{
 						CEffect * effect = new CEffect();
-						effect->SetPosition(x-5.0f, y-10.0f);
+						effect->SetPosition(x - 5.0f, y - 10.0f);
 						effect->StartShowEffect();
 						effect->SetState(STATE_MONEY_100);
 						CMap::GetInstance()->PushEffect(effect);
@@ -483,7 +487,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 	if (coEvents.size() == 0)
-	{		
+	{
 		x += dx;
 		y += dy;
 	}
@@ -576,7 +580,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					x += dx;
 					vy = 0;
 				}
-				 
+
 				if (e->obj->state != STATE_WALL_1 && e->obj->state != STATE_BLACK && e->obj->state != STATE_WALL_2 && e->obj->state != STATE_WALL_3)
 				{
 					if (e->obj->state == MONEY_ITEM_100)
@@ -620,7 +624,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				if (dynamic_cast<CEnemy *>(e->obj))
 				{
-					if (e->obj->state != STATE_BULLET )
+					if (e->obj->state != STATE_BULLET)
 					{
 						startInjure(e->obj->x > 0 ? 1 : -1);
 						weapon->ResetAttack();
@@ -632,14 +636,18 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 
-/*		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;*/	
+		/*		if (nx != 0) vx = 0;
+				if (ny != 0) vy = 0;*/
 	}
+
 
 	for (UINT i = 0; i < coEvents.size(); i++)
 	{
 		delete coEvents[i];
 	}
+
+
+
 }
 
 void CSimon::Render()
@@ -712,15 +720,17 @@ void CSimon::Render()
 	}
 	animations[ani]->Render(x, y, alpha);
 
-	if (renderBBox )RenderBoundingBox();
-	
+	if (renderBBox)RenderBoundingBox();
+
 }
 
 void CSimon::SetState(int state)
 {
+
 	CGameObject::SetState(state);
 
-	if (isBeMoving || isInJure) return;
+	if (isBeMoving || isInJure)
+		return;
 
 	switch (state)
 	{
@@ -843,7 +853,7 @@ void CSimon::resetSit()
 {
 	if (isSit && !onStair)
 	{
-		upBBox();		
+		upBBox();
 		isSit = false;
 	}
 }
@@ -904,7 +914,6 @@ void CSimon::beMoving(int bnx, float bx, int updown)
 	{
 		isBeMoving = true;
 
-
 		be_nx = bnx;
 		be_updown = updown;
 
@@ -914,8 +923,8 @@ void CSimon::beMoving(int bnx, float bx, int updown)
 		}
 		else
 		{
-			be_nx == -1 ? be_x = bx + 3.0f : be_x = bx -5.0f;
-		}	
+			be_nx == -1 ? be_x = bx + 3.0f : be_x = bx - 5.0f;
+		}
 	}
 }
 
@@ -923,14 +932,14 @@ void CSimon::moveOnStair()
 {
 	if (!onStair)
 	{
-		onStair = true;	
+		onStair = true;
 	}
 	if (!onTimeStair)
 	{
 		onTimeStair = true;
 		action_time = GetTickCount();
 	}
-	
+
 }
 
 void CSimon::upBBox()
@@ -978,6 +987,18 @@ CSimon * CSimon::GetInstance()
 {
 	if (__instance == NULL) __instance = new CSimon();
 	return __instance;
+}
+
+void CSimon::createEnemy(int state, int nxx, float xx, float yy)
+{
+	CEnemy* enemy = new CEnemy();
+	enemy->SetPosition(xx, yy);
+
+	enemy->SetState(state);
+	enemy->setNxx(nxx);
+
+	CMap* map = CMap::GetInstance();
+	map->PushEnemy(enemy);
 }
 
 bool CSimon::get_candownstair()

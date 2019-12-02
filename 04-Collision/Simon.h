@@ -147,6 +147,7 @@ public:
 	void beMoving(int bnx, float bx, int updown);
 	void moveOnStair();
 	void resetAttack();
+	void createEnemy(int state, int nxx, float xx, float yy);
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 

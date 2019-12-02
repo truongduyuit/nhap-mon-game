@@ -4,10 +4,10 @@
 #define ENEMY_WALKING_SPEED		0.062f
 #define WOLF_FLY_SPEED			0.09f
 #define WOLF_RUN_SPEED			0.11f
-#define BAT_FLY_SPEED			0.025f
-#define BAT_FLY_SPEED_Y			0.01f
+#define BAT_FLY_SPEED			0.06f
+#define BAT_FLY_SPEED_Y			0.015f
 #define ENEMY_GRAVITY			0.0001f
-#define FISH_INATIVE			0.09f
+#define FISH_INATIVE			0.19f
 #define FISH_WALKING_SPEED		0.015f
 #define SHOOT_SPEED				0.075f
 

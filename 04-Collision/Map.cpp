@@ -127,7 +127,7 @@ void CMap::LoadContent(string filePath)
 			else if (id_object == 4)
 			{
 				int x, y, state, nextState, nxx;
-				
+
 
 				in >> x >> y >> state >> nextState >> nxx;
 
@@ -167,7 +167,7 @@ void CMap::DrawMap()
 
 		if (i >= tile_x_end)
 		{
-			i += max_x - SCREEN_WIDTH / tile_size_x - 2 ;
+			i += max_x - SCREEN_WIDTH / tile_size_x - 2;
 			tile_x_end += max_x;
 		}
 	}
@@ -240,12 +240,14 @@ vector<LPGAMEOBJECT> CMap::Get_listItem()
 vector<LPGAMEOBJECT> CMap::Get_listEnemy()
 {
 	vector<LPGAMEOBJECT> enemies;
+	numFishmonster = 0;
 
 	for (unsigned int i = 0; i < listEnemy.size(); i++)
 	{
 		if (!listEnemy[i]->get_isHidden())
 		{
 			enemies.push_back(listEnemy[i]);
+			numFishmonster++;
 		}
 	}
 
@@ -279,20 +281,6 @@ void CMap::PushObject(LPGAMEOBJECT object)
 
 void CMap::Cross_Enemy()
 {
-	//vector<int> currentGrid = GetGridNumber(CGame::GetInstance()->getCamPos_x(), SCREEN_WIDTH - 1);
-	//for (int i = 0; i < currentGrid.size(); i++)
-	//{
-	//	vector<int> idObjects = gridObject[currentGrid[i]].Get_Arr();
-
-	//	for (int j = 0; j < idObjects.size(); j++)
-	//	{
-	//		if (dynamic_cast<CEnemy *>(mapObjects[idObjects[j]]) && !mapObjects[idObjects[j]]->get_isHidden())
-	//		{
-	//			mapObjects[idObjects[j]]->BeDestroy();
-	//		}
-	//	}
-	//}
-
 	for (int i = 0; i < listEnemy.size(); i++)
 	{
 		listEnemy[i]->BeDestroy();
@@ -301,24 +289,15 @@ void CMap::Cross_Enemy()
 
 void CMap::Stop_Enemy()
 {
-	/*vector<int> currentGrid = GetGridNumber(CGame::GetInstance()->getCamPos_x(), SCREEN_WIDTH - 1);
-	for (int i = 0; i < currentGrid.size(); i++)
-	{
-		vector<int> idObjects = gridObject[currentGrid[i]].Get_Arr();
-
-		for (int j = 0; j < idObjects.size(); j++)
-		{
-			if (dynamic_cast<CEnemy *>(mapObjects[idObjects[j]]) && !mapObjects[idObjects[j]]->get_isHidden())
-			{
-				mapObjects[idObjects[j]]->isStop = true;
-			}
-		}
-	}*/
-
 	for (int i = 0; i < listEnemy.size(); i++)
 	{
 		listEnemy[i]->isStop = true;
 	}
+}
+
+void CMap::ClearEnemy()
+{
+	listEnemy.clear();
 }
 
 CMap::CMap()
@@ -391,7 +370,7 @@ void CMap::Get_gridObjects(
 	coObjectFlag.clear();
 	coObjectsWithSimon.clear();
 	coObjectsWithSkill.clear();
-	numFishmonster = 0;
+
 
 	vector<int> currentGrid = GetGridNumber(CGame::GetInstance()->getCamPos_x(), SCREEN_WIDTH - 1);
 	unordered_map<int, int> checkUnique;
@@ -399,7 +378,7 @@ void CMap::Get_gridObjects(
 
 	for (int i = 0; i < currentGrid.size(); i++)
 	{
-		while (gridObject.size() -1 < currentGrid[currentGrid.size() -1])
+		while (gridObject.size() - 1 < currentGrid[currentGrid.size() - 1])
 		{
 			int_c temp;
 			gridObject.push_back(temp);
@@ -413,7 +392,7 @@ void CMap::Get_gridObjects(
 				coObjectsFull.push_back(mapObjects[idObjects[j]]);
 				checkUnique[idObjects[j]] = idObjects[j];
 
-				if (dynamic_cast<CSObject *>(mapObjects[idObjects[j]]) ) //&& !mapObjects[idObjects[j]]->get_isHidden()
+				if (dynamic_cast<CSObject *>(mapObjects[idObjects[j]])) //&& !mapObjects[idObjects[j]]->get_isHidden()
 				{
 					if (mapObjects[idObjects[j]]->GetState() == SMALL_CANDLE || mapObjects[idObjects[j]]->GetState() == BIG_CANDLE)
 					{
@@ -433,7 +412,7 @@ void CMap::Get_gridObjects(
 					coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);
 				}
 				else if (dynamic_cast<CEnemy *>(mapObjects[idObjects[j]])) // && !mapObjects[idObjects[j]]->get_isHidden()
-				{					
+				{
 					coObjectsWithSkill.push_back(mapObjects[idObjects[j]]);
 					coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);
 				}
@@ -452,13 +431,4 @@ void CMap::Get_gridObjects(
 	coObjectsFull.push_back(weapon);
 	coObjectsFull.push_back(simon);
 	coObjectsFull.push_back(skill);
-
-	for (int i = 0; i < coObjectsWithSimon.size(); i++)
-	{
-		if (dynamic_cast<CEnemy *>(coObjectsWithSimon[i]) && coObjectsWithSimon[i]->state == STATE_FISH_MONSTER)
-		{
-			numFishmonster++;
-		}
-	}
-
 }

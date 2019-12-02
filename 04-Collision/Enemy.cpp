@@ -18,7 +18,10 @@ CEnemy::CEnemy()
 void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 
-	if (x < CSimon::GetInstance()->x - SCREEN_WIDTH / 2 - SIMON_BBOX_WIDTH*3) isHidden = true;
+	if (x < CSimon::GetInstance()->x - SCREEN_WIDTH / 2 || x > CSimon::GetInstance()->x + SCREEN_WIDTH / 2 && state != STATE_WOLF)
+	{
+		isHidden = true;
+	}
 
 	if (isHidden) return;
 
@@ -76,7 +79,7 @@ void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 				else
-				{					
+				{
 					y += dy;
 				}
 
@@ -146,7 +149,7 @@ void CEnemy::BeDestroy()
 
 	int item = RandomItem();
 
-	if (item != SOBJECT_HIDDEN && isHidden == false)
+	if (item == STATE_GHOST && isHidden == false)
 	{
 		effect = new CEffect();
 		effect->SetPosition(x, y);
@@ -182,8 +185,8 @@ int CEnemy::RandomItem()
 	uniform_int_distribution<int> uni(1, items.size());
 	auto n = uni(rng);
 
-	
-	return items[n-1];
+
+	return items[n - 1];
 }
 
 bool CEnemy::onFlag()
@@ -240,7 +243,7 @@ void CEnemy::wolf_update()
 
 void CEnemy::bat_update()
 {
-	
+
 	if (!isActive)
 	{
 		isActive = true;
@@ -250,7 +253,7 @@ void CEnemy::bat_update()
 	else
 	{
 		nxx > 0 ? vx = BAT_FLY_SPEED : vx = -BAT_FLY_SPEED;
-		
+
 
 		if (GetTickCount() - action_time > 1000)
 		{
@@ -302,7 +305,7 @@ void CEnemy::fish_update()
 
 		if (y < x_min)
 		{
-			isActive = true;	
+			isActive = true;
 			nxx = nx;
 
 			random_device rd;
@@ -314,6 +317,7 @@ void CEnemy::fish_update()
 	}
 	else
 	{
+		vy = FISH_INATIVE/2;
 		if (y > 141 && dy > 0 && splash)
 		{
 			splash = false;
@@ -353,13 +357,13 @@ void CEnemy::fish_update()
 			if (GetTickCount() - action_time > move_time)
 			{
 				isFishMove = false;
-				isShoot = true; 
+				isShoot = true;
 				action_time = GetTickCount();
 
 				CEnemy* ene = new CEnemy();
 				ene->SetState(STATE_BULLET);
 				ene->nx = nxx;
-				nxx > 0 ? ene->SetPosition(x + FISH_MONSTER_WIDTH + 2, y + 5) : ene->SetPosition(x - 2, y +5);
+				nxx > 0 ? ene->SetPosition(x + FISH_MONSTER_WIDTH + 2, y + 5) : ene->SetPosition(x - 2, y + 5);
 				ene->set_isHidden(false);
 				CMap* map = CMap::GetInstance();
 				map->PushObject(ene);

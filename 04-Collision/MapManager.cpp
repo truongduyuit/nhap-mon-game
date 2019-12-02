@@ -43,6 +43,7 @@ void CMapManager::ChangeMap(int map)
 {
 	map_stage = map;
 	LoadMapResources();
+	this->map->ClearEnemy();
 }
 
 void CMapManager::LoadRoundGame(int round)
