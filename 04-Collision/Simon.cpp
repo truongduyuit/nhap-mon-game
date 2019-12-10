@@ -138,6 +138,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 	else
 	{
+		canActiveMoney1k = false;
 		for (unsigned int i = 0; i < coObjectFlag.size(); i++)
 		{
 			if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state >= 10)
@@ -261,8 +262,15 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				if (CMap::GetInstance()->Get_Boss() != NULL) CMap::GetInstance()->Get_Boss()->isActive = true;
 			}
+		
+			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 6)
+			{
+				canActiveMoney1k = true;
+				if (activeMoney1k) CMap::GetInstance()->ActiveMoney1K();
+			}
 		}
 	}
+
 
 
 	if (onStair && !isAttack && !isthrow)

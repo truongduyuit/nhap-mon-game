@@ -96,14 +96,6 @@ void CMap::LoadContent(string filePath)
 				sobject->SetState(state);
 				sobject->SetNextState(nextState);
 
-				if (state == 5)
-				{
-					int xAppear;
-					in >> xAppear;
-					sobject->SetxAppear(xAppear);
-					sobject->set_isHidden(true);
-				}
-
 				mapObjects[mapObjectId] = sobject;
 				AddGridObject(GetGridNumber(x), mapObjectId);
 			}
@@ -306,6 +298,15 @@ void CMap::ClearEnemy()
 	listEnemy.clear();
 }
 
+void CMap::ActiveMoney1K()
+{
+	if (money1k != NULL)
+	{
+		money1k->SetState(money1k->nextState);
+		money1k->isHidden = false;
+	}
+}
+
 CMap::CMap()
 {
 	LoadMapSprites();
@@ -404,12 +405,14 @@ void CMap::Get_gridObjects(
 					{
 						coObjectsWithSkill.push_back(mapObjects[idObjects[j]]);
 					}
-					else
+					else if (mapObjects[idObjects[j]]->GetState() != STATE_HIDDEN)
 					{
 						coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);
 					}
 
 					if (mapObjects[idObjects[j]]->GetState() == STATE_WALL_1 || mapObjects[idObjects[j]]->GetState() == STATE_WALL_2 || mapObjects[idObjects[j]]->GetState() == STATE_WALL_3) coObjectsWithSkill.push_back(mapObjects[idObjects[j]]);
+					if (mapObjects[idObjects[j]]->GetNextState() == MONEY_ITEM_1k)
+						money1k = mapObjects[idObjects[j]];
 				}
 				else if (dynamic_cast<CGround *>(mapObjects[idObjects[j]]))
 				{

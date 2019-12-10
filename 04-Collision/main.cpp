@@ -116,7 +116,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 				simon->SetState(SIMON_STATE_SIT);
 			}
 		}
-		
+		if (simon->get_canActiveMoney1k()) simon->SetActiveMoney1k(true);
 		break;
 	case DIK_F1:
 		LoadRoundGame(1);

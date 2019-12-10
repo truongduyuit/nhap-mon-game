@@ -24,7 +24,8 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	{
 		vy += SOBJECT_GRAVITY * dt;
 	}
-
+	if (state == STATE_HIDDEN) vy = 0;
+		
 
 	if (isDestroy)
 	{
@@ -73,6 +74,20 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			isAppear = true;
 			isHidden = true;
 			appear_start = GetTickCount();
+		}
+	}
+
+	if (state == MONEY_ITEM_1k)
+	{
+		for (unsigned int i = 0; i < coObjects->size(); i++)
+		{
+			if (dynamic_cast<CGround *>(coObjects->at(i)))
+			{
+				if (isOverlapping(coObjects->at(i)))
+				{
+					vy -= MONEY_ACTIVE_SPEED * dt;
+				}
+			}
 		}
 	}
 
@@ -146,7 +161,7 @@ void CSObject::Render()
 	{
 		animations[ani]->Render(x, y, 255);
 
-		if (renderBBox)RenderBoundingBox();
+		if (renderBBox) RenderBoundingBox();
 	}
 }
 

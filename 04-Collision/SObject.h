@@ -3,6 +3,7 @@
 
 #define SOBJECT_GRAVITY			0.00008f
 #define SMALL_HEART_GRAVITY		0.000015f
+#define MONEY_ACTIVE_SPEED		0.000095f
 
 #define SOBJECT_HIDDEN		-1
 #define SMALL_CANDLE		0
@@ -41,7 +42,7 @@
 #define BBOX_HEART_ITEM_H		16
 
 #define BBOX_MONEY_1K_W		16
-#define BBOX_MONEY_1K_H		16
+#define BBOX_MONEY_1K_H		15
 
 #define	BBOX_CANE_ITEM_W		16
 #define BBOX_CANE_ITEM_H		16

@@ -97,7 +97,8 @@ class CSimon : public CGameObject
 	bool onStair;
 	bool onTimeStair;
 	bool canDownstair;
-
+	bool activeMoney1k;
+	bool canActiveMoney1k;
 	bool isBeMoving;
 	float be_x;
 	int be_nx;
@@ -119,6 +120,7 @@ public:
 	void SetHP(int h) { hp = h; }
 	void SetIsBlock(bool block);
 	void SetBeMoving(bool moving) { isBeMoving = moving; }
+	void SetActiveMoney1k(bool active) { activeMoney1k = active; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 
 	bool get_isBlock() { return isBlock; }
@@ -134,6 +136,7 @@ public:
 	bool get_candownstair();
 	bool get_isBeMoving() { return isBeMoving; }
 	bool get_canSit() { return canSit; }
+	bool get_canActiveMoney1k() { return canActiveMoney1k; }
 
 	void startAttack();
 	void startJump();

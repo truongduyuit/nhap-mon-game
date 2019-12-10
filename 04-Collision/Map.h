@@ -27,6 +27,7 @@ class CMap
 	vector<LPGAMEOBJECT> listItem;
 	vector<LPGAMEOBJECT> listEnemy;
 	LPGAMEOBJECT boss;
+	LPGAMEOBJECT money1k;
 
 	unordered_map<int, LPGAMEOBJECT> mapObjects;
 	vector<int_c> gridObject;
@@ -47,6 +48,7 @@ public :
 	void Cross_Enemy();
 	void Stop_Enemy();
 	void ClearEnemy();
+	void ActiveMoney1K();
 
 	int GetMaxX() { return this->max_x; }
 	int GetMaxY() { return this->max_y; }
