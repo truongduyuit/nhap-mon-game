@@ -52,9 +52,14 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 			if (dynamic_cast<CEnemy *>(coObjects->at(i)))
 			{
-				if (isOverlapping(coObjects->at(i)))
+				if (isOverlapping(coObjects->at(i)) && coObjects->at(i)->state != STATE_BOSS_1)
 				{
 					coObjects->at(i)->BeDestroy();
+				}
+				if (isOverlapping(coObjects->at(i)) && coObjects->at(i)->state == STATE_BOSS_1)
+				{
+					CEnemy* enemy = (CEnemy*)coObjects->at(i);
+					enemy->be_hit();
 				}
 			}
 		}

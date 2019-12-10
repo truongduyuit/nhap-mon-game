@@ -14,6 +14,7 @@ CEnemy* enemy;
 void CMap::LoadMapSprites()
 {
 	CLoadResourcesHelper::LoadSprites("data\\background\\background_sprites.txt");
+	boss = NULL;
 }
 
 void CMap::LoadContent(string filePath)
@@ -256,6 +257,11 @@ vector<LPGAMEOBJECT> CMap::Get_listEnemy()
 	return enemies;
 }
 
+LPGAMEOBJECT CMap::Get_Boss()
+{
+	return boss;
+}
+
 void CMap::PushEffect(LPGAMEOBJECT effect)
 {
 	listEffect.push_back(effect);
@@ -413,6 +419,7 @@ void CMap::Get_gridObjects(
 				}
 				else if (dynamic_cast<CEnemy *>(mapObjects[idObjects[j]])) // && !mapObjects[idObjects[j]]->get_isHidden()
 				{
+					if (mapObjects[idObjects[j]]->state == STATE_BOSS_1) boss = mapObjects[idObjects[j]];
 					coObjectsWithSkill.push_back(mapObjects[idObjects[j]]);
 					coObjectsWithSimon.push_back(mapObjects[idObjects[j]]);
 				}

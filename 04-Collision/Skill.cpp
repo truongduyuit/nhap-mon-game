@@ -9,8 +9,8 @@ CSkill::CSkill()
 {
 	CLoadResourcesHelper::LoadSprites("data\\skills\\skill_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\skills\\skill_anis.txt", this);
-	state = STATE_KNIFE;
-	nextState = STATE_KNIFE;
+	state = STATE_ACE;
+	nextState = STATE_ACE;
 }
 
 void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -74,12 +74,14 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			if (dynamic_cast<CEnemy *>(coObjects->at(i)))
 			{
-				if (isOverlapping(coObjects->at(i)))
+				if (isOverlapping(coObjects->at(i)) && coObjects->at(i)->state != STATE_BOSS_1)
 				{
 					coObjects->at(i)->BeDestroy();
-
-					//set_isHidden(true);
-					SetPosition(-100.0f, -100.0f);
+				}
+				if (isOverlapping(coObjects->at(i)) && coObjects->at(i)->state == STATE_BOSS_1)
+				{
+					CEnemy* enemy = (CEnemy*)coObjects->at(i);
+					enemy->be_hit();
 				}
 			}
 		}

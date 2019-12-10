@@ -8,6 +8,7 @@ CEffect::CEffect()
 	state = STATE_DESTROY;
 	isHidden = true;
 	item = -1;
+	timeE = DESTROY_EFFECT_TIME;
 	CLoadResourcesHelper::LoadSprites("data\\effects\\effect_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\effects\\effect_anis.txt", this);
 }
@@ -29,7 +30,6 @@ void CEffect::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		return;
 	}
 
-
 	CGameObject::Update(dt);
 
 	if (state == STATE_BREAKING_WALL || state == STATE_SPLASH)
@@ -42,12 +42,18 @@ void CEffect::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		x += dx;
 		y += dy;
 
-		DWORD timeE;
-		if (state == STATE_DESTROY) timeE = DESTROY_EFFECT_TIME;
-		else timeE = BREAKING_WALL_TIME;
-
 		if (GetTickCount() - start_show > timeE)
 		{
+			if (state == STATE_BOSS_1_DIE)
+			{
+				CSObject* obj = new CSObject();
+				obj->SetState(STATE_CRYSTAL);
+				obj->SetNextState(STATE_CRYSTAL);
+				obj->SetPosition(x + 10.0f, y);
+				obj->set_isHidden(false);
+				obj->BeDestroy();
+				CMap::GetInstance()->PushItem(obj);
+			}
 			isHidden = true;
 			isShow = false;
 		}		
@@ -66,12 +72,13 @@ void CEffect::Render()
 	else if (state == STATE_MONEY_400) ani = STATE_MONEY_400;
 	else if (state == STATE_MONEY_700) ani = STATE_MONEY_700;
 	else if (state == STATE_MONEY_1K) ani = STATE_MONEY_1K;
+	else if (state == STATE_BOSS_1_DIE) ani = STATE_BOSS_1_DIE;
 
 	if (!isHidden && state != STATE_HIDDEN)
 	{
 		animations[ani]->Render(x, y);
 		
-		if (renderBBox) RenderBoundingBox();
+		//if (renderBBox) RenderBoundingBox();
 	}
 }
 
@@ -80,6 +87,10 @@ void CEffect::Render()
 void CEffect::SetState(int state)
 {
 	CGameObject::SetState(state);
+
+	if (state == STATE_DESTROY) timeE = DESTROY_EFFECT_TIME;
+	else if (state == STATE_BOSS_1_DIE) timeE = BOSS_1_DIE_TIME;
+	else timeE = BREAKING_WALL_TIME;
 }
 
 void CEffect::StartShowEffect()
@@ -87,9 +98,8 @@ void CEffect::StartShowEffect()
 	if (isHidden)
 	{
 		this->isHidden = false;
-
 		this->isShow = true;
-		start_show = GetTickCount();
+		start_show = GetTickCount();	
 	}
 }
 
@@ -138,6 +148,11 @@ void CEffect::GetBoundingBox(float &left, float &top, float &right, float &botto
 	{
 		right = left + SPLASH_WIDTH;
 		bottom = top + SPLASH_HEIGHT;
+	}
+	else if (state == STATE_BOSS_1_DIE)
+	{
+		right = left + BOSS_1_DIE_WIDTH;
+		bottom = top + BOSS_1_DIE_HEIGHT;
 	}
 	// money
 	else

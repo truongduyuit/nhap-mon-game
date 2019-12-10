@@ -17,3 +17,5 @@
 2	textures\\enemies.png			96 68 106
 3	textures\\sprite\\weapon\\effects.png	255 0 255
 4	textures\\money_effects.png		255 0 255
+5	textures\\boss_1.png			255 255 255
+6	textures\\boss_1_die_effects.png		255 255 255

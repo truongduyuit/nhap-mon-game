@@ -49,7 +49,7 @@ public:
 	bool isHidden;
 	bool renderBBox;
 	bool isStop;
-
+	bool isActive;
 	DWORD dt;
 	DWORD stop_time;
 

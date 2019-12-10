@@ -26,6 +26,7 @@ class CMap
 	vector<LPGAMEOBJECT> listEffect;
 	vector<LPGAMEOBJECT> listItem;
 	vector<LPGAMEOBJECT> listEnemy;
+	LPGAMEOBJECT boss;
 
 	unordered_map<int, LPGAMEOBJECT> mapObjects;
 	vector<int_c> gridObject;
@@ -62,6 +63,7 @@ public :
 	static CMap * GetInstance();
 
 	LPGAMEOBJECT Get_mapObject(unsigned int id);
+	LPGAMEOBJECT Get_Boss();
 	void AddMapObject(int id, LPGAMEOBJECT obj);
 	void AddGridObject(int numGrid, int id);
 	int GetGridNumber(int pos_x);

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "GameObject.h"
 
 #define ENEMY_WALKING_SPEED		0.062f
@@ -10,6 +10,7 @@
 #define FISH_INATIVE			0.19f
 #define FISH_WALKING_SPEED		0.015f
 #define SHOOT_SPEED				0.075f
+#define JUMP_TIME_BEZIER		0.01f
 
 #define ENEMY_HIDDEN			-1
 #define STATE_GHOST				0
@@ -17,6 +18,7 @@
 #define STATE_BAT				2
 #define STATE_FISH_MONSTER		3
 #define STATE_BULLET			4
+#define STATE_BOSS_1			5
 
 #define ANI_GHOST_LEFT			0
 #define ANI_GHOST_RIGHT			1
@@ -36,6 +38,8 @@
 #define ANI_FISH_INACTIVE_RIGHT 15
 #define ANI_BULLET_LEFT			16
 #define ANI_BULLET_RIGHT		17
+#define ANI_BOSS_1_INACTIVE		18
+#define ANI_BOSS_1_ACTIVE		19
 
 #define GHOST_WIDTH				16
 #define GHOST_HEIGHT			32
@@ -47,12 +51,18 @@
 #define FISH_MONSTER_HEIGHT		31
 #define BULLET_WIDTH			6
 #define BULLET_HEIGHT			7
+#define BOSS_1_WIDTH			48
+#define BOSS_1_HEIGHT			23
 
 #define ACTION_LEFT				-1
 #define ACTION_RIGHT			1
+#define HIT_HP					10
+#define HP_DEFAULT				10
+#define HP_BOSS					100
 
 class CEnemy : public CGameObject
 {
+	int hp;
 	int nxx;
 	int move_time;
 
@@ -61,11 +71,30 @@ class CEnemy : public CGameObject
 	float vyy;
 
 	bool isFly;
-	bool isActive;
 	bool isFishMove;
 	bool isShoot;
 	bool splash;
+	bool behit;
+	DWORD behit_time;
 	DWORD action_time;
+
+
+	// boss
+
+
+	bool isAttack;
+
+	float xOld, yOld;	// vị trí cũ
+	float xSimon, ySimon; // vị trí simon
+	float xMove, yMove; // vị trí đến
+	float bezier_time;
+
+	bool waiting;
+	bool moving_straight;
+	bool moving_bezier;
+	
+	DWORD waiting_time;
+
 public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
@@ -74,15 +103,21 @@ public:
 	virtual void BeDestroy();
 
 	int RandomItem();
+	void be_hit();
 
 	void wolf_update();
 	void ghost_update();
 	void bat_update();
 	void fish_update();
 	void bullet_update();
+	void boss_1_update();
+
+	void boss_move_straight();
+	void boss_move_bezier();
+
 	bool onFlag();
 	void setNxx(int xx) { nxx = xx; }
-
+	void setActive(bool at) { isActive = at; }
 	void SetMaxMin(float min, float max) { x_min = min; x_max = max; }
 	CEnemy();
 	~CEnemy() {};

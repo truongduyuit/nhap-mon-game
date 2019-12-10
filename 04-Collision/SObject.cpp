@@ -58,7 +58,7 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (isAppear)
 	{
-		if (GetTickCount() - appear_start >= SOBJECT_APPEAR_TIME)
+		if (GetTickCount() - appear_start >= SOBJECT_APPEAR_TIME && state != STATE_CRYSTAL)
 		{
 			SetState(SOBJECT_HIDDEN);
 			isHidden = true;
@@ -139,6 +139,8 @@ void CSObject::Render()
 	else if (state == ACE_ITEM) ani = ACE_ITEM;
 	else if (state == MONEY_ITEM_400) ani = MONEY_ITEM_400;
 	else if (state == MONEY_ITEM_700) ani = MONEY_ITEM_700;
+	else if (state == STATE_CRYSTAL) ani = STATE_CRYSTAL;
+	else if (state == OTHER_STUFF_1) ani = OTHER_STUFF_1;
 
 	if (state != SOBJECT_HIDDEN && !isHidden)
 	{
@@ -283,5 +285,15 @@ void CSObject::GetBoundingBox(float &left, float &top, float &right, float &bott
 	{
 		right = x + ACE_WIDTH;
 		bottom = y + ACE_HEIGHT;
+	}
+	else if (state == STATE_CRYSTAL)
+	{
+		right = x + CRYSTAL_WIDTH;
+		bottom = y + CRYSTAL_HEIGHT;
+	}
+	else if (state == OTHER_STUFF_1)
+	{
+		right = x + OTHER_STUFF_1_WIDTH;
+		bottom = y + OTHER_STUFF_1_HEIGHT;
 	}
 }

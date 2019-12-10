@@ -7,10 +7,12 @@
 #include "Simon.h"
 #include "Contands.h"
 #include "SObject.h"
+#include "MathHelper.h"
 
 
 CEnemy::CEnemy()
 {
+	hp = HP_DEFAULT;
 	CLoadResourcesHelper::LoadSprites("data\\enemies\\enemy_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\enemies\\enemy_anis.txt", this);
 }
@@ -18,7 +20,7 @@ CEnemy::CEnemy()
 void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 
-	if (x < CSimon::GetInstance()->x - SCREEN_WIDTH / 2 || x > CSimon::GetInstance()->x + SCREEN_WIDTH / 2 && state != STATE_WOLF)
+	if (x < CSimon::GetInstance()->x - SCREEN_WIDTH / 2 || x > CSimon::GetInstance()->x + SCREEN_WIDTH / 2 && state != STATE_WOLF && state != STATE_BOSS_1)
 	{
 		isHidden = true;
 	}
@@ -27,13 +29,17 @@ void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	CGameObject::Update(dt);
 
-	vy += ENEMY_GRAVITY * dt;
+
+	if (GetTickCount() - behit_time >= SIMON_ATTACK_TIME) behit = false;
+
+	if (state != STATE_BOSS_1) vy += ENEMY_GRAVITY * dt;
 
 	if (state == STATE_GHOST) ghost_update();
 	else if (state == STATE_WOLF) wolf_update();
 	else if (state == STATE_BAT) bat_update();
 	else if (state == STATE_FISH_MONSTER) fish_update();
 	else if (state == STATE_BULLET) bullet_update();
+	else if (state == STATE_BOSS_1) boss_1_update();
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -127,6 +133,7 @@ void CEnemy::Render()
 		}
 	}
 	else if (state == STATE_BULLET) nxx > 0 ? ani = ANI_BULLET_RIGHT : ani = ANI_BULLET_LEFT;
+	else if (state == STATE_BOSS_1) isActive ? ani = ANI_BOSS_1_ACTIVE : ani = ANI_BOSS_1_INACTIVE;
 
 	if (isStop) animations[ani]->ResetFrame();
 
@@ -141,16 +148,22 @@ void CEnemy::Render()
 void CEnemy::BeDestroy()
 {
 	CEffect * effect = new CEffect();
-	effect->SetPosition(x, y);
+	effect->SetPosition(x + 5.0f, y);
+
+	if (state == STATE_BOSS_1)
+	{
+		//effect->StartShowEffect(STATE_CRYSTAL);
+		effect->SetState(STATE_BOSS_1_DIE);
+	}
+
 	effect->StartShowEffect();
 
 	CMap* map = CMap::GetInstance();
 	map->PushEffect(effect);
 
-	int item = RandomItem();
-
-	if (item == STATE_GHOST && isHidden == false)
+	if (state == STATE_GHOST && isHidden == false)
 	{
+		int item = RandomItem();
 		effect = new CEffect();
 		effect->SetPosition(x, y);
 		effect->SetState(-1);
@@ -412,9 +425,98 @@ void CEnemy::bullet_update()
 	if (x < simon->x - SCREEN_WIDTH || x > simon->x + SCREEN_WIDTH) isHidden = true;
 }
 
+void CEnemy::boss_1_update()
+{
+	if (!isActive) 
+	{
+		xOld = x;
+		xMove = x - 70;
+		yOld = y;
+		yMove = y + 50;
+	}
+	else
+	{
+		if (!waiting)
+		{
+			xMove = CMathHelper::RandomInt(500, 700);
+			yMove = CMathHelper::RandomInt(50, 100);
+			waiting = true;
+			moving_straight = true;
+		}
+		else if (moving_straight)
+		{
+			boss_move_straight();
+		}
+		
+		if (moving_bezier)
+		{
+			boss_move_bezier();
+		}
+	}
+}
+
+void CEnemy::boss_move_straight()
+{
+	xOld = x;
+	yOld = y;
+
+	vx = (xMove - xOld) / 1000;
+	vy = (yMove - yOld) / 1000;
+
+	if (abs(x - xMove) < 2.0f && abs(y - yMove) < 2.0f)
+	{
+		moving_straight = false;
+		moving_bezier = true;
+
+		CSimon::GetInstance()->GetPosition(xSimon, ySimon);
+
+		if (x < xSimon) xMove = CMathHelper::RandomInt(xSimon > 500 ? xSimon + 5.0f : 500, 700);
+		else xMove = CMathHelper::RandomInt(500,xSimon > 500 ? xSimon - 0.5f: 700);
+		
+		yMove = CMathHelper::RandomInt(50, ySimon);
+
+		bezier_time = 0.01f;
+	}
+}
+
+void CEnemy::boss_move_bezier()
+{
+	if (bezier_time < 1)
+	{
+		float xNew = CMathHelper::GetBezier3P(xOld, xSimon + SIMON_BBOX_HEIGHT, xMove, bezier_time);
+		float yNew = CMathHelper::GetBezier3P(yOld, ySimon + SIMON_BBOX_HEIGHT, yMove, bezier_time);
+		vx = (xNew - xOld) / 1000;
+		vy = (yNew - yOld) / 1000;
+
+		bezier_time += JUMP_TIME_BEZIER;
+	}
+	else
+	{
+		moving_bezier = false;
+		waiting = false;
+	}
+}
+
 void CEnemy::SetState(int state)
 {
 	CGameObject::SetState(state);
+
+	if (state == STATE_BOSS_1)
+		hp = HP_BOSS;
+}
+
+void CEnemy::be_hit()
+{
+	if (!behit)
+	{
+		
+		hp -= HIT_HP;
+		OutputDebugString(L"a");
+		if (hp < 0) BeDestroy();
+
+		behit = true;
+		behit_time = GetTickCount();
+	}
 }
 
 void CEnemy::GetBoundingBox(float &left, float &top, float &right, float &bottom)
@@ -446,5 +548,10 @@ void CEnemy::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	{
 		right = left + BULLET_WIDTH;
 		bottom = top + BULLET_HEIGHT;
+	}
+	else if (state == STATE_BOSS_1)
+	{
+		right = left + BOSS_1_WIDTH;
+		bottom = top + BOSS_1_HEIGHT;
 	}
 }

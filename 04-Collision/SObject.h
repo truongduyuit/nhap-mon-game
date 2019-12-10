@@ -24,6 +24,8 @@
 #define ACE_ITEM			16
 #define MONEY_ITEM_400		17
 #define MONEY_ITEM_700		18
+#define STATE_CRYSTAL		19
+#define OTHER_STUFF_1		20
 
 #define SOBJECT_APPEAR_TIME		5000
 #define SOBJECT_DESTROY_TIME	500
@@ -67,6 +69,12 @@
 
 #define ACE_WIDTH	16
 #define ACE_HEIGHT	15
+
+#define CRYSTAL_WIDTH	14
+#define CRYSTAL_HEIGHT	16
+
+#define OTHER_STUFF_1_WIDTH		14
+#define OTHER_STUFF_1_HEIGHT	14
 
 class CSObject : public CGameObject
 {

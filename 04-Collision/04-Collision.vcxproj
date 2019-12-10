@@ -139,6 +139,7 @@
     <ClInclude Include="LoadResource.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapManager.h" />
+    <ClInclude Include="MathHelper.h" />
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="SObject.h" />
@@ -161,6 +162,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapManager.cpp" />
+    <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SObject.cpp" />

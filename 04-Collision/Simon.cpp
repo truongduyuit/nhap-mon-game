@@ -256,6 +256,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				CMapManager::GetInstance()->ChangeMap(coObjectFlag[i]->nextState);
 			}
+
+			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 7)
+			{
+				if (CMap::GetInstance()->Get_Boss() != NULL) CMap::GetInstance()->Get_Boss()->isActive = true;
+			}
 		}
 	}
 
@@ -350,6 +355,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	{
 		weapon->set_isHidden(true);
 		weapon->ResetAttack();
+		isJump = false;
 
 		if (!onStair && !isBeMoving && vy != 0)
 		{

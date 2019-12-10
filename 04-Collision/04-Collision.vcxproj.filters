@@ -108,6 +108,9 @@
     <ClInclude Include="Camera.h">
       <Filter>src\Maps</Filter>
     </ClInclude>
+    <ClInclude Include="MathHelper.h">
+      <Filter>src\Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.cpp">
@@ -169,6 +172,9 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>src\Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="MathHelper.cpp">
+      <Filter>src\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
