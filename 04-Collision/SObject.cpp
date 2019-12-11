@@ -211,6 +211,7 @@ void CSObject::BeDestroy()
 	else
 	{
 		CEffect * effect = new CEffect();
+		effect->SetState(STATE_DESTROY);
 		effect->SetPosition(x, y);
 		effect->StartShowEffect();
 		

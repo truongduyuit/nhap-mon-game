@@ -12,6 +12,7 @@
 #define STATE_MONEY_700			5
 #define STATE_MONEY_1K			6
 #define STATE_BOSS_1_DIE		7
+#define STATE_WHITE				8
 
 #define DESTROY_EFFECT_WIDTH	8
 #define DESTROY_EFFECT_HEIGHT	16
@@ -26,12 +27,14 @@
 
 #define DESTROY_EFFECT_TIME		400
 #define BREAKING_WALL_TIME		600
+#define WHITE_TIME				1000
 #define BOSS_1_DIE_TIME			1500
 class CEffect : public CGameObject
 {
 	bool isShow;
 	DWORD start_show;
 	DWORD timeE;
+	int alpha;
 
 	int item;
 public:

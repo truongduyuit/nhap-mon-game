@@ -9,6 +9,7 @@ CEffect::CEffect()
 	isHidden = true;
 	item = -1;
 	timeE = DESTROY_EFFECT_TIME;
+	alpha = 255;
 	CLoadResourcesHelper::LoadSprites("data\\effects\\effect_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\effects\\effect_anis.txt", this);
 }
@@ -73,10 +74,17 @@ void CEffect::Render()
 	else if (state == STATE_MONEY_700) ani = STATE_MONEY_700;
 	else if (state == STATE_MONEY_1K) ani = STATE_MONEY_1K;
 	else if (state == STATE_BOSS_1_DIE) ani = STATE_BOSS_1_DIE;
+	else if (state == STATE_WHITE) ani = STATE_WHITE;
 
 	if (!isHidden && state != STATE_HIDDEN)
 	{
-		animations[ani]->Render(x, y);
+		if (state == STATE_WHITE)
+		{
+			alpha += 16;
+			if (alpha > 128)
+				alpha = 0;
+		}
+		animations[ani]->Render(x, y, alpha);
 		
 		//if (renderBBox) RenderBoundingBox();
 	}
@@ -90,7 +98,14 @@ void CEffect::SetState(int state)
 
 	if (state == STATE_DESTROY) timeE = DESTROY_EFFECT_TIME;
 	else if (state == STATE_BOSS_1_DIE) timeE = BOSS_1_DIE_TIME;
+	else if (state == STATE_WHITE) 
+	{
+		timeE = WHITE_TIME;
+		alpha = 0;
+	}
 	else timeE = BREAKING_WALL_TIME;
+
+	
 }
 
 void CEffect::StartShowEffect()
@@ -153,6 +168,11 @@ void CEffect::GetBoundingBox(float &left, float &top, float &right, float &botto
 	{
 		right = left + BOSS_1_DIE_WIDTH;
 		bottom = top + BOSS_1_DIE_HEIGHT;
+	}
+	else if (state == STATE_WHITE)
+	{
+		right = left + SCREEN_WIDTH;
+		bottom = top + SCREEN_HEIGHT;
 	}
 	// money
 	else

@@ -426,6 +426,13 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				else if (coObjects->at(i)->state == CROSS_ITEM)
 				{
 					map->Cross_Enemy();
+
+					CEffect * effect = new CEffect();
+					effect->SetPosition(x - SCREEN_WIDTH / 2, 0);
+					effect->SetState(STATE_WHITE);
+					effect->StartShowEffect();
+					CMap::GetInstance()->PushEffect(effect);
+
 				}
 				else if (coObjects->at(i)->state == STOPWATCH_ITEM)
 				{
@@ -587,6 +594,12 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				}
 				else if (e->obj->state == CROSS_ITEM)
 				{
+					CEffect * effect = new CEffect();
+					effect->SetPosition(Camera::GetInstance()->GetCamX(), 0);
+					effect->SetState(STATE_WHITE);
+					effect->StartShowEffect();
+					CMap::GetInstance()->PushEffect(effect);
+
 					map->Cross_Enemy();
 				}
 				else if (e->obj->state != STATE_WALL_2 && e->obj->state != STATE_WALL_3)

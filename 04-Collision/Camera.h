@@ -42,7 +42,8 @@ public:
 	void Set_idnextMap(int map) { id_nextMap = map; }
 	bool GetCameraAuto() { return isAuto; }
 	bool GetFollowSimon() { return isFollowSimon; }
-	bool GetCamX() { return cam_x; }
+	float GetCamX() { return cam_x; }
+
 
 	static Camera* GetInstance();
 	Camera() { isFollowSimon = true; }
