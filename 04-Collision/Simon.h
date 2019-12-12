@@ -59,12 +59,14 @@
 #define SIMON_SIT_BBOX_HEIGHT	24
 #define SIMON_RESET_BBOX		7
 
-#define SIMON_ATTACK_TIME			400
-#define SIMON_PICK_TIME				1600
-#define SIMON_THROW_TIME			1000
-#define SIMON_ENJURE_TIME			800
-#define SIMON_UNTOUCHABLE_TIME		2500
-#define CREATE_ENEMY_TIME			8000
+#define SIMON_ATTACK_TIME					400
+#define SIMON_PICK_TIME						1600
+#define SIMON_THROW_TIME					1000
+#define SIMON_ENJURE_TIME					800
+#define SIMON_UNTOUCHABLE_TIME				2500
+#define CREATE_ENEMY_TIME					8000
+#define SIMON_INVISIBLE_TIME				2000
+#define SIMON_UNTOUCHABLE_INVISIBLE_TIME	5000
 
 #define SIMON_DOWNSTAIR		-2
 #define SIMON_UPSTAIR		2
@@ -100,6 +102,8 @@ class CSimon : public CGameObject
 	bool activeMoney1k;
 	bool canActiveMoney1k;
 	bool isBeMoving;
+	bool isInvisible;
+
 	float be_x;
 	int be_nx;
 	int be_updown;
@@ -108,6 +112,8 @@ class CSimon : public CGameObject
 	DWORD injure_time;
 	DWORD create_time_right;
 	DWORD create_time_left;
+	DWORD invisible_time;
+	DWORD untouchable_time;
 public:
 
 	CSimon();
@@ -145,6 +151,10 @@ public:
 	void startThrow();
 	void startSit(bool sit);
 	void startInjure(int nxx);
+	void startInvisible();
+
+	void updateUntouchable(int time);
+
 	void resetSit();
 	void upBBox();
 	void beMoving(int bnx, float bx, int updown);

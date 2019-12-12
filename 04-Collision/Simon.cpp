@@ -377,12 +377,29 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 
-	if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
+
+	// invisible
+	if (isInvisible)
 	{
-		untouchable_start = 0;
-		untouchable = 0;
-		alpha = 255;
+		if (GetTickCount() - invisible_time > SIMON_INVISIBLE_TIME)
+		{
+			isInvisible = false;
+			invisible_time = 0;
+
+			StartUntouchable();			
+		}
 	}
+
+	if (untouchable == 1)
+	{
+		if (GetTickCount() - untouchable_start > untouchable_time)
+		{
+			untouchable_start = 0;
+			untouchable = 0;
+			alpha = 255;
+		}
+	}
+
 
 	for (unsigned int i = 0; i < coObjects->size(); i++)
 	{
@@ -439,6 +456,10 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					this->skill[0] += 5;
 					canStop = true;
 				}
+				else if (coObjects->at(i)->state == STATE_INVINCIBILITY_POTION)
+				{
+					startInvisible();
+				}
 				else if (coObjects->at(i)->state == STATE_WALL_1)
 				{
 					vy = 0;
@@ -483,7 +504,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 
-		if (untouchable == 0 && !isInJure)
+		if (untouchable == 0 && !isInJure && !isInvisible)
 		{
 			if (dynamic_cast<CEnemy *>(coObjects->at(i)))
 			{
@@ -602,6 +623,10 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 					map->Cross_Enemy();
 				}
+				else if (e->obj->state == STATE_INVINCIBILITY_POTION)
+				{
+					startInvisible();
+				}
 				else if (e->obj->state != STATE_WALL_2 && e->obj->state != STATE_WALL_3)
 				{
 					x += dx;
@@ -647,7 +672,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				}
 			}
 
-			if (untouchable == 0 && !isInJure)
+			if (untouchable == 0 && !isInJure && !isInvisible)
 			{
 				if (dynamic_cast<CEnemy *>(e->obj))
 				{
@@ -741,10 +766,8 @@ void CSimon::Render()
 
 	if (isthrow && canStop) nx > 0 ? ani = SIMON_ANI_IDLE_RIGHT : ani = SIMON_ANI_IDLE_LEFT;
 
-	if (untouchable)
-	{
-		alpha == 255 ? alpha = 128 : alpha = 255;
-	}
+	if (untouchable) alpha == 255 ? alpha = 128 : alpha = 255;
+	if (isInvisible) alpha = 0;
 	animations[ani]->Render(x, y, alpha);
 
 	if (renderBBox)RenderBoundingBox();
@@ -895,6 +918,8 @@ void CSimon::startInjure(int nxx)
 
 		if (!isBeMoving && !onStair) be_nx = nxx;
 		resetAttack();
+
+		untouchable_time = SIMON_UNTOUCHABLE_TIME;
 	}
 }
 
@@ -932,6 +957,17 @@ void CSimon::startThrow()
 				vx = 0;
 			}
 		}
+	}
+}
+
+void CSimon::startInvisible()
+{
+	if (!isInvisible)
+	{
+		isInvisible = true;
+
+		invisible_time = GetTickCount();
+		untouchable_time = SIMON_UNTOUCHABLE_INVISIBLE_TIME;
 	}
 }
 

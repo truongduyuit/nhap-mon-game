@@ -156,6 +156,7 @@ void CSObject::Render()
 	else if (state == MONEY_ITEM_700) ani = MONEY_ITEM_700;
 	else if (state == STATE_CRYSTAL) ani = STATE_CRYSTAL;
 	else if (state == OTHER_STUFF_1) ani = OTHER_STUFF_1;
+	else if (state == STATE_INVINCIBILITY_POTION) ani = STATE_INVINCIBILITY_POTION;
 
 	if (state != SOBJECT_HIDDEN && !isHidden)
 	{
@@ -311,5 +312,10 @@ void CSObject::GetBoundingBox(float &left, float &top, float &right, float &bott
 	{
 		right = x + OTHER_STUFF_1_WIDTH;
 		bottom = y + OTHER_STUFF_1_HEIGHT;
+	}
+	else if (state == STATE_INVINCIBILITY_POTION)
+	{
+		right = x + INVINCIBILITY_POTION_WIDTH;
+		bottom = y + INVINCIBILITY_POTION_HEIGHT;
 	}
 }
