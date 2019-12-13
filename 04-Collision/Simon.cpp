@@ -18,7 +18,7 @@
 
 CSimon::CSimon()
 {
-	skill.push_back(10);
+	skill.push_back(20);
 
 	untouchable = 0;
 	alpha = 255;
@@ -260,7 +260,12 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 7)
 			{
-				if (CMap::GetInstance()->Get_Boss() != NULL) CMap::GetInstance()->Get_Boss()->isActive = true;
+				CMap* map = CMap::GetInstance();
+				if (map->Get_Boss() != NULL)
+				{
+					map->Get_Boss()->isActive = true;
+					Camera::GetInstance()->SetBlockBoss(true);
+				}
 			}
 		
 			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 6)
@@ -376,7 +381,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			injure_time = 0;
 		}
 	}
-
 
 	// invisible
 	if (isInvisible)
@@ -527,6 +531,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 	}
+
 
 	if (coEvents.size() == 0)
 	{
@@ -697,9 +702,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	{
 		delete coEvents[i];
 	}
-
-
-
 }
 
 void CSimon::Render()

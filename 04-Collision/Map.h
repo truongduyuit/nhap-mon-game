@@ -42,6 +42,7 @@ public :
 	void DrawMap();
 	void ResetListObjects();
 	void PushEffect(LPGAMEOBJECT effect);
+	void PushEffect(float xx, float xy);
 	void PushItem(CSObject* item);
 	void PushEnemy(CEnemy* enemy);
 	void PushObject(LPGAMEOBJECT shoot);

@@ -21,6 +21,7 @@ class Camera
 
 	bool isFollowSimon;
 	bool isAuto;
+	bool isBlockBoss;
 	bool nextMap;
 	bool changing;
 
@@ -39,6 +40,7 @@ public:
 	void SetFollowSimon() { isFollowSimon = true; isAuto = false; }
 	void SetAuto() { isAuto = true;}
 	void SetNextMap() { nextMap = true; }
+	void SetBlockBoss(bool block) { isBlockBoss = block; }
 	void Set_idnextMap(int map) { id_nextMap = map; }
 	bool GetCameraAuto() { return isAuto; }
 	bool GetFollowSimon() { return isFollowSimon; }

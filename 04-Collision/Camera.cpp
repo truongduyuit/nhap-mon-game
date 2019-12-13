@@ -4,8 +4,7 @@
 
 void Camera::Update(DWORD dt, CGameObject* simon)
 {
-	CMapManager* map_manager = CMapManager::GetInstance();
-	CSimon* simmon = CSimon::GetInstance();
+	if (isBlockBoss) return;
 	if (isFollowSimon && !isAuto)
 	{
 		FollowSimon(simon);
@@ -18,6 +17,8 @@ void Camera::Update(DWORD dt, CGameObject* simon)
 	{
 		if (GetTickCount() - delay_change_time > 1000)
 		{
+			CMapManager* map_manager = CMapManager::GetInstance();
+			CSimon* simmon = CSimon::GetInstance();
 			simmon->SetIsBlock(false);
 			simon->vy = 0;
 			map_manager = CMapManager::GetInstance();

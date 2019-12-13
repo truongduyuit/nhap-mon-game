@@ -47,14 +47,8 @@ void CSObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (state == HEART_SMALL_ITEM)
 	{
-		if (GetTickCount() - appear_start < SMALL_HEART_X_TIME)
-		{
-			x += 0.5f;
-		}
-		else if (GetTickCount() - appear_start >= SMALL_HEART_X_TIME && GetTickCount() - appear_start < 2* SMALL_HEART_X_TIME)
-		{
-			x -= 0.5f;
-		}
+		if (GetTickCount() - appear_start < SMALL_HEART_X_TIME) x += 0.5f;
+		else if (GetTickCount() - appear_start >= SMALL_HEART_X_TIME && GetTickCount() - appear_start < 2* SMALL_HEART_X_TIME) x -= 0.5f;
 	}
 
 	if (isAppear)
@@ -211,12 +205,12 @@ void CSObject::BeDestroy()
 	}
 	else
 	{
-		CEffect * effect = new CEffect();
+		/*CEffect * effect = new CEffect();
 		effect->SetState(STATE_DESTROY);
 		effect->SetPosition(x, y);
 		effect->StartShowEffect();
-		
-		map->PushEffect(effect);
+		map->PushEffect(effect);*/
+		map->PushEffect(x, y);
 	}
 	
 	if (!isDestroy)

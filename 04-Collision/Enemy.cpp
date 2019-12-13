@@ -2,6 +2,7 @@
 
 #include "LoadResource.h"
 #include "Enemy.h"
+#include "Camera.h"
 #include "Ground.h"
 #include "Map.h"
 #include "Simon.h"
@@ -20,17 +21,12 @@ CEnemy::CEnemy()
 void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 
-	if (x < CSimon::GetInstance()->x - SCREEN_WIDTH / 2 || x > CSimon::GetInstance()->x + SCREEN_WIDTH / 2 && state != STATE_WOLF && state != STATE_BOSS_1)
-	{
-		isHidden = true;
-	}
-
+	if (x < Camera::GetInstance()->GetCamX() || x > CMap::GetInstance()->GetPos_max() && state != STATE_WOLF && state != STATE_BOSS_1) isHidden = true;
 	if (isHidden) return;
+	if (GetTickCount() - behit_time >= SIMON_ATTACK_TIME) behit = false;
+	if (GetTickCount() - behit_time >= 50 && behit) return;
 
 	CGameObject::Update(dt);
-
-
-	if (GetTickCount() - behit_time >= SIMON_ATTACK_TIME) behit = false;
 
 	if (state != STATE_BOSS_1) vy += ENEMY_GRAVITY * dt;
 
@@ -427,6 +423,9 @@ void CEnemy::bullet_update()
 
 void CEnemy::boss_1_update()
 {
+	Camera* camera = Camera::GetInstance();
+	CMap* map = CMap::GetInstance();
+
 	if (!isActive) 
 	{
 		xOld = x;
@@ -435,11 +434,12 @@ void CEnemy::boss_1_update()
 		yMove = y + 50;
 	}
 	else
-	{
+	{		
 		if (!waiting)
 		{
-			xMove = CMathHelper::RandomInt(500, 700);
-			yMove = CMathHelper::RandomInt(50, 100);
+			xMove = CMathHelper::RandomInt(camera->GetCamX() + SPACE_ERROR_MIN, map->GetPos_max() - 2*SPACE_ERROR_MIN);
+			yMove = CMathHelper::RandomInt(Y_MOVE_BEGIN, Y_MOVE_END);
+
 			waiting = true;
 			moving_straight = true;
 		}
@@ -453,6 +453,11 @@ void CEnemy::boss_1_update()
 			boss_move_bezier();
 		}
 	}
+
+	if (x < camera->GetCamX())
+		x = camera->GetCamX() + 0.1f;
+	else if (x >map->GetPos_max() - 2 * SIMON_BBOX_WIDTH)
+		x = map->GetPos_max() - 2 * SIMON_BBOX_WIDTH - 8.1f;
 }
 
 void CEnemy::boss_move_straight()
@@ -469,11 +474,12 @@ void CEnemy::boss_move_straight()
 		moving_bezier = true;
 
 		CSimon::GetInstance()->GetPosition(xSimon, ySimon);
+		Camera* camera = Camera::GetInstance();
+		CMap* map = CMap::GetInstance();
 
-		if (x < xSimon) xMove = CMathHelper::RandomInt(xSimon > 500 ? xSimon + 5.0f : 500, 700);
-		else xMove = CMathHelper::RandomInt(500,xSimon > 500 ? xSimon - 0.5f: 700);
-		
-		yMove = CMathHelper::RandomInt(50, ySimon);
+		if (x < xSimon) xMove = CMathHelper::RandomInt(xSimon + SPACE_ERROR_MIN, map->GetPos_max() - 2*SPACE_ERROR_MIN);
+		else xMove = CMathHelper::RandomInt(camera->GetCamX() + 2*SPACE_ERROR_MIN, xSimon - SPACE_ERROR_MIN);
+		yMove = CMathHelper::RandomInt(Y_MOVE_BEGIN, ySimon + SIMON_BBOX_HEIGHT + SPACE_ERROR_MIN);
 
 		bezier_time = 0.01f;
 	}
@@ -513,7 +519,11 @@ void CEnemy::be_hit()
 		hp -= HIT_HP;
 		OutputDebugString(L"a");
 		if (hp < 0) BeDestroy();
-
+		else
+		{
+			CMap* map = CMap::GetInstance();
+			map->PushEffect(x + BOSS_1_WIDTH / 2, y + BOSS_1_HEIGHT / 2 - 3.0f);
+		}
 		behit = true;
 		behit_time = GetTickCount();
 	}

@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 #define SOBJECT_GRAVITY			0.00008f
-#define SMALL_HEART_GRAVITY		0.000015f
+#define SMALL_HEART_GRAVITY		0.00015f
 #define MONEY_ACTIVE_SPEED		0.000095f
 
 #define SOBJECT_HIDDEN				-1

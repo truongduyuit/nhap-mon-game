@@ -11,6 +11,9 @@
 #define FISH_WALKING_SPEED		0.015f
 #define SHOOT_SPEED				0.075f
 #define JUMP_TIME_BEZIER		0.01f
+#define SPACE_ERROR_MIN			20.0f
+#define Y_MOVE_BEGIN			50.0f
+#define Y_MOVE_END				100.0f
 
 #define ENEMY_HIDDEN			-1
 #define STATE_GHOST				0

@@ -259,6 +259,14 @@ void CMap::PushEffect(LPGAMEOBJECT effect)
 	listEffect.push_back(effect);
 }
 
+void CMap::PushEffect(float xx, float xy)
+{
+	CEffect * effect = new CEffect();
+	effect->SetPosition(xx,xy);
+	effect->StartShowEffect();
+	listEffect.push_back(effect);
+}
+
 void CMap::PushItem(CSObject* item)
 {
 	listItem.push_back(item);

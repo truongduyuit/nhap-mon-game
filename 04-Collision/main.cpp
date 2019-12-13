@@ -133,6 +133,9 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_F8:
 		LoadRoundGame(8);
 		break;
+	case DIK_O:
+		camera->SetBlockBoss(false);
+		break;
 	case DIK_P:
 		toggleRenderBBox();
 		break;

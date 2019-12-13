@@ -187,15 +187,8 @@ void CGameObject::basicCollision(float &min_tx, float &min_ty, float& nx,float& 
 
 void CGameObject::BeDestroy()
 {
-
-	/*CEffect * effect = CEffect::GetInstance();*/
-	CEffect * effect = new CEffect();
-	effect->SetPosition(x, y);
-	//if (state == STATE_BOSS_1) effect->SetState(STATE_BOSS_1_DIE);
-	effect->StartShowEffect();
-
 	CMap* map = CMap::GetInstance();
-	map->PushEffect(effect);
+	map->PushEffect(x,y);
 
 	isHidden = true;
 }

@@ -153,8 +153,6 @@ public:
 	void startInjure(int nxx);
 	void startInvisible();
 
-	void updateUntouchable(int time);
-
 	void resetSit();
 	void upBBox();
 	void beMoving(int bnx, float bx, int updown);

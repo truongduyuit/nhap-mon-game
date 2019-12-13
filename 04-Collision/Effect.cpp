@@ -50,7 +50,7 @@ void CEffect::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				CSObject* obj = new CSObject();
 				obj->SetState(STATE_CRYSTAL);
 				obj->SetNextState(STATE_CRYSTAL);
-				obj->SetPosition(x + 10.0f, y);
+				obj->SetPosition(CMap::GetInstance()->GetPos_max() - SCREEN_WIDTH/2, Y_MOVE_BEGIN);
 				obj->set_isHidden(false);
 				obj->BeDestroy();
 				CMap::GetInstance()->PushItem(obj);
@@ -75,6 +75,7 @@ void CEffect::Render()
 	else if (state == STATE_MONEY_1K) ani = STATE_MONEY_1K;
 	else if (state == STATE_BOSS_1_DIE) ani = STATE_BOSS_1_DIE;
 	else if (state == STATE_WHITE) ani = STATE_WHITE;
+	else if (state == STATE_BE_HIT) ani = STATE_BE_HIT;
 
 	if (!isHidden && state != STATE_HIDDEN)
 	{
@@ -103,9 +104,8 @@ void CEffect::SetState(int state)
 		timeE = WHITE_TIME;
 		alpha = 0;
 	}
+	else if (state == STATE_BE_HIT) timeE = BE_HIT_TIME;
 	else timeE = BREAKING_WALL_TIME;
-
-	
 }
 
 void CEffect::StartShowEffect()
@@ -149,7 +149,7 @@ void CEffect::GetBoundingBox(float &left, float &top, float &right, float &botto
 	left = x;
 	top = y;
 
-	if (state == STATE_DESTROY)
+	if (state == STATE_DESTROY || state == STATE_BE_HIT)
 	{
 		right = left + DESTROY_EFFECT_WIDTH;
 		bottom = top + DESTROY_EFFECT_HEIGHT;
