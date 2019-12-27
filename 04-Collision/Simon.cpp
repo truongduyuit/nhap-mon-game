@@ -216,7 +216,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						CMap* map = CMap::GetInstance();
 						map->PushEnemy(enemy);
 					}
-					else if (coObjectFlag[i]->nextState == 1 && !create_enemy_right && !create_enemy)
+					 if (coObjectFlag[i]->nextState == 1 && !create_enemy_right)
 					{
 						create_enemy_right = true;
 						create_time_right = GetTickCount();
@@ -283,14 +283,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (GetTickCount() - action_time <= 300)
 		{
 			if (be_nx == 1)
-				x += 0.41f;
+				x += SIMON_AUTO_STAIR_SPEED;
 			else
-				x -= 0.41f;
+				x -= SIMON_AUTO_STAIR_SPEED;
 
 			if (be_updown == SIMON_UPSTAIR)
-				dy = -0.41f;
+				dy = -SIMON_AUTO_STAIR_SPEED;
 			else
-				dy = 0.41f;
+				dy = SIMON_AUTO_STAIR_SPEED;
 		}
 		else
 		{

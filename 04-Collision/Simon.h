@@ -2,11 +2,12 @@
 #include "GameObject.h"
 #include "LoadResource.h"
 
-#define SIMON_WALKING_SPEED			0.07f
+#define SIMON_WALKING_SPEED			0.048f
 #define SIMON_GRAVITY				0.0005f
 #define SIMON_JUMP_SPEED_Y			0.18f
 #define SIMON_INJURE_X				0.4f
 #define SIMON_INJURE_Y				0.01f
+#define SIMON_AUTO_STAIR_SPEED		0.41f
 
 #define SIMON_HP_START				100
 
@@ -64,7 +65,7 @@
 #define SIMON_THROW_TIME					1000
 #define SIMON_ENJURE_TIME					800
 #define SIMON_UNTOUCHABLE_TIME				2500
-#define CREATE_ENEMY_TIME					8000
+#define CREATE_ENEMY_TIME					6000
 #define SIMON_INVISIBLE_TIME				2000
 #define SIMON_UNTOUCHABLE_INVISIBLE_TIME	5000
 

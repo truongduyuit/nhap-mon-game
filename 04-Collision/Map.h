@@ -54,7 +54,7 @@ public :
 	int GetMaxX() { return this->max_x; }
 	int GetMaxY() { return this->max_y; }
 	int GetTileSizeX() { return tile_size_x; }
-	int Get_numFishMonster() { return numFishmonster; }
+	int Get_numFishMonster();
 	float GetPos_max() { return pos_max; }
 	int GetPos_door() { return pos_door; }
 
