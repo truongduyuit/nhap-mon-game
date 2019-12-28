@@ -81,7 +81,7 @@ void CEffect::Render()
 	{
 		if (state == STATE_WHITE)
 		{
-			alpha += 16;
+			alpha += 12;
 			if (alpha > 128)
 				alpha = 0;
 		}

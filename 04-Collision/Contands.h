@@ -11,7 +11,7 @@
 
 #define ID_TEX_BACKBROUND		10
 
-#define SCREEN_WIDTH 420
+#define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 250
 
 #define MAP1_MAX_X	24

@@ -168,6 +168,19 @@ void CMap::DrawMap()
 	//OutputDebugString(L"a");
 }
 
+int CMap::Get_numFishMonster()
+{
+	int temp = 0;
+	
+	for (int i = 0; i < listEnemy.size(); i++)
+	{
+		if (abs(listEnemy[i]->x - CSimon::GetInstance()->x) < SCREEN_WIDTH / 2)
+			temp++;
+	}
+
+	return temp;
+}
+
 void CMap::ResetListObjects()
 {
 	tiles.clear();
