@@ -37,7 +37,7 @@ public:
 	void SetDoor(LPGAMEOBJECT f) {door = (CFlag*)f; }
 	void CloseDoor();
 
-	void SetFollowSimon() { isFollowSimon = true; isAuto = false; }
+	void SetFollowSimon() { isFollowSimon = true; isAuto = false; isBlockBoss = false; }
 	void SetAuto() { isAuto = true;}
 	void SetNextMap() { nextMap = true; }
 	void SetBlockBoss(bool block) { isBlockBoss = block; }

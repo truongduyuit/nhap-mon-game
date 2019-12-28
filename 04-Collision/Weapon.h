@@ -36,7 +36,7 @@ public:
 	virtual void Render();
 	void SetState(int statCSpritese);
 	void SetPosTemp(float xx, float xy);
-
+	void SetLevel(int level) { this->level = level; }
 	void IncreaseLevel() {
 		if (level < 3)
 			level++;
@@ -44,6 +44,7 @@ public:
 
 	void ResetAttack();
 	void UpdatePositionWithSimon();
+	
 	int GetCurrentAnimation();
 
 	CWeapon();

@@ -53,6 +53,8 @@ void LoadRoundGame(int round)
 {
 	map_manager = CMapManager::GetInstance();
 	map_manager->ChangeMap(round);
+
+	Camera::GetInstance()->SetFollowSimon();
 }
 
 void toggleRenderBBox()
@@ -138,6 +140,15 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		break;
 	case DIK_P:
 		toggleRenderBBox();
+		break;
+	case DIK_0:
+		CWeapon::GetInstance()->SetLevel(3);
+		break;
+	case DIK_9:
+		CWeapon::GetInstance()->SetLevel(2);
+		break;
+	case DIK_8:
+		CWeapon::GetInstance()->SetLevel(1);
 		break;
 	}
 }

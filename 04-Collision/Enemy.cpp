@@ -23,8 +23,8 @@ void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (x < Camera::GetInstance()->GetCamX() || x > CMap::GetInstance()->GetPos_max() && state != STATE_WOLF && state != STATE_BOSS_1) isHidden = true;
 	if (isHidden) return;
-	if (GetTickCount() - behit_time >= SIMON_ATTACK_TIME) behit = false;
-	if (GetTickCount() - behit_time >= 50 && behit) return;
+	if (GetTickCount() - behit_time >= BOSS_BIHIT_TIME) behit = false;
+	if (behit) return;
 
 	CGameObject::Update(dt);
 

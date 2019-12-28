@@ -21,6 +21,11 @@
 #define ANI_ACE_LEFT				5
 #define ANI_ACE_RIGHT				6
 
+#define SKILL_SPEED_1			0.00015f
+#define SKILL_SPEED_2			0.0002f
+#define SKILL_SPEED_3			0.095f
+#define TIME_SHOW_SPE			10000
+
 #define TIME_THROW					2000
 
 class CSkill : public CGameObject

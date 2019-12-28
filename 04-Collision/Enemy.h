@@ -62,6 +62,7 @@
 #define HIT_HP					10
 #define HP_DEFAULT				10
 #define HP_BOSS					100
+#define BOSS_BIHIT_TIME		    1000
 
 class CEnemy : public CGameObject
 {

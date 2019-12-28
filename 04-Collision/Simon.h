@@ -58,6 +58,8 @@
 #define SIMON_BBOX_HEIGHT		31
 #define SIMON_SIT_BBOX_WIDTH	17
 #define SIMON_SIT_BBOX_HEIGHT	24
+#define SIMON_DIE_BBOX_WIDTH	17
+#define SIMON_DIE_BBOX_HEIGHT	17
 #define SIMON_RESET_BBOX		7
 
 #define SIMON_ATTACK_TIME					400
@@ -68,6 +70,8 @@
 #define CREATE_ENEMY_TIME					6000
 #define SIMON_INVISIBLE_TIME				2000
 #define SIMON_UNTOUCHABLE_INVISIBLE_TIME	5000
+#define SIMON_DIE_TIME						3000
+#define SIMON_HP_INJURE						10
 
 #define SIMON_DOWNSTAIR		-2
 #define SIMON_UPSTAIR		2
@@ -93,6 +97,9 @@ class CSimon : public CGameObject
 	bool isSit;
 	bool canSit;
 	bool isInJure;
+	bool isDie;
+	bool isHasOtherStuff;
+
 	bool create_enemy;
 	bool create_enemy_right;
 	bool create_enemy_left;

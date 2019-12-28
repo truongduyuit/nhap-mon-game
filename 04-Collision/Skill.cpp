@@ -18,9 +18,9 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 
 	if (state != STATE_KNIFE && state != STATE_ACE)
-		vy += 0.00015f * dt;
+		vy += SKILL_SPEED_1 * dt;
 	else if (state == STATE_ACE)
-		vy += 0.0002f * dt;
+		vy += SKILL_SPEED_2 * dt;
 	else vy = 0;
 		
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -203,7 +203,7 @@ void CSkill::updateThrow()
 	}
 	else if (state == STATE_HOLY_WATER)
 	{
-		nx > 0 ? vx = 0.095f : vx = -0.095f;
+		nx > 0 ? vx = SKILL_SPEED_3 : vx = -SKILL_SPEED_3;
 	}
 	else if (state == STATE_HOLY_FIRE)
 	{
@@ -211,7 +211,7 @@ void CSkill::updateThrow()
 	}
 	else if (state == STATE_ACE)
 	{
-		nx > 0 ? vx = 0.095f : vx = -0.095f;
+		nx > 0 ? vx = SKILL_SPEED_3 : vx = -SKILL_SPEED_3;
 	}
 }
 
@@ -222,10 +222,10 @@ void CSkill::SetState(int state)
 	switch (state)
 	{
 	case STATE_HOLY_WATER:
-		timeshow = 10000;
+		timeshow = TIME_SHOW_SPE;
 		break;
 	case STATE_ACE:
-		timeshow = 2000;
+		timeshow = TIME_SHOW_SPE;
 		vy = -0.18f;
 		break;
 	default:

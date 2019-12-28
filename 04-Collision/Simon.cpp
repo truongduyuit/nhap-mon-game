@@ -15,13 +15,13 @@
 #include "Camera.h"
 
 
-
 CSimon::CSimon()
 {
-	skill.push_back(20);
+	skill.push_back(0);
 
 	untouchable = 0;
 	alpha = 255;
+	hp = SIMON_HP_START;
 
 	CLoadResourcesHelper::LoadSprites("data\\simon\\simon_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\simon\\simon_anis.txt", this);
@@ -76,10 +76,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	coEvents.clear();
 
-	if (state != SIMON_STATE_DIE)
-	{
-		CalcPotentialCollisions(coObjects, coEvents);
-	}
+	CalcPotentialCollisions(coObjects, coEvents);
 
 	CWeapon* weapon = CWeapon::GetInstance();
 	CSkill* skill = CSkill::GetInstance();
@@ -201,7 +198,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				else if (coObjectFlag[i]->state == 13 && CMap::GetInstance()->Get_numFishMonster() < 2)
 				{
-					if (coObjectFlag[i]->nextState == -1 && !create_enemy_left && create_enemy)
+					if (coObjectFlag[i]->nextState == -1 && !create_enemy_left)
 					{
 						create_enemy_left = true;
 						create_time_left = GetTickCount();
@@ -237,12 +234,17 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 0)
 			{
-				if (Camera::GetInstance()->GetFollowSimon())
+				if (Camera::GetInstance()->GetFollowSimon() && !isJump)
 				{
 					Camera::GetInstance()->SetDoor(coObjectFlag[i]);
 					Camera::GetInstance()->SetAuto();
 					SetState(SIMON_STATE_IDLE);
 					isBlock = true;
+				}
+				else if (Camera::GetInstance()->GetFollowSimon())
+				{
+					dx = 0;
+					vx = 0;
 				}
 			}
 
@@ -256,6 +258,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 8 && !isJump)
 			{
 				CMapManager::GetInstance()->ChangeMap(coObjectFlag[i]->nextState);
+				isJump = false;
+				isSit = false;
 			}
 
 			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 7)
@@ -353,6 +357,46 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 
+	if (isDie && GetTickCount() - action_time > SIMON_DIE_TIME)
+	{
+
+		Camera::GetInstance()->SetFollowSimon();
+		nx = 1;
+		SetState(SIMON_STATE_IDLE);
+		isDie = false;
+		hp = SIMON_HP_START;
+		onStair = false;
+
+		CMapManager* mapManager = CMapManager::GetInstance();
+		mapManager->ChangeMap(mapManager->GetMapStage());
+		if (!isHasOtherStuff)
+		{
+			this->skill[0] = 0;
+			
+		}
+		isHasOtherStuff = false;
+		weapon->SetLevel(1);
+	}
+
+	if (y > 1000)
+	{
+		Camera::GetInstance()->SetFollowSimon();
+		nx = 1;
+		SetState(SIMON_STATE_IDLE);
+		isDie = false;
+		hp = SIMON_HP_START;
+		onStair = false;
+
+		CMapManager* mapManager = CMapManager::GetInstance();
+		mapManager->ChangeMap(mapManager->GetMapStage());
+		if (!isHasOtherStuff)
+		{
+			this->skill[0] = 0;
+
+		}
+		isHasOtherStuff = false;
+		weapon->SetLevel(1);
+	}
 
 	// Injure
 	if (GetTickCount() - injure_time > SIMON_ENJURE_TIME)
@@ -362,6 +406,13 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			StartUntouchable();
 			isInJure = false;
 			action_time = 0;
+
+			if (hp <= 0)
+			{
+				SetState(SIMON_STATE_DIE);
+				isDie = true;
+				action_time = GetTickCount();
+			}
 		}
 	}
 	else if (isInJure)
@@ -449,12 +500,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					map->Cross_Enemy();
 
 					CEffect * effect = new CEffect();
-					effect->SetPosition(x - SCREEN_WIDTH / 2, 0);
+					effect->SetPosition(Camera::GetInstance()->GetCamX(), 0);
 					effect->SetState(STATE_WHITE);
 					effect->StartShowEffect();
 					CMap::GetInstance()->PushEffect(effect);
 
 				}
+				else if (coObjects->at(i)->state == OTHER_STUFF_1)
+					isHasOtherStuff = true;
 				else if (coObjects->at(i)->state == STOPWATCH_ITEM)
 				{
 					this->skill[0] += 5;
@@ -568,8 +621,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (ny < 0)
 				{
 					if (isJump) isSit = true;
-					basicCollision(min_tx, min_ty, nx, ny);
-					//if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
+						basicCollision(min_tx, min_ty, nx, ny);
+					if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
 				}
 				else
 				{
@@ -627,6 +680,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					CMap::GetInstance()->PushEffect(effect);
 
 					map->Cross_Enemy();
+				}
+				else if (e->obj->state == POT_ROAST_ITEM)
+				{
+					hp = SIMON_HP_START;
+				}
+				else if (e->obj->state == OTHER_STUFF_1)
+				{
+					isHasOtherStuff = true;
 				}
 				else if (e->obj->state == STATE_INVINCIBILITY_POTION)
 				{
@@ -914,8 +975,8 @@ void CSimon::startInjure(int nxx)
 {
 	if (!isInJure)
 	{
+		hp -= SIMON_HP_INJURE;
 		isInJure = true;
-
 		injure_time = GetTickCount();
 
 		if (!isBeMoving && !onStair) be_nx = nxx;
@@ -1030,10 +1091,15 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		right = left + SIMON_SIT_BBOX_WIDTH;
 		bottom = top + SIMON_SIT_BBOX_HEIGHT;
 	}
-	else if (isJump)
+	else if (isJump && state)
 	{
 		right = left + SIMON_SIT_BBOX_WIDTH;
 		bottom = top + SIMON_SIT_BBOX_HEIGHT;
+	}
+	else if (state == SIMON_STATE_DIE)
+	{
+		right = left + SIMON_DIE_BBOX_WIDTH;
+		bottom = top + SIMON_DIE_BBOX_HEIGHT;
 	}
 	else
 	{
