@@ -9,18 +9,20 @@ CSkill::CSkill()
 {
 	CLoadResourcesHelper::LoadSprites("data\\skills\\skill_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\skills\\skill_anis.txt", this);
-	state = STATE_ACE;
-	nextState = STATE_ACE;
+	state = STATE_HOLY_WATER;
+	nextState = STATE_HOLY_WATER;
 }
 
 void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
 
-	if (state != STATE_KNIFE && state != STATE_ACE)
+	if (state != STATE_KNIFE && state != STATE_ACE && state != STATE_HOLY_WATER)
 		vy += SKILL_SPEED_1 * dt;
 	else if (state == STATE_ACE)
-		vy += SKILL_SPEED_2 * dt;
+		vy += SKILL_SPEED_AXE_Y * dt;
+	else if (state == STATE_HOLY_WATER)
+		vy += SKILL_SPEED_3 * dt;
 	else vy = 0;
 		
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -36,7 +38,7 @@ void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (state == STATE_HOLY_WATER && !isFailing)
 	{
-		vy = -0.03f;
+		//vy += 0.035f;
 		isFailing = true;
 	}
 
@@ -203,7 +205,7 @@ void CSkill::updateThrow()
 	}
 	else if (state == STATE_HOLY_WATER)
 	{
-		nx > 0 ? vx = SKILL_SPEED_3 : vx = -SKILL_SPEED_3;
+		nx > 0 ? vx = SKILL_SPEED_WATER_X : vx -= SKILL_SPEED_WATER_X;
 	}
 	else if (state == STATE_HOLY_FIRE)
 	{
@@ -211,7 +213,7 @@ void CSkill::updateThrow()
 	}
 	else if (state == STATE_ACE)
 	{
-		nx > 0 ? vx = SKILL_SPEED_3 : vx = -SKILL_SPEED_3;
+		nx > 0 ? vx = SKILL_SPEED_AXE_X : vx = -SKILL_SPEED_AXE_X;
 	}
 }
 
@@ -223,10 +225,11 @@ void CSkill::SetState(int state)
 	{
 	case STATE_HOLY_WATER:
 		timeshow = TIME_SHOW_SPE;
+		vy = -SKILL_SPEED_WATER_Y;
 		break;
 	case STATE_ACE:
-		timeshow = TIME_SHOW_SPE;
-		vy = -0.18f;
+		timeshow = TIME_THROW;
+		vy = -SKILL_SPEED_AXE;
 		break;
 	default:
 		timeshow = TIME_THROW;

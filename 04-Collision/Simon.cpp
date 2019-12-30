@@ -17,7 +17,7 @@
 
 CSimon::CSimon()
 {
-	skill.push_back(0);
+	skill.push_back(100);
 
 	untouchable = 0;
 	alpha = 255;
@@ -167,7 +167,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 							create_enemy_left = true;
 							create_time_left = GetTickCount();
 
-							createEnemy(coObjectFlag[i]->state - 10, -coObjectFlag[i]->nextState, x - SCREEN_WIDTH / 2 - 40, coObjectFlag[i]->state == 10 ? 148 : y - 2);
+							createEnemy(coObjectFlag[i]->state - 10, -coObjectFlag[i]->nextState, x - SCREEN_WIDTH / 2 , coObjectFlag[i]->state == 10 ? 148 : y - 2);
 						}
 					}
 				}
@@ -351,7 +351,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				this->skill[0]--;
 				skill->nx = this->nx;
-				skill->nx > 0 ? skill->SetPosition(x + 10, y + 6) : skill->SetPosition(x - 3, y + 6);
+				//skill->nx > 0 ? skill->SetPosition(x + 10, y + 6) : skill->SetPosition(x - 3, y + 6);
+				skill->SetPosition(x, y+5);
 				skill->startThrow();
 			}
 		}
@@ -473,7 +474,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				// Lụm dao
 				else if (coObjects->at(i)->state == KNIFE_ITEM)
 				{
-					this->skill[0] += 5;
+					this->skill[0] += INCREASE_SKILL;
 					skill->SetState(STATE_KNIFE);
 					skill->SetNextState(STATE_KNIFE);
 					canStop = false;
@@ -482,7 +483,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				// lụm nước thánh
 				else if (coObjects->at(i)->state == HOLY_WATER_ITEM)
 				{
-					this->skill[0] += 5;
+					this->skill[0] += INCREASE_SKILL;
 					skill->SetState(STATE_HOLY_WATER);
 					skill->SetNextState(STATE_HOLY_WATER);
 					canStop = false;
@@ -490,7 +491,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				// lụm rìu
 				else if (coObjects->at(i)->state == ACE_ITEM)
 				{
-					this->skill[0] += 5;
+					this->skill[0] += INCREASE_SKILL;
 					skill->SetState(STATE_ACE);
 					skill->SetNextState(STATE_ACE);
 					canStop = false;
@@ -510,7 +511,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					isHasOtherStuff = true;
 				else if (coObjects->at(i)->state == STOPWATCH_ITEM)
 				{
-					this->skill[0] += 5;
+					this->skill[0] += INCREASE_SKILL;
 					canStop = true;
 				}
 				else if (coObjects->at(i)->state == STATE_INVINCIBILITY_POTION)
@@ -644,7 +645,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				// Lụm dao
 				else if (e->obj->state == KNIFE_ITEM)
 				{
-					this->skill[0] += 5;
+					this->skill[0] = INCREASE_SKILL;
 					skill->SetState(STATE_KNIFE);
 					skill->SetNextState(STATE_KNIFE);
 					canStop = false;
@@ -653,7 +654,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				// lụm nước thánh
 				else if (e->obj->state == HOLY_WATER_ITEM)
 				{
-					this->skill[0] += 5;
+					this->skill[0] = INCREASE_SKILL;
 					skill->SetState(STATE_HOLY_WATER);
 					skill->SetNextState(STATE_HOLY_WATER);
 					canStop = false;
@@ -661,14 +662,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				// lụm rìu
 				else if (e->obj->state == ACE_ITEM)
 				{
-					this->skill[0] += 5;
+					this->skill[0] = INCREASE_SKILL;
 					skill->SetState(STATE_ACE);
 					skill->SetNextState(STATE_ACE);
 					canStop = false;
 				}
 				else if (e->obj->state == STOPWATCH_ITEM)
 				{
-					this->skill[0] += 5;
+					this->skill[0] = INCREASE_SKILL;
 					canStop = true;
 				}
 				else if (e->obj->state == CROSS_ITEM)

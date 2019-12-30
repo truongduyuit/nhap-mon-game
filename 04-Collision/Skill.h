@@ -22,8 +22,12 @@
 #define ANI_ACE_RIGHT				6
 
 #define SKILL_SPEED_1			0.00015f
-#define SKILL_SPEED_2			0.0002f
-#define SKILL_SPEED_3			0.095f
+#define SKILL_SPEED_AXE			0.35f
+#define SKILL_SPEED_AXE_Y		0.0015f
+#define SKILL_SPEED_AXE_X		0.16f
+#define SKILL_SPEED_WATER_X		0.2f
+#define SKILL_SPEED_WATER_Y		0.1f
+#define SKILL_SPEED_3			0.0015f
 #define TIME_SHOW_SPE			10000
 
 #define TIME_THROW					2000
