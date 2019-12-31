@@ -7,7 +7,10 @@
 #define SIMON_JUMP_SPEED_Y			0.18f
 #define SIMON_INJURE_X				0.4f
 #define SIMON_INJURE_Y				0.01f
-#define SIMON_AUTO_STAIR_SPEED		0.41f
+#define SIMON_AUTO_STAIR_SPEED		0.2f
+#define SIMON_AUTO_STAIR_SPEED_Y	0.2f
+#define SIMON_WALKING_SPEED_AUTO	0.018f
+#define SIMON_WALKING_SPEED_MOVING	0.05f
 
 #define SIMON_HP_START				100
 
@@ -152,6 +155,7 @@ public:
 	bool get_isBeMoving() { return isBeMoving; }
 	bool get_canSit() { return canSit; }
 	bool get_canActiveMoney1k() { return canActiveMoney1k; }
+	bool get_onTimeStair() { return onTimeStair; }
 
 	void startAttack();
 	void startJump();

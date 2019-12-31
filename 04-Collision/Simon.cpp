@@ -40,21 +40,22 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	else if (isBlock && isBeMoving)
 	{
 		SetState(SIMON_STATE_WALKING_RIGHT);
-		vx = 0.018f;
+		vx = SIMON_WALKING_SPEED_AUTO;
 	}
 
-	if (isBeMoving && !isBlock)
+
+	if (isBeMoving && !isBlock && !onStair)
 	{
 
 		if (x - be_x > 0.5f)
 		{
-			vx = -0.05f;
+			vx = -SIMON_WALKING_SPEED_MOVING;
 			nx = -1;
 			state = SIMON_STATE_WALKING_LEFT;
 		}
 		else if (x - be_x < -0.5f)
 		{
-			vx = 0.05f;
+			vx = SIMON_WALKING_SPEED_MOVING;
 			nx = 1;
 			state = SIMON_STATE_WALKING_RIGHT;
 		}
@@ -123,6 +124,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 							coObjectFlag[i]->nextState == -2 ? x = coObjectFlag[i]->x + 13.0f : x = coObjectFlag[i]->x + 2.0f;
 						}
 						y = coObjectFlag[i]->y - 27.0f;
+
+						SetState(SIMON_STATE_IDLE);
 					}
 				}
 
@@ -280,21 +283,21 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 
-
-
-	if (onStair && !isAttack && !isthrow)
+	if (onStair && !isAttack && !isthrow && onTimeStair)
 	{
 		if (GetTickCount() - action_time <= 300)
 		{
 			if (be_nx == 1)
-				x += SIMON_AUTO_STAIR_SPEED;
+				dx = SIMON_AUTO_STAIR_SPEED;
 			else
-				x -= SIMON_AUTO_STAIR_SPEED;
-
+				dx = -SIMON_AUTO_STAIR_SPEED;
 			if (be_updown == SIMON_UPSTAIR)
-				dy = -SIMON_AUTO_STAIR_SPEED;
+				dy = -SIMON_AUTO_STAIR_SPEED_Y;
 			else
-				dy = SIMON_AUTO_STAIR_SPEED;
+				dy = SIMON_AUTO_STAIR_SPEED_Y;
+
+			this->x += dx;
+			this->y += dy;
 		}
 		else
 		{
@@ -302,6 +305,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			action_time = 0;
 		}
 	}
+
 
 	// pick
 	if (GetTickCount() - action_time >= SIMON_PICK_TIME)
@@ -418,19 +422,22 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 	else if (isInJure)
 	{
-		weapon->set_isHidden(true);
-		weapon->ResetAttack();
-		isJump = false;
+		if (!isBeMoving)
+		{
+			weapon->set_isHidden(true);
+			weapon->ResetAttack();
+			isJump = false;
 
-		if (!onStair && !isBeMoving && vy != 0)
-		{
-			vy = -SIMON_INJURE_Y;
-			nx = be_nx;
-			dx = -be_nx * SIMON_INJURE_X;
-		}
-		else
-		{
-			injure_time = 0;
+			if (!onStair && !isBeMoving && vy != 0)
+			{
+				vy = -SIMON_INJURE_Y;
+				nx = be_nx;
+				dx = -be_nx * SIMON_INJURE_X;
+			}
+			else
+			{
+				injure_time = 0;
+			}
 		}
 	}
 
@@ -1087,7 +1094,7 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	left = x;
 	top = y;
 
-	if ((isSit && !onStair))
+	if (isSit && !onStair)
 	{
 		right = left + SIMON_SIT_BBOX_WIDTH;
 		bottom = top + SIMON_SIT_BBOX_HEIGHT;

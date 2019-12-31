@@ -72,7 +72,9 @@ void onFlag(int st)
 		if (simon->isOverlapping(coObjectFlag[i]) && !simon->get_isBeMoving())
 		{
 			if (!simon->get_onstair() && coObjectFlag[i]->nextState == st)
+			{
 				simon->beMoving(coObjectFlag[i]->state, coObjectFlag[i]->x, coObjectFlag[i]->nextState);
+			}
 		}
 	}
 }
@@ -111,12 +113,10 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 			if (!simon->get_onstair())
 				onFlag(SIMON_DOWNSTAIR);
 		}
-		else
+		else if (!simon->get_isAttack() && !simon->get_isPick() && !simon->get_canSit() && !simon->get_onstair())
 		{
-			if (!simon->get_isAttack() && !simon->get_isPick() && !simon->get_canSit())
-			{
-				simon->SetState(SIMON_STATE_SIT);
-			}
+			simon->SetState(SIMON_STATE_SIT);
+
 		}
 		if (simon->get_canActiveMoney1k()) simon->SetActiveMoney1k(true);
 		break;
@@ -168,11 +168,11 @@ void CSampleKeyHander::KeyState(BYTE *states)
 
 	if (game->IsKeyDown(DIK_DOWN))
 	{
-		if (simon->get_onstair())
+		if (simon->get_onstair() && !simon->get_onTimeStair())
 		{
 			if (simon->get_be_nx() == 1 && simon->get_be_updown() == SIMON_DOWNSTAIR) simon->SetState(SIMON_STATE_WALKING_RIGHT);
 			else if (simon->get_be_nx() == -1 && simon->get_be_updown() == SIMON_UPSTAIR) simon->SetState(SIMON_STATE_WALKING_RIGHT);
-			else simon->SetState(SIMON_STATE_WALKING_LEFT);
+			else simon->SetState(SIMON_STATE_WALKING_LEFT);		
 		}
 		else if (!simon->get_candownstair() && !simon->get_onstair())
 		{
