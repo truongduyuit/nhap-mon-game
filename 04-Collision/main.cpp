@@ -21,6 +21,7 @@
 #include "Weapon.h"
 #include "Skill.h"
 #include "Enemy.h"
+#include "BoardGame.h"
 
 using namespace std;
 
@@ -29,6 +30,7 @@ CMapManager* map_manager;
 Camera* camera;
 CMap* map;
 CSimon *simon;
+CBoardGame* boardgame;
 
 vector<LPGAMEOBJECT> coObjectsFull;
 vector<LPGAMEOBJECT> coObjectGround;
@@ -247,6 +249,8 @@ void LoadResources()
 
 void Update(DWORD dt)
 {
+	boardgame = CBoardGame::GetInstance();
+	boardgame->Update(dt);
 
 	map = CMap::GetInstance();
 	map->Get_gridObjects(coObjectsFull, coObjectGround, coObjectFlag, coObjectsWithSimon, coObjectsWithSkill);
@@ -330,6 +334,7 @@ void Render()
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 		
+		boardgame->Render();
 		map->DrawMap();
 
 		for (unsigned int i = 0; i < coObjectsFull.size(); i++)

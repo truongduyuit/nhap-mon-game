@@ -18,3 +18,5 @@
 5	textures\\boss_1.png			255 255 255
 6	textures\\boss_1_die_effects.png		255 255 255
 7	textures\\white.png			0 0 0
+8	textures\\blackboard.png		255 255 255
+9	textures\\1.png			255 0 255

@@ -168,6 +168,7 @@ void CEnemy::BeDestroy()
 	}
 
 	isHidden = true;
+	CSimon::GetInstance()->increaseScore(100);
 }
 
 int CEnemy::RandomItem()

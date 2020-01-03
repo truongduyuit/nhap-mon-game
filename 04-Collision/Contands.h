@@ -11,11 +11,13 @@
 
 #define ID_TEX_BACKBROUND		10
 
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 250
+#define SCREEN_WIDTH 273
+#define SCREEN_HEIGHT 270
 
 #define MAP1_MAX_X	24
 #define MAP1_MAX_y	5
+
+#define BOARDGAME_HEIGHT	19
 
 #pragma region Textures
 #define TEX_PATH "data\\textures\\textures.txt"

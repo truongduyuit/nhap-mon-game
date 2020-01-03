@@ -43,11 +43,6 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				if (isOverlapping(coObjects->at(i)))
 				{
-					/*if (coObjects->at(i)->GetState() == BIG_CANDLE || coObjects->at(i)->GetState() == SMALL_CANDLE || coObjects->at(i)->GetState() == STATE_WALL_1)
-					{
-						coObjects->at(i)->BeDestroy();
-					}*/
-
 					coObjects->at(i)->BeDestroy();
 				}
 			}
@@ -63,6 +58,8 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					CEnemy* enemy = (CEnemy*)coObjects->at(i);
 					enemy->be_hit();
 				}
+
+				
 			}
 		}
 	}
@@ -227,7 +224,7 @@ void CWeapon::UpdatePositionWithSimon()
 				frame = 1;
 
 			}
-			else if (animations[ani]->GetCurrentFrame() < 3)
+			else if (animations[ani]->GetCurrentFrame() < 4)
 			{
 				x -= 9;
 				y += 4.5;

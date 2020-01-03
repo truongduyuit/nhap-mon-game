@@ -75,7 +75,8 @@
 #define SIMON_UNTOUCHABLE_INVISIBLE_TIME	5000
 #define SIMON_DIE_TIME						3000
 #define SIMON_HP_INJURE						10
-#define INCREASE_SKILL						50
+#define INCREASE_SKILL_BIG					5
+#define INCREASE_SKILL_SMALL				1
 
 #define SIMON_DOWNSTAIR		-2
 #define SIMON_UPSTAIR		2
@@ -86,6 +87,9 @@ class CSimon : public CGameObject
 
 	int hp;
 	vector<int> skill;
+	int life;
+	int score;
+
 	int sthrow;
 	int alpha;
 
@@ -151,6 +155,10 @@ public:
 	bool get_onstair() { return onStair; }
 	int get_be_nx() { return be_nx; }
 	int get_be_updown() { return be_updown; }
+	int get_skillNum() { return skill[0]; }
+	int get_lifeNum() { return life; }
+	int getScoreNum() { return score; }
+	void increaseScore(int x) { score += x; }
 	bool get_candownstair();
 	bool get_isBeMoving() { return isBeMoving; }
 	bool get_canSit() { return canSit; }
@@ -172,6 +180,7 @@ public:
 	void moveOnStair();
 	void resetAttack();
 	void createEnemy(int state, int nxx, float xx, float yy);
+	void resetDie();
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 

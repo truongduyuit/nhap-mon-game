@@ -55,6 +55,7 @@ void Camera::FollowSimon(CGameObject* simon)
 
 
 	CGame::GetInstance()->SetCamPos(cx, 0);
+	
 }
 
 void Camera::StartAuto()

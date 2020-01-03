@@ -66,6 +66,7 @@ void CMap::LoadContent(string filePath)
 			{
 				int size_x, size_y, x, y;
 				in >> size_x >> size_y >> x >> y;
+				y += BOARDGAME_HEIGHT;
 
 				ground = new CGround();
 				ground->setSize(size_x, size_y);
@@ -82,6 +83,7 @@ void CMap::LoadContent(string filePath)
 			{
 				int x, y;
 				in >> x >> y;
+				y += BOARDGAME_HEIGHT;
 
 				simon = CSimon::GetInstance();
 				simon->SetPosition(float(x), float(y));
@@ -90,6 +92,7 @@ void CMap::LoadContent(string filePath)
 			{
 				int x, y, state, nextState;
 				in >> x >> y >> state >> nextState;
+				y += BOARDGAME_HEIGHT;
 
 				sobject = new CSObject();
 				sobject->SetPosition(float(x), float(y));
@@ -103,6 +106,7 @@ void CMap::LoadContent(string filePath)
 			{
 				int size_x, size_y, x, y, state, nextState;
 				in >> size_x >> size_y >> x >> y >> state >> nextState;
+				y += BOARDGAME_HEIGHT;
 
 				CFlag* flag = new CFlag();
 				flag->setSize(size_x, size_y);
@@ -121,8 +125,8 @@ void CMap::LoadContent(string filePath)
 			{
 				int x, y, state, nextState, nxx;
 
-
 				in >> x >> y >> state >> nextState >> nxx;
+				y += BOARDGAME_HEIGHT;
 
 				enemy = new CEnemy();
 				enemy->SetPosition(float(x), float(y));

@@ -6,7 +6,7 @@ void CTileMat::Render()
 {
 	CSprites *sprites = CSprites::GetInstance();
 
-	sprites->Get(id)->Draw(index_y*tile_size_x, index_x * tile_size_y + 20);
+	sprites->Get(id)->Draw(index_y*tile_size_x -1, index_x * tile_size_y + 20 + BOARDGAME_HEIGHT);
 }
 
 void CTileMat::SetTileSize(int size_x, int size_y)
