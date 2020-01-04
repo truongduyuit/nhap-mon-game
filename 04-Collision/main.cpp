@@ -21,6 +21,7 @@
 #include "Weapon.h"
 #include "Skill.h"
 #include "Enemy.h"
+#include "BoardGame.h"
 
 using namespace std;
 
@@ -29,6 +30,7 @@ CMapManager* map_manager;
 Camera* camera;
 CMap* map;
 CSimon *simon;
+CBoardGame* boardgame;
 
 vector<LPGAMEOBJECT> coObjectsFull;
 vector<LPGAMEOBJECT> coObjectGround;
@@ -90,7 +92,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		if (!simon->get_onstair())
+		if (!simon->get_onstair() && !simon->get_isOnJump())
 		{
 			if (simon->state == SIMON_STATE_WALKING_RIGHT)simon->startJumpMove(true);
 			else if (simon->state == SIMON_STATE_WALKING_LEFT) simon->startJumpMove(false);
@@ -195,7 +197,7 @@ void CSampleKeyHander::KeyState(BYTE *states)
 			else simon->SetState(SIMON_STATE_WALKING_RIGHT);
 		}
 	}
-	else if (game->IsKeyDown(DIK_RIGHT) && !simon->get_isAttack() && !simon->get_isJump())
+	else if (game->IsKeyDown(DIK_RIGHT) && !simon->get_isAttack() && !simon->get_isJump() && !simon->get_isOnJump())
 	{
 		if (simon->get_isJump())
 		{
@@ -206,7 +208,7 @@ void CSampleKeyHander::KeyState(BYTE *states)
 			simon->SetState(SIMON_STATE_WALKING_RIGHT);
 		}
 	}
-	else if (game->IsKeyDown(DIK_LEFT) && !simon->get_isAttack() && !simon->get_isJump())
+	else if (game->IsKeyDown(DIK_LEFT) && !simon->get_isAttack() && !simon->get_isJump() && !simon->get_isOnJump())
 	{
 		if (simon->get_isJump())
 		{
@@ -247,6 +249,8 @@ void LoadResources()
 
 void Update(DWORD dt)
 {
+	boardgame = CBoardGame::GetInstance();
+	boardgame->Update(dt);
 
 	map = CMap::GetInstance();
 	map->Get_gridObjects(coObjectsFull, coObjectGround, coObjectFlag, coObjectsWithSimon, coObjectsWithSkill);
@@ -330,6 +334,7 @@ void Render()
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 		
+		boardgame->Render();
 		map->DrawMap();
 
 		for (unsigned int i = 0; i < coObjectsFull.size(); i++)
@@ -373,7 +378,7 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	wc.cbWndExtra = 0;
 	wc.hIcon = NULL;
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH); //WHITE_BRUSH
 	wc.lpszMenuName = NULL;
 	wc.lpszClassName = WINDOW_CLASS_NAME;
 	wc.hIconSm = NULL;

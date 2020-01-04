@@ -9,8 +9,8 @@ CSkill::CSkill()
 {
 	CLoadResourcesHelper::LoadSprites("data\\skills\\skill_sprites.txt");
 	CLoadResourcesHelper::LoadAnimations("data\\skills\\skill_anis.txt", this);
-	state = STATE_HOLY_WATER;
-	nextState = STATE_HOLY_WATER;
+	state = STATE_HIDDEN;
+	nextState = STATE_HIDDEN;
 }
 
 void CSkill::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -151,7 +151,8 @@ void CSkill::Render()
 	{
 		nx < 0 ? ani = ANI_ACE_LEFT : ani = ANI_ACE_RIGHT;
 	}
-	if (!isHidden)
+
+	if (!isHidden && state != STATE_TOPWATCH && state != STATE_HIDDEN)
 	{
 		animations[ani]->Render(x, y);
 		if (renderBBox)RenderBoundingBox();

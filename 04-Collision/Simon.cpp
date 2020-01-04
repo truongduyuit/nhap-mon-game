@@ -13,11 +13,13 @@
 #include "LoadResource.h"
 #include "Enemy.h"
 #include "Camera.h"
-
+#include "BoardGame.h"
 
 CSimon::CSimon()
 {
-	skill.push_back(100);
+	skill.push_back(5);
+	life = 3;
+	score = 0;
 
 	untouchable = 0;
 	alpha = 255;
@@ -159,7 +161,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 							for (int j = 0; j <= n; j++)
 							{
-								createEnemy(coObjectFlag[i]->state - 10, -coObjectFlag[i]->nextState, x + SCREEN_WIDTH / 2 - j * 40, coObjectFlag[i]->state == 10 ? 148 : y - 2);
+								createEnemy(coObjectFlag[i]->state - 10, -coObjectFlag[i]->nextState, x + SCREEN_WIDTH / 2 - j * 40, coObjectFlag[i]->state == 10 ? 148 + BOARDGAME_HEIGHT : y - 2);
 							}
 						}
 					}
@@ -170,7 +172,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 							create_enemy_left = true;
 							create_time_left = GetTickCount();
 
-							createEnemy(coObjectFlag[i]->state - 10, -coObjectFlag[i]->nextState, x - SCREEN_WIDTH / 2 , coObjectFlag[i]->state == 10 ? 148 : y - 2);
+							createEnemy(coObjectFlag[i]->state - 10, -coObjectFlag[i]->nextState, x - SCREEN_WIDTH / 2 , coObjectFlag[i]->state == 10 ? 148 + BOARDGAME_HEIGHT : y - 2);
 						}
 					}
 				}
@@ -242,7 +244,9 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					Camera::GetInstance()->SetDoor(coObjectFlag[i]);
 					Camera::GetInstance()->SetAuto();
 					SetState(SIMON_STATE_IDLE);
+					nx = 1;
 					isBlock = true;
+					isPausetime = true;
 				}
 				else if (Camera::GetInstance()->GetFollowSimon())
 				{
@@ -263,6 +267,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				CMapManager::GetInstance()->ChangeMap(coObjectFlag[i]->nextState);
 				isJump = false;
 				isSit = false;
+				dy = 0;
 			}
 
 			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 7)
@@ -336,7 +341,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	else if (isAttack)
 	{
 		weapon->SetPosTemp(x, y);
-		if (!isJump) dx = 0;
+		if (!isJump && !isOnJump) dx = 0;
 	}
 
 	// throw
@@ -362,46 +367,9 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 
-	if (isDie && GetTickCount() - action_time > SIMON_DIE_TIME)
-	{
+	if (isDie && GetTickCount() - action_time > SIMON_DIE_TIME) resetDie();
 
-		Camera::GetInstance()->SetFollowSimon();
-		nx = 1;
-		SetState(SIMON_STATE_IDLE);
-		isDie = false;
-		hp = SIMON_HP_START;
-		onStair = false;
-
-		CMapManager* mapManager = CMapManager::GetInstance();
-		mapManager->ChangeMap(mapManager->GetMapStage());
-		if (!isHasOtherStuff)
-		{
-			this->skill[0] = 0;
-			
-		}
-		isHasOtherStuff = false;
-		weapon->SetLevel(1);
-	}
-
-	if (y > 1000)
-	{
-		Camera::GetInstance()->SetFollowSimon();
-		nx = 1;
-		SetState(SIMON_STATE_IDLE);
-		isDie = false;
-		hp = SIMON_HP_START;
-		onStair = false;
-
-		CMapManager* mapManager = CMapManager::GetInstance();
-		mapManager->ChangeMap(mapManager->GetMapStage());
-		if (!isHasOtherStuff)
-		{
-			this->skill[0] = 0;
-
-		}
-		isHasOtherStuff = false;
-		weapon->SetLevel(1);
-	}
+	if (y > 1000) resetDie();
 
 	// Injure
 	if (GetTickCount() - injure_time > SIMON_ENJURE_TIME)
@@ -464,6 +432,35 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 
+	if (isJump && vy > 0)
+	{
+		if (!jumpingMove && !isFly)
+		{
+			isFly = true;
+			fly_time = GetTickCount();
+		}
+	}
+
+	if (isFly)
+	{
+		if (GetTickCount() - fly_time > SIMON_FLY_TIME)
+		{
+			isJump = false;
+			isOnJump = true;
+			isFly = false;
+		}
+		else
+		{
+			vy = 0;
+			dy = 0;
+		}
+	}
+
+	if (isOnJump && jumpingMove)
+	{
+		jump_nx ? vx = SIMON_WALKING_SPEED : vx = -SIMON_WALKING_SPEED;
+	}
+
 	for (unsigned int i = 0; i < coObjects->size(); i++)
 	{
 
@@ -481,7 +478,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				// Lụm dao
 				else if (coObjects->at(i)->state == KNIFE_ITEM)
 				{
-					this->skill[0] += INCREASE_SKILL;
 					skill->SetState(STATE_KNIFE);
 					skill->SetNextState(STATE_KNIFE);
 					canStop = false;
@@ -490,7 +486,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				// lụm nước thánh
 				else if (coObjects->at(i)->state == HOLY_WATER_ITEM)
 				{
-					this->skill[0] += INCREASE_SKILL;
 					skill->SetState(STATE_HOLY_WATER);
 					skill->SetNextState(STATE_HOLY_WATER);
 					canStop = false;
@@ -498,7 +493,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				// lụm rìu
 				else if (coObjects->at(i)->state == ACE_ITEM)
 				{
-					this->skill[0] += INCREASE_SKILL;
 					skill->SetState(STATE_ACE);
 					skill->SetNextState(STATE_ACE);
 					canStop = false;
@@ -518,7 +512,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					isHasOtherStuff = true;
 				else if (coObjects->at(i)->state == STOPWATCH_ITEM)
 				{
-					this->skill[0] += INCREASE_SKILL;
+					skill->SetState(STATE_TOPWATCH);
 					canStop = true;
 				}
 				else if (coObjects->at(i)->state == STATE_INVINCIBILITY_POTION)
@@ -529,7 +523,15 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					vy = 0;
 				}
-
+				else if (coObjects->at(i)->state == HEART_SMALL_ITEM)
+				{
+					this->skill[0] += INCREASE_SKILL_SMALL;
+				}
+				else if (coObjects->at(i)->state == HEART_ITEM)
+				{
+					this->skill[0] += INCREASE_SKILL_BIG;
+				}
+				else if (coObjects->at(i)->state == STATE_CRYSTAL) hp = SIMON_HP_START;
 				if (coObjects->at(i)->state != STATE_WALL_1 && coObjects->at(i)->state != STATE_BLACK && coObjects->at(i)->state != STATE_WALL_2 && coObjects->at(i)->state != STATE_WALL_3)
 				{
 					if (coObjects->at(i)->state == MONEY_ITEM_100)
@@ -539,6 +541,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						effect->StartShowEffect();
 						effect->SetState(STATE_MONEY_100);
 						CMap::GetInstance()->PushEffect(effect);
+
+						score += 100;
 					}
 					else if (coObjects->at(i)->state == MONEY_ITEM_400)
 					{
@@ -547,6 +551,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						effect->StartShowEffect();
 						effect->SetState(STATE_MONEY_400);
 						CMap::GetInstance()->PushEffect(effect);
+
+						score += 400;
 					}
 					else if (coObjects->at(i)->state == MONEY_ITEM_700)
 					{
@@ -555,6 +561,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						effect->StartShowEffect();
 						effect->SetState(STATE_MONEY_700);
 						CMap::GetInstance()->PushEffect(effect);
+
+						score += 700;
 					}
 					else if (coObjects->at(i)->state == MONEY_ITEM_1k)
 					{
@@ -563,6 +571,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						effect->StartShowEffect();
 						effect->SetState(STATE_MONEY_1K);
 						CMap::GetInstance()->PushEffect(effect);
+
+						score += 1000;
 					}
 					coObjects->at(i)->isHidden = true;
 				}
@@ -610,6 +620,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			if (isJump)
 			{
 				isJump = false;
+				isOnJump = false;
 				isSit = true;
 			}
 		}
@@ -629,6 +640,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (ny < 0)
 				{
 					if (isJump) isSit = true;
+					isOnJump = false;
 						basicCollision(min_tx, min_ty, nx, ny);
 					if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
 				}
@@ -652,7 +664,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				// Lụm dao
 				else if (e->obj->state == KNIFE_ITEM)
 				{
-					this->skill[0] = INCREASE_SKILL;
 					skill->SetState(STATE_KNIFE);
 					skill->SetNextState(STATE_KNIFE);
 					canStop = false;
@@ -661,7 +672,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				// lụm nước thánh
 				else if (e->obj->state == HOLY_WATER_ITEM)
 				{
-					this->skill[0] = INCREASE_SKILL;
 					skill->SetState(STATE_HOLY_WATER);
 					skill->SetNextState(STATE_HOLY_WATER);
 					canStop = false;
@@ -669,14 +679,13 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				// lụm rìu
 				else if (e->obj->state == ACE_ITEM)
 				{
-					this->skill[0] = INCREASE_SKILL;
 					skill->SetState(STATE_ACE);
 					skill->SetNextState(STATE_ACE);
 					canStop = false;
 				}
 				else if (e->obj->state == STOPWATCH_ITEM)
 				{
-					this->skill[0] = INCREASE_SKILL;
+					skill->SetState(STATE_TOPWATCH);
 					canStop = true;
 				}
 				else if (e->obj->state == CROSS_ITEM)
@@ -688,6 +697,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					CMap::GetInstance()->PushEffect(effect);
 
 					map->Cross_Enemy();
+				}
+				else if (e->obj->state == HEART_ITEM)
+				{
+					this->skill[0] += INCREASE_SKILL_BIG;
+				}
+				else if (e->obj->state == HEART_SMALL_ITEM)
+				{
+					this->skill[0] += INCREASE_SKILL_SMALL;
 				}
 				else if (e->obj->state == POT_ROAST_ITEM)
 				{
@@ -701,6 +718,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					startInvisible();
 				}
+				else if (e->obj->state == STATE_CRYSTAL) hp = SIMON_HP_START;
 				else if (e->obj->state != STATE_WALL_2 && e->obj->state != STATE_WALL_3)
 				{
 					x += dx;
@@ -716,6 +734,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						effect->StartShowEffect();
 						effect->SetState(STATE_MONEY_100);
 						CMap::GetInstance()->PushEffect(effect);
+
+						score += 100;
 					}
 					else if (e->obj->state == MONEY_ITEM_400)
 					{
@@ -724,6 +744,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						effect->StartShowEffect();
 						effect->SetState(STATE_MONEY_400);
 						CMap::GetInstance()->PushEffect(effect);
+
+						score += 400;
 					}
 					else if (e->obj->state == MONEY_ITEM_700)
 					{
@@ -732,6 +754,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						effect->StartShowEffect();
 						effect->SetState(STATE_MONEY_700);
 						CMap::GetInstance()->PushEffect(effect);
+
+						score += 700;
 					}
 					else if (e->obj->state == MONEY_ITEM_1k)
 					{
@@ -740,6 +764,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						effect->StartShowEffect();
 						effect->SetState(STATE_MONEY_1K);
 						CMap::GetInstance()->PushEffect(effect);
+
+						score += 1000;
 					}
 					e->obj->SetState(SOBJECT_HIDDEN);
 					e->obj->isHidden = true;
@@ -890,6 +916,11 @@ void CSimon::SetState(int state)
 		nx = 1;
 		break;
 	case SIMON_STATE_ATTACK:
+		if (isJump && vx != 0)
+		{
+			isOnJump = true;
+			jumpingMove = true;
+		}
 		startAttack();
 		break;
 	case SIMON_STATE_THROW:
@@ -899,7 +930,7 @@ void CSimon::SetState(int state)
 		startPick();
 		break;
 	default:
-		if (!isJump) vx = 0;
+		if (!isJump && !isOnJump) vx = 0;
 		if (!isAttack) resetSit();
 		break;
 	}
@@ -934,6 +965,7 @@ void CSimon::startJump()
 
 		isJump = true;
 		vy = -SIMON_JUMP_SPEED_Y;
+		jumpingMove = false;
 	}
 }
 
@@ -942,6 +974,8 @@ void CSimon::startJumpMove(bool nxx)
 	isJump = true;
 	vy = -SIMON_JUMP_SPEED_Y;
 	nxx ? vx = SIMON_WALKING_SPEED : vx = -SIMON_WALKING_SPEED;
+	jumpingMove = true;
+	jump_nx = nxx;
 }
 
 void CSimon::startPick()
@@ -1007,6 +1041,9 @@ void CSimon::resetAttack()
 
 void CSimon::startThrow()
 {
+	CSkill* skill = CSkill::GetInstance();
+	if (skill->state == STATE_HIDDEN) return;
+
 	if (canStop)
 	{
 		CMap* map = CMap::GetInstance();
@@ -1015,7 +1052,7 @@ void CSimon::startThrow()
 	}
 	else
 	{
-		CSkill* skill = CSkill::GetInstance();
+		
 
 		if (!isPick && !isAttack && !isthrow && skill->get_isHidden())
 		{
@@ -1160,4 +1197,28 @@ bool CSimon::get_candownstair()
 		}
 	}
 	return false;
+}
+
+void CSimon::resetDie()
+{
+	Camera::GetInstance()->SetFollowSimon();
+	nx = 1;
+	SetState(SIMON_STATE_IDLE);
+	isDie = false;
+	hp = SIMON_HP_START;
+	onStair = false;
+
+	CMapManager* mapManager = CMapManager::GetInstance();
+	mapManager->ChangeMap(mapManager->GetMapStage());
+	if (!isHasOtherStuff)
+	{
+		this->skill[0] = 0;
+
+	}
+	isHasOtherStuff = false;
+	CWeapon::GetInstance()->SetLevel(1);
+
+	CBoardGame::GetInstance()->resetTime();
+	life - 1 > 0 ? life -= 1 : life = 3;
+	vy = 0;
 }

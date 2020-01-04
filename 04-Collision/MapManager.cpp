@@ -2,6 +2,7 @@
 #include <string>
 
 #include "MapManager.h"
+#include "Simon.h"
 
 CMapManager::CMapManager()
 {
@@ -44,6 +45,7 @@ void CMapManager::ChangeMap(int map)
 	map_stage = map;
 	LoadMapResources();
 	this->map->ClearEnemy();
+	CSimon::GetInstance()->resumeTime();
 }
 
 void CMapManager::LoadRoundGame(int round)

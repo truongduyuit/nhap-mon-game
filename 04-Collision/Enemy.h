@@ -12,8 +12,8 @@
 #define SHOOT_SPEED				0.075f
 #define JUMP_TIME_BEZIER		0.01f
 #define SPACE_ERROR_MIN			20.0f
-#define Y_MOVE_BEGIN			50.0f
-#define Y_MOVE_END				100.0f
+#define Y_MOVE_BEGIN			70.0f
+#define Y_MOVE_END				120.0f
 
 #define ENEMY_HIDDEN			-1
 #define STATE_GHOST				0
@@ -59,14 +59,14 @@
 
 #define ACTION_LEFT				-1
 #define ACTION_RIGHT			1
-#define HIT_HP					10
-#define HP_DEFAULT				10
-#define HP_BOSS					100
+#define HIT_HP					20
+#define HP_DEFAULT				20
+#define HP_BOSS					160
 #define BOSS_BIHIT_TIME		    1000
 
 class CEnemy : public CGameObject
 {
-	int hp;
+	//int hp;
 	int nxx;
 	int move_time;
 

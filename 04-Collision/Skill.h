@@ -8,10 +8,12 @@
 #define ACE_WIDTH						16
 #define ACE_HEIGHT						15
 
+
 #define STATE_KNIFE					10
 #define STATE_HOLY_WATER			11
 #define STATE_HOLY_FIRE				12
 #define STATE_ACE					13
+#define STATE_TOPWATCH				14
 
 #define ANI_THROW_KNIFE_LEFT		0
 #define ANI_THROW_KNIFE_RIGHT		1

@@ -46,6 +46,9 @@
     <Filter Include="src\GameObjects\enemies">
       <UniqueIdentifier>{cb8e5fe2-6e50-43f8-a80d-6ca5ad01665a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GameObjects\board">
+      <UniqueIdentifier>{92616fa4-ece2-48bc-b91a-ca46ddbf3ee5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h">
@@ -111,6 +114,9 @@
     <ClInclude Include="MathHelper.h">
       <Filter>src\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="BoardGame.h">
+      <Filter>src\GameObjects\board</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.cpp">
@@ -175,6 +181,9 @@
     </ClCompile>
     <ClCompile Include="MathHelper.cpp">
       <Filter>src\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="BoardGame.cpp">
+      <Filter>src\GameObjects\board</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

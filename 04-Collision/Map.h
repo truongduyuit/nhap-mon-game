@@ -10,6 +10,8 @@
 #include <d3dx9.h>
 #include "SObject.h"
 
+using namespace std;
+
 class CMap
 {
 	static CMap* __instance;
@@ -27,6 +29,7 @@ class CMap
 	vector<LPGAMEOBJECT> listItem;
 	vector<LPGAMEOBJECT> listEnemy;
 	LPGAMEOBJECT boss;
+	int hpBoss;
 	LPGAMEOBJECT money1k;
 
 	unordered_map<int, LPGAMEOBJECT> mapObjects;
@@ -57,6 +60,7 @@ public :
 	int Get_numFishMonster();
 	float GetPos_max() { return pos_max; }
 	int GetPos_door() { return pos_door; }
+	int get_hpBoss();
 
 	vector<LPGAMEOBJECT> Get_coObjectFlag();
 	vector<LPGAMEOBJECT> Get_listEffect();
