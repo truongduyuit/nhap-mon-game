@@ -519,7 +519,7 @@ void CEnemy::be_hit()
 		
 		hp -= HIT_HP;
 		OutputDebugString(L"a");
-		if (hp < 0) BeDestroy();
+		if (hp <= 0) BeDestroy();
 		else
 		{
 			CMap* map = CMap::GetInstance();

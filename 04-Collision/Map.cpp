@@ -370,6 +370,14 @@ int CMap::GetGridNumber(int pos_x)
 	return pos_x / SCREEN_WIDTH;
 }
 
+int CMap::get_hpBoss()
+{
+	if (boss == NULL) return 160;
+
+	else
+		return boss->hp;
+}
+
 vector<int> CMap::GetGridNumber(float pos_x, int size_x)
 {
 	int min = pos_x / SCREEN_WIDTH;

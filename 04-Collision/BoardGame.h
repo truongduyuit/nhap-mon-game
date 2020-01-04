@@ -10,13 +10,13 @@ using namespace std;
 #define SKILL_AXE		91078 
 #define SKILL_HIDDEN	99999
 
-#define SCORE_X			60
+#define SCORE_X			55
 #define SCORE_Y			7
 
 #define TIME_X			155
 #define TIME_Y			7
 
-#define STAGE_X			235
+#define STAGE_X			240
 #define STAGE_Y			7
 
 #define SKILL_X			200
@@ -24,6 +24,15 @@ using namespace std;
 
 #define LIFE_X			200
 #define LIFE_Y			25
+
+#define HP_X			60
+#define HP_Y			17
+
+
+#define HP_BOSS_X			60
+#define HP_BOSS_Y			25
+
+#define COUNTDOWN_HP	200
 
 class CBoardGame : public CGameObject
 {
@@ -38,12 +47,13 @@ class CBoardGame : public CGameObject
 	int stage;
 	int skill;
 	int life;
-
-	vector<int> hpSimon;
-	vector<int> hpBoss;
+	int hp;
+	int hpBoss;
+	bool isPauseTime;
 
 	DWORD countdownTime;
-
+	DWORD countdownHP;
+	DWORD countdownHPBoss;
 public:
 	CBoardGame();
 	~CBoardGame() { ; }
@@ -57,6 +67,9 @@ public:
 	void updateStage();
 	void updateSkill();
 	void updateLife();
+	void updateHP();
+	void updateHPBoss();
+	void set_isPauseTime(bool pause) { isPauseTime = pause; }
 
 	void resetTime() { time = 300; }
 	void setSkill(int num) { skill += num; }

@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "LoadResource.h"
 
-#define SIMON_WALKING_SPEED			0.048f
+#define SIMON_WALKING_SPEED			0.05f
 #define SIMON_GRAVITY				0.0005f
 #define SIMON_JUMP_SPEED_Y			0.18f
 #define SIMON_INJURE_X				0.4f
@@ -11,8 +11,9 @@
 #define SIMON_AUTO_STAIR_SPEED_Y	0.2f
 #define SIMON_WALKING_SPEED_AUTO	0.018f
 #define SIMON_WALKING_SPEED_MOVING	0.05f
+#define SIMON_FLY_TIME				150
 
-#define SIMON_HP_START				100
+#define SIMON_HP_START				160
 
 #define SIMON_STATE_IDLE			0
 #define SIMON_STATE_WALKING_RIGHT	100
@@ -74,7 +75,7 @@
 #define SIMON_INVISIBLE_TIME				2000
 #define SIMON_UNTOUCHABLE_INVISIBLE_TIME	5000
 #define SIMON_DIE_TIME						3000
-#define SIMON_HP_INJURE						10
+#define SIMON_HP_INJURE						20
 #define INCREASE_SKILL_BIG					5
 #define INCREASE_SKILL_SMALL				1
 
@@ -85,7 +86,7 @@ class CSimon : public CGameObject
 {
 	static CSimon * __instance;
 
-	int hp;
+	//int hp;
 	vector<int> skill;
 	int life;
 	int score;
@@ -98,6 +99,8 @@ class CSimon : public CGameObject
 
 	bool isBlock;
 	bool isJump;
+	bool isOnJump;
+	bool jumpingMove;
 	bool isAttack;
 	bool isPick;
 	bool isthrow;
@@ -107,6 +110,7 @@ class CSimon : public CGameObject
 	bool isInJure;
 	bool isDie;
 	bool isHasOtherStuff;
+	bool isPausetime;
 
 	bool create_enemy;
 	bool create_enemy_right;
@@ -119,10 +123,12 @@ class CSimon : public CGameObject
 	bool canActiveMoney1k;
 	bool isBeMoving;
 	bool isInvisible;
+	bool isFly;
 
 	float be_x;
 	int be_nx;
 	int be_updown;
+	int jump_nx;
 
 	DWORD action_time;
 	DWORD injure_time;
@@ -130,6 +136,7 @@ class CSimon : public CGameObject
 	DWORD create_time_left;
 	DWORD invisible_time;
 	DWORD untouchable_time;
+	DWORD fly_time;
 public:
 
 	CSimon();
@@ -158,12 +165,16 @@ public:
 	int get_skillNum() { return skill[0]; }
 	int get_lifeNum() { return life; }
 	int getScoreNum() { return score; }
+	int get_HPNum() { return hp; }
 	void increaseScore(int x) { score += x; }
 	bool get_candownstair();
 	bool get_isBeMoving() { return isBeMoving; }
 	bool get_canSit() { return canSit; }
 	bool get_canActiveMoney1k() { return canActiveMoney1k; }
 	bool get_onTimeStair() { return onTimeStair; }
+	bool get_isPauseTime() { return isPausetime; }
+	bool get_isOnJump() { return isOnJump; }
+	void resumeTime() { isPausetime = false; }
 
 	void startAttack();
 	void startJump();

@@ -14,11 +14,15 @@ CBoardGame::CBoardGame()
 	time = 300;
 	countdownTime = 0;
 	stage = 1;
+	hp = 16;
+	hpBoss = 16;
 }
 
 void CBoardGame::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-	if (CSimon::GetInstance()->get_isPick()) countdownTime = GetTickCount();
+	CSimon* simon = CSimon::GetInstance();
+	if (simon->get_isPick()) countdownTime = GetTickCount();
+	if (simon->get_isPauseTime()) return;
 
 	if (GetTickCount() - countdownTime >= 1000)
 	{
@@ -29,6 +33,7 @@ void CBoardGame::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void CBoardGame::Render()
 {
+	CSprites *sprites = CSprites::GetInstance();
 	x = CGame::GetInstance()->getCamPos_x();
 	y = 0;
 	animations[0]->Render(x, y);
@@ -39,6 +44,8 @@ void CBoardGame::Render()
 	updateStage();
 	updateSkill();
 	updateLife();
+	updateHP();
+	updateHPBoss();
 }
 
 void CBoardGame::GetBoundingBox(float &left, float &top, float &right, float &bottom)
@@ -137,6 +144,66 @@ void CBoardGame::updateSkill()
 	for (int i = 0; i < scores.size(); i++)
 	{
 		sprites->Get(9800 + scores[scores.size() - i - 1])->Draw(x + SKILL_X + i * 7.5f, SKILL_Y);
+	}
+}
+
+void CBoardGame::updateHP()
+{
+	int hpSimon = CSimon::GetInstance()->get_HPNum() / 10;
+
+	if (hp > hpSimon)
+	{
+		if (GetTickCount() - countdownHP >= COUNTDOWN_HP)
+		{
+			hp--;
+			countdownHP = GetTickCount();
+		}
+	}
+	else if (hp < hpSimon)
+	{
+		if (GetTickCount() - countdownHP >= COUNTDOWN_HP)
+		{
+			hp++;
+			countdownHP = GetTickCount();
+		}
+	}
+
+	CSprites *sprites = CSprites::GetInstance();
+	vector<int> scores = CMathHelper::TachSo(skill, 2);
+
+	for (int i = 0; i < 16; i++)
+	{
+		i < hp ? sprites->Get(9810)->Draw(x + HP_X + i*5, HP_Y) : sprites->Get(9811)->Draw(x + HP_X + i*5, HP_Y);
+	}
+}
+
+void CBoardGame::updateHPBoss()
+{
+	int hpb = CMap::GetInstance()->get_hpBoss() / 10;
+
+	if (hpBoss > hpb)
+	{
+		if (GetTickCount() - countdownHP >= COUNTDOWN_HP)
+		{
+			hpBoss--;
+			countdownHP = GetTickCount();
+		}
+	}
+	else if (hpBoss < hpb)
+	{
+		if (GetTickCount() - countdownHP >= COUNTDOWN_HP)
+		{
+			hpBoss++;
+			countdownHP = GetTickCount();
+		}
+	}
+
+	CSprites *sprites = CSprites::GetInstance();
+	vector<int> scores = CMathHelper::TachSo(skill, 2);
+
+	for (int i = 0; i < 16; i++)
+	{
+		i < hpBoss ? sprites->Get(9812)->Draw(x + HP_BOSS_X + i * 5, HP_BOSS_Y) : sprites->Get(9811)->Draw(x + HP_BOSS_X + i * 5, HP_BOSS_Y);
 	}
 }
 

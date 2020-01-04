@@ -246,6 +246,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					SetState(SIMON_STATE_IDLE);
 					nx = 1;
 					isBlock = true;
+					isPausetime = true;
 				}
 				else if (Camera::GetInstance()->GetFollowSimon())
 				{
@@ -266,6 +267,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				CMapManager::GetInstance()->ChangeMap(coObjectFlag[i]->nextState);
 				isJump = false;
 				isSit = false;
+				dy = 0;
 			}
 
 			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 7)
@@ -339,7 +341,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	else if (isAttack)
 	{
 		weapon->SetPosTemp(x, y);
-		if (!isJump) dx = 0;
+		if (!isJump && !isOnJump) dx = 0;
 	}
 
 	// throw
@@ -430,6 +432,35 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 
+	if (isJump && vy > 0)
+	{
+		if (!jumpingMove && !isFly)
+		{
+			isFly = true;
+			fly_time = GetTickCount();
+		}
+	}
+
+	if (isFly)
+	{
+		if (GetTickCount() - fly_time > SIMON_FLY_TIME)
+		{
+			isJump = false;
+			isOnJump = true;
+			isFly = false;
+		}
+		else
+		{
+			vy = 0;
+			dy = 0;
+		}
+	}
+
+	if (isOnJump && jumpingMove)
+	{
+		jump_nx ? vx = SIMON_WALKING_SPEED : vx = -SIMON_WALKING_SPEED;
+	}
+
 	for (unsigned int i = 0; i < coObjects->size(); i++)
 	{
 
@@ -500,6 +531,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					this->skill[0] += INCREASE_SKILL_BIG;
 				}
+				else if (coObjects->at(i)->state == STATE_CRYSTAL) hp = SIMON_HP_START;
 				if (coObjects->at(i)->state != STATE_WALL_1 && coObjects->at(i)->state != STATE_BLACK && coObjects->at(i)->state != STATE_WALL_2 && coObjects->at(i)->state != STATE_WALL_3)
 				{
 					if (coObjects->at(i)->state == MONEY_ITEM_100)
@@ -588,6 +620,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			if (isJump)
 			{
 				isJump = false;
+				isOnJump = false;
 				isSit = true;
 			}
 		}
@@ -607,6 +640,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (ny < 0)
 				{
 					if (isJump) isSit = true;
+					isOnJump = false;
 						basicCollision(min_tx, min_ty, nx, ny);
 					if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
 				}
@@ -684,6 +718,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					startInvisible();
 				}
+				else if (e->obj->state == STATE_CRYSTAL) hp = SIMON_HP_START;
 				else if (e->obj->state != STATE_WALL_2 && e->obj->state != STATE_WALL_3)
 				{
 					x += dx;
@@ -881,6 +916,11 @@ void CSimon::SetState(int state)
 		nx = 1;
 		break;
 	case SIMON_STATE_ATTACK:
+		if (isJump && vx != 0)
+		{
+			isOnJump = true;
+			jumpingMove = true;
+		}
 		startAttack();
 		break;
 	case SIMON_STATE_THROW:
@@ -890,7 +930,7 @@ void CSimon::SetState(int state)
 		startPick();
 		break;
 	default:
-		if (!isJump) vx = 0;
+		if (!isJump && !isOnJump) vx = 0;
 		if (!isAttack) resetSit();
 		break;
 	}
@@ -925,6 +965,7 @@ void CSimon::startJump()
 
 		isJump = true;
 		vy = -SIMON_JUMP_SPEED_Y;
+		jumpingMove = false;
 	}
 }
 
@@ -933,6 +974,8 @@ void CSimon::startJumpMove(bool nxx)
 	isJump = true;
 	vy = -SIMON_JUMP_SPEED_Y;
 	nxx ? vx = SIMON_WALKING_SPEED : vx = -SIMON_WALKING_SPEED;
+	jumpingMove = true;
+	jump_nx = nxx;
 }
 
 void CSimon::startPick()
