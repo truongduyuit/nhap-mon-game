@@ -90,6 +90,7 @@ class CSimon : public CGameObject
 	vector<int> skill;
 	int life;
 	int score;
+	int stage;
 
 	int sthrow;
 	int alpha;
@@ -166,6 +167,7 @@ public:
 	int get_lifeNum() { return life; }
 	int getScoreNum() { return score; }
 	int get_HPNum() { return hp; }
+	int det_stageNum() { return stage; }
 	void increaseScore(int x) { score += x; }
 	bool get_candownstair();
 	bool get_isBeMoving() { return isBeMoving; }

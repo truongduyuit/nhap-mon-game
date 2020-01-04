@@ -91,7 +91,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 
 	switch (KeyCode)
 	{
-	case DIK_SPACE:
+	case DIK_X:
 		if (!simon->get_onstair() && !simon->get_isOnJump())
 		{
 			if (simon->state == SIMON_STATE_WALKING_RIGHT)simon->startJumpMove(true);
@@ -99,7 +99,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 			else simon->startJump();	
 		}
 		break;
-	case DIK_D:
+	case DIK_Z:
 		if (!simon->get_isAttack() && !simon->get_isPick() && !simon->get_isThrow())
 		{
 			simon->SetState(SIMON_STATE_ATTACK);
@@ -183,7 +183,7 @@ void CSampleKeyHander::KeyState(BYTE *states)
 	}
 	else if (game->IsKeyDown(DIK_UP))
 	{
-		if (game->IsKeyDown(DIK_D))
+		if (game->IsKeyDown(DIK_Z))
 		{
 			if (!simon->get_isAttack() && !simon->get_isPick() && !simon->get_isThrow() && !simon->get_isSit())
 			{

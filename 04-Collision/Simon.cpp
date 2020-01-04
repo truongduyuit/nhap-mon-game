@@ -20,6 +20,7 @@ CSimon::CSimon()
 	skill.push_back(5);
 	life = 3;
 	score = 0;
+	stage = 1;
 
 	untouchable = 0;
 	alpha = 255;
@@ -125,7 +126,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						{
 							coObjectFlag[i]->nextState == -2 ? x = coObjectFlag[i]->x + 13.0f : x = coObjectFlag[i]->x + 2.0f;
 						}
-						y = coObjectFlag[i]->y - 27.0f;
+						//y = coObjectFlag[i]->y - 27.0f;
+						if (coObjectFlag[i]->nextState == -2) y = coObjectFlag[i]->y;
 
 						SetState(SIMON_STATE_IDLE);
 					}
@@ -156,12 +158,12 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 							random_device rd;
 							mt19937 rng(rd());
-							uniform_int_distribution<int> uni(1, 2);
+							uniform_int_distribution<int> uni(0, 2);
 							auto n = uni(rng);
 
 							for (int j = 0; j <= n; j++)
 							{
-								createEnemy(coObjectFlag[i]->state - 10, -coObjectFlag[i]->nextState, x + SCREEN_WIDTH / 2 - j * 40, coObjectFlag[i]->state == 10 ? 148 + BOARDGAME_HEIGHT : y - 2);
+								createEnemy(coObjectFlag[i]->state - 10, -coObjectFlag[i]->nextState, x + SCREEN_WIDTH / 2 - j * 35, coObjectFlag[i]->state == 10 ? 148 + BOARDGAME_HEIGHT : y - 2);
 							}
 						}
 					}
@@ -284,6 +286,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				canActiveMoney1k = true;
 				if (activeMoney1k) CMap::GetInstance()->ActiveMoney1K();
+			}
+
+			else if (isOverlapping(coObjectFlag[i]) && coObjectFlag[i]->state == 5)
+			{
+				stage = coObjectFlag[i]->nextState;
 			}
 		}
 	}
@@ -515,6 +522,10 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					skill->SetState(STATE_TOPWATCH);
 					canStop = true;
 				}
+				else if (coObjects->at(i)->state == POT_ROAST_ITEM)
+				{
+					hp = SIMON_HP_START;
+				}
 				else if (coObjects->at(i)->state == STATE_INVINCIBILITY_POTION)
 				{
 					startInvisible();
@@ -642,7 +653,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					if (isJump) isSit = true;
 					isOnJump = false;
 						basicCollision(min_tx, min_ty, nx, ny);
-					if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
+					//if (isOverlapping(e->obj)) basicCollision(min_tx, min_ty, nx, ny);
 				}
 				else
 				{

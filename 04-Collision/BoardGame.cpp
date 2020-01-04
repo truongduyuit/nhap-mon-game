@@ -13,7 +13,6 @@ CBoardGame::CBoardGame()
 	CLoadResourcesHelper::LoadAnimations("data\\boardgame\\boardgame_anis.txt", this);
 	time = 300;
 	countdownTime = 0;
-	stage = 1;
 	hp = 16;
 	hpBoss = 16;
 }
@@ -115,6 +114,7 @@ void CBoardGame::updateTime()
 void CBoardGame::updateStage()
 {
 	CSprites *sprites = CSprites::GetInstance();
+	stage = CSimon::GetInstance()->det_stageNum();
 	vector<int> scores = CMathHelper::TachSo(stage, 2);
 
 	for (int i = 0; i < scores.size(); i++)
